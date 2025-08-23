@@ -3,19 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Menu,
-  X,
-  Home,
-  Package,
-  Users,
-  Settings,
-  ChevronDown,
-  Search,
-} from "lucide-react";
+import { Menu, X } from "lucide-react";
 import {
   SignInButton,
-  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,

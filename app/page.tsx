@@ -1,7 +1,5 @@
 import Navbar from "@/components/navbar";
-import { UserManagement } from "@/components/examples/user-management";
-import { SignUpButton, SignInButton, useUser } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { SignUpButton, SignInButton } from "@clerk/nextjs";
 import AuthCheck from "@/components/auth-check";
 
 const Page = () => {
@@ -77,7 +75,6 @@ const Page = () => {
               notifications.
             </p>
           </div>
-          <UserManagement />
         </div>
       </section>
 
