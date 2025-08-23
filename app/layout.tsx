@@ -33,7 +33,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ClerkProvider>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formButtonPrimary:
+                "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
+            },
+          }}
+          afterSignInUrl="/dashboard"
+          afterSignUpUrl="/dashboard"
+        >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <QueryProvider>
               {children}

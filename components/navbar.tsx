@@ -192,8 +192,12 @@ export default function Navbar() {
 
               <header className="flex justify-end items-center p-4 gap-4 h-16">
                 <SignedOut>
-                  {/* <SignInButton /> */}
-                  <SignUpButton>
+                  <SignInButton mode="modal">
+                    <Button className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
+                      Sign In
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton mode="modal">
                     <Button className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
                       Sign Up
                     </Button>
@@ -250,9 +254,18 @@ export default function Navbar() {
                       <ThemeToggleButton />
                     </div>
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
-                    Get Started
-                  </Button>
+                  <div className="space-y-2">
+                    <SignInButton mode="modal">
+                      <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
+                        Sign In
+                      </Button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
+                        Sign Up
+                      </Button>
+                    </SignUpButton>
+                  </div>
                 </div>
               </div>
             </motion.div>

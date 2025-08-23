@@ -1,5 +1,6 @@
 import Navbar from "@/components/navbar";
 import { UserManagement } from "@/components/examples/user-management";
+import { SignUpButton } from "@clerk/nextjs";
 
 const page = () => {
   return (
@@ -20,9 +21,11 @@ const page = () => {
             and deliver exceptional experiences.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
-              Get Started
-            </button>
+            <SignUpButton mode="modal">
+              <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
+                Get Started
+              </button>
+            </SignUpButton>
             <button className="border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 px-8 py-4 rounded-lg font-medium transition-all duration-200">
               Learn More
             </button>
