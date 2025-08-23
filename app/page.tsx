@@ -1,10 +1,13 @@
 import Navbar from "@/components/navbar";
 import { UserManagement } from "@/components/examples/user-management";
-import { SignUpButton } from "@clerk/nextjs";
+import { SignUpButton, SignInButton, useUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+import AuthCheck from "@/components/auth-check";
 
-const page = () => {
+const Page = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-background dark:from-gray-900 dark:via-black dark:to-gray-900">
+      <AuthCheck />
       <Navbar />
 
       {/* Hero Section */}
@@ -26,9 +29,11 @@ const page = () => {
                 Get Started
               </button>
             </SignUpButton>
-            <button className="border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 px-8 py-4 rounded-lg font-medium transition-all duration-200">
-              Learn More
-            </button>
+            <SignInButton mode="modal">
+              <button className="border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 px-8 py-4 rounded-lg font-medium transition-all duration-200">
+                Sign In
+              </button>
+            </SignInButton>
           </div>
         </div>
       </section>
@@ -105,4 +110,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
