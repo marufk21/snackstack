@@ -13,6 +13,13 @@ import {
   ChevronDown,
   Search,
 } from "lucide-react";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
@@ -182,9 +189,20 @@ export default function Navbar() {
               </div>
 
               {/* CTA Button */}
-              <Button className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
-                Get Started
-              </Button>
+
+              <header className="flex justify-end items-center p-4 gap-4 h-16">
+                <SignedOut>
+                  {/* <SignInButton /> */}
+                  <SignUpButton>
+                    <Button className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
+                      Sign Up
+                    </Button>
+                  </SignUpButton>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
+              </header>
 
               {/* Mobile Menu Button */}
               <Button
