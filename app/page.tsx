@@ -1,4 +1,5 @@
 import Navbar from "@/components/navbar";
+import { UserManagement } from "@/components/examples/user-management";
 
 const page = () => {
   return (
@@ -54,8 +55,26 @@ const page = () => {
         </div>
       </section>
 
-      {/* More content to demonstrate scroll */}
+      {/* Zustand + React Query Demo */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-muted/20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Zustand + React Query Demo
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              This section demonstrates how to use Zustand for state management
+              and React Query for data fetching together. The user management
+              interface shows CRUD operations with optimistic updates and
+              notifications.
+            </p>
+          </div>
+          <UserManagement />
+        </div>
+      </section>
+
+      {/* More content to demonstrate scroll */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-foreground mb-8">
             Scroll to see the sticky navbar in action
