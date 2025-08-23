@@ -174,15 +174,6 @@ export default function Navbar() {
 
             {/* Right side actions */}
             <div className="flex items-center gap-3">
-              {/* Search Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="hidden sm:flex text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg px-3 py-2"
-              >
-                <Search className="w-4 h-4" />
-              </Button>
-
               {/* Theme Toggle */}
               <div className="hidden sm:block items-center gap-2">
                 <ThemeToggleButton />
@@ -190,16 +181,11 @@ export default function Navbar() {
 
               {/* Authentication Buttons */}
               <SignedOut>
-                <SignInButton mode="modal">
+                <SignInButton>
                   <Button className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
                     Sign In
                   </Button>
                 </SignInButton>
-                <SignUpButton mode="modal">
-                  <Button className="hidden sm:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
-                    Sign Up
-                  </Button>
-                </SignUpButton>
               </SignedOut>
               <SignedIn>
                 <Link href="/dashboard">
@@ -214,18 +200,21 @@ export default function Navbar() {
               </SignedIn>
 
               {/* Mobile Menu Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg p-2"
-                onClick={() => setIsOpen(!isOpen)}
-              >
-                {isOpen ? (
-                  <X className="w-5 h-5" />
-                ) : (
-                  <Menu className="w-5 h-5" />
-                )}
-              </Button>
+              <div className="sm:hidden">
+                <ThemeToggleButton />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg p-2"
+                  onClick={() => setIsOpen(!isOpen)}
+                >
+                  {isOpen ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -246,31 +235,14 @@ export default function Navbar() {
                 ))}
 
                 {/* Mobile Actions */}
-                <div className="pt-6 border-t border-border mt-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <Button
-                      variant="ghost"
-                      className="flex-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg px-4 py-3"
-                    >
-                      <Search className="w-4 h-4 mr-2" />
-                      Search
-                    </Button>
-                    <div className="flex items-center gap-2">
-                      <ThemeToggleButton />
-                    </div>
-                  </div>
+                <div className="pt-6">
                   <SignedOut>
                     <div className="space-y-2">
-                      <SignInButton mode="modal">
+                      <SignInButton>
                         <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
                           Sign In
                         </Button>
                       </SignInButton>
-                      <SignUpButton mode="modal">
-                        <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
-                          Sign Up
-                        </Button>
-                      </SignUpButton>
                     </div>
                   </SignedOut>
                   <SignedIn>
