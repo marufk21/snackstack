@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface NavItem {
   label: string;
@@ -48,6 +49,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const { theme } = useTheme();
 
   // Handle scroll effect
   useEffect(() => {
@@ -93,7 +95,7 @@ export default function Navbar() {
     return (
       <Link
         href={item.href}
-        className="relative text-gray-300 hover:text-white transition-colors duration-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/5 group"
+        className="relative text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-accent group"
         onClick={() => {
           setIsOpen(false);
           setActiveDropdown(null);
@@ -109,7 +111,7 @@ export default function Navbar() {
     return (
       <Link
         href={item.href}
-        className="block px-6 py-4 text-gray-300 hover:text-white hover:bg-white/5 transition-all duration-200 border-b border-gray-800/50 last:border-b-0 text-base font-medium"
+        className="block px-6 py-4 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 border-b border-border last:border-b-0 text-base font-medium"
         onClick={() => {
           setIsOpen(false);
           setActiveDropdown(null);
@@ -126,8 +128,8 @@ export default function Navbar() {
         className={cn(
           "navbar fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-black/95 backdrop-blur-xl border-b border-gray-800/50 shadow-2xl shadow-black/20"
-            : "bg-black/80 backdrop-blur-lg"
+            ? "bg-background/95 backdrop-blur-xl border-b border-border shadow-2xl shadow-black/20 dark:shadow-black/20"
+            : "bg-background/80 backdrop-blur-lg"
         )}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -143,13 +145,15 @@ export default function Navbar() {
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white font-bold text-xl">S</span>
                   </div>
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-black" />
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
                 </div>
                 <div className="hidden sm:block">
-                  <span className="text-white font-bold text-xl">
+                  <span className="text-foreground font-bold text-xl">
                     SnackStack
                   </span>
-                  <div className="text-xs text-gray-400">Modern Solutions</div>
+                  <div className="text-xs text-muted-foreground">
+                    Modern Solutions
+                  </div>
                 </div>
               </motion.div>
             </Link>
@@ -167,13 +171,13 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="hidden sm:flex text-gray-400 hover:text-white hover:bg-white/5 rounded-lg px-3 py-2"
+                className="hidden sm:flex text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg px-3 py-2"
               >
                 <Search className="w-4 h-4" />
               </Button>
 
               {/* Theme Toggle */}
-              <div className="hidden sm:block">
+              <div className="hidden sm:block items-center gap-2">
                 <ThemeToggleButton />
               </div>
 
@@ -186,7 +190,7 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="lg:hidden text-gray-400 hover:text-white hover:bg-white/5 rounded-lg p-2"
+                className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg p-2"
                 onClick={() => setIsOpen(!isOpen)}
               >
                 {isOpen ? (
@@ -207,7 +211,7 @@ export default function Navbar() {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="lg:hidden overflow-hidden bg-black/95 backdrop-blur-xl border-t border-gray-800/50"
+              className="lg:hidden overflow-hidden bg-background/95 backdrop-blur-xl border-t border-border"
             >
               <div className="px-4 py-6 space-y-2">
                 {navItems.map((item) => (
@@ -215,16 +219,18 @@ export default function Navbar() {
                 ))}
 
                 {/* Mobile Actions */}
-                <div className="pt-6 border-t border-gray-800/50 mt-6">
+                <div className="pt-6 border-t border-border mt-6">
                   <div className="flex items-center gap-3 mb-4">
                     <Button
                       variant="ghost"
-                      className="flex-1 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg px-4 py-3"
+                      className="flex-1 text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg px-4 py-3"
                     >
                       <Search className="w-4 h-4 mr-2" />
                       Search
                     </Button>
-                    <ThemeToggleButton />
+                    <div className="flex items-center gap-2">
+                      <ThemeToggleButton />
+                    </div>
                   </div>
                   <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
                     Get Started
