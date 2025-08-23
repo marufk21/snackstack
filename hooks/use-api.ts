@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAppStore } from "@/lib/stores/use-app-store";
+import { useAppStore } from "@/stores/use-app-store";
 
 // Example API types
 interface User {
