@@ -16,7 +16,9 @@ import {
   TrendingUp,
   Calendar,
   Bell,
+  Image as ImageIcon,
 } from "lucide-react";
+import { SimpleImageUpload } from "@/components/features/dashboard/simple-image-upload";
 
 const DashboardPage = () => {
   return (
@@ -205,6 +207,11 @@ const DashboardPage = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* Image Upload Section */}
+        <div className="mt-8">
+          <SimpleImageUpload />
         </div>
       </main>
     </div>
