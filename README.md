@@ -1,12 +1,13 @@
 # 🍔 SnackStack
 
-A modern, full-stack web application starter template built with Next.js 15, featuring authentication, database integration, state management, and a beautiful UI with dark mode support.
+A modern, full-stack web application starter template built with Next.js 15, featuring authentication, database integration, state management, image uploads, and a beautiful UI with dark mode support.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.0-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=flat-square&logo=tailwind-css)
 ![Clerk](https://img.shields.io/badge/Clerk-Auth-6C47FF?style=flat-square)
 ![Prisma](https://img.shields.io/badge/Prisma-6.15-2D3748?style=flat-square&logo=prisma)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-Image_CDN-3448C5?style=flat-square&logo=cloudinary)
 
 ## 🚀 Overview
 
@@ -16,44 +17,56 @@ SnackStack is a production-ready starter template that combines the best modern 
 
 - **🔐 Authentication**: Secure user authentication with Clerk (sign up, sign in, user management)
 - **🎨 Modern UI**: Beautiful, responsive design with Tailwind CSS and custom components
-- **🌓 Dark Mode**: Built-in theme switching with next-themes
-- **📊 State Management**: Global state management with Zustand
+- **🌓 Dark Mode**: Built-in theme switching with next-themes and smooth transitions
+- **📊 State Management**: Global state management with Zustand and persistence
 - **🔄 Data Fetching**: Efficient data fetching and caching with TanStack Query (React Query)
 - **🗄️ Database**: PostgreSQL integration with Prisma ORM
+- **📸 Image Upload**: Cloudinary integration for image uploads and management
+- **🔔 Notifications**: Toast notification system with multiple types
 - **📱 Responsive**: Mobile-first design that works on all devices
 - **⚡ Performance**: Optimized with Next.js 15 Turbopack
 - **🎭 Animations**: Smooth animations with Framer Motion
 - **🛡️ Type Safety**: Full TypeScript support throughout the codebase
+- **🎯 Dashboard**: Complete dashboard with analytics, quick actions, and activity feed
 
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework**: [Next.js 15.5.0](https://nextjs.org/) with App Router
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) with PostCSS
+- **Language**: [TypeScript](https://www.typescriptlang.org/) 5.0
+- **Styling**: [Tailwind CSS v4.1](https://tailwindcss.com/) with PostCSS
 - **UI Components**: Custom components with [Radix UI](https://www.radix-ui.com/) primitives
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/) 12.23.12
+- **Icons**: [Lucide React](https://lucide.dev/) 0.541.0
+- **Theme**: [next-themes](https://github.com/pacocoursey/next-themes) 0.4.6
 
 ### Backend & Database
+
 - **ORM**: [Prisma](https://www.prisma.io/) 6.15.0
 - **Database**: PostgreSQL (configurable)
 - **API**: Next.js API Routes
+- **Image CDN**: [Cloudinary](https://cloudinary.com/) 2.7.0
 
 ### Authentication & Authorization
-- **Auth Provider**: [Clerk](https://clerk.com/) for complete user management
+
+- **Auth Provider**: [Clerk](https://clerk.com/) 6.31.4 for complete user management
 - **Middleware**: Protected routes with Clerk middleware
 
 ### State Management & Data Fetching
-- **Global State**: [Zustand](https://zustand-demo.pmnd.rs/) 5.0.8
+
+- **Global State**: [Zustand](https://zustand-demo.pmnd.rs/) 5.0.8 with persistence
 - **Server State**: [TanStack Query](https://tanstack.com/query) 5.85.5
 - **API Client**: [Axios](https://axios-http.com/) 1.11.0
+- **Forms**: [TanStack Form](https://tanstack.com/form) 1.19.2
 
 ### Development Tools
+
 - **Package Manager**: pnpm (recommended) / npm / yarn
 - **Linting**: ESLint with Next.js config
 - **Type Checking**: TypeScript strict mode
 - **Hot Reload**: Next.js Fast Refresh with Turbopack
+- **Utilities**: [clsx](https://github.com/lukeed/clsx) 2.1.1, [tailwind-merge](https://github.com/dcastil/tailwind-merge) 3.3.1
 
 ## 📋 Prerequisites
 
@@ -95,11 +108,10 @@ DATABASE_URL="postgresql://username:password@localhost:5432/snackstack?schema=pu
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 CLERK_SECRET_KEY=your_clerk_secret_key
 
-# Clerk URLs (optional - defaults work for most cases)
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
+# Cloudinary (for image uploads)
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+NEXT_PUBLIC_CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 ```
 
 ### 4. Set up the database
@@ -132,6 +144,7 @@ Open [http://localhost:3000](http://localhost:3000) to see your application.
 ### Database Configuration
 
 1. **Local PostgreSQL**:
+
    - Install PostgreSQL on your machine
    - Create a new database: `CREATE DATABASE snackstack;`
    - Update the `DATABASE_URL` in `.env.local`
@@ -147,6 +160,13 @@ Open [http://localhost:3000](http://localhost:3000) to see your application.
 3. Copy your API keys from the Clerk dashboard
 4. Add the keys to your `.env.local` file
 5. Configure your application URLs in Clerk dashboard
+
+### Cloudinary Setup (for Image Uploads)
+
+1. Create a [Cloudinary](https://cloudinary.com/) account
+2. Get your Cloud Name, API Key, and API Secret from the dashboard
+3. Add the credentials to your `.env.local` file
+4. The app will automatically use these for image uploads
 
 ## 📖 Usage Guide
 
@@ -171,26 +191,52 @@ pnpm type-check   # Run TypeScript compiler check
 ### Key Features Implementation
 
 #### 🔐 Authentication
+
 - Sign up/Sign in pages at `/sign-up` and `/sign-in`
 - Protected routes automatically redirect to sign-in
 - User button component for account management
 - Middleware configuration in `middleware.ts`
 
 #### 🎨 Theme Switching
+
 - Toggle between light and dark modes
 - Theme preference persisted to localStorage
 - Smooth transitions between themes
 - Custom theme provider in `components/ui/theme-provider.tsx`
 
 #### 📊 State Management
+
 - Global app state with Zustand in `stores/use-app-store.ts`
 - Server state caching with React Query
 - Optimistic updates for better UX
 
 #### 🗄️ Database Operations
-- Define models in `prisma/schema.prisma`
+
+- Define models in `server/db/schema.prisma`
 - Type-safe database queries with Prisma Client
 - Generated types in `lib/generated/prisma`
+
+#### 📸 Image Upload System
+
+- Cloudinary integration for image storage and optimization
+- Drag-and-drop image upload component
+- Automatic image optimization and format conversion
+- File validation (type, size limits)
+- Upload progress indicators and error handling
+
+#### 🔔 Notification System
+
+- Toast notifications with multiple types (success, error, warning, info)
+- Global notification state management with Zustand
+- Auto-dismiss functionality with customizable timing
+- Notification container component for consistent UI
+
+#### 🎨 Theme System
+
+- Light/dark mode switching with system preference detection
+- Smooth theme transitions with CSS animations
+- Persistent theme preference in localStorage
+- Custom theme provider with next-themes integration
 
 ## 📁 Project Structure
 
@@ -200,29 +246,50 @@ snackstack/
 │   ├── layout.tsx         # Root layout with providers
 │   ├── page.tsx           # Home page
 │   ├── globals.css        # Global styles
-│   ├── dashboard/         # Protected dashboard route
-│   ├── sign-in/           # Clerk sign-in page
-│   └── sign-up/           # Clerk sign-up page
+│   ├── (auth)/            # Authentication routes
+│   │   ├── sign-in/       # Clerk sign-in page
+│   │   └── sign-up/       # Clerk sign-up page
+│   ├── (dashboard)/       # Protected dashboard route
+│   │   └── dashboard/     # Dashboard page
+│   ├── (landing)/         # Landing page
+│   │   └── page.tsx       # Landing page
+│   └── api/               # API routes
+│       └── upload/        # Image upload endpoint
 ├── components/            # React components
 │   ├── ui/               # Reusable UI components
-│   ├── navbar.tsx        # Navigation component
-│   └── auth-check.tsx    # Authentication checker
-├── hooks/                # Custom React hooks
-│   └── use-api.ts       # API hook with React Query
+│   │   ├── button.tsx    # Button component
+│   │   ├── card.tsx      # Card component
+│   │   ├── badge.tsx     # Badge component
+│   │   ├── image-upload.tsx # Image upload component
+│   │   ├── notification.tsx # Notification system
+│   │   ├── theme-provider.tsx # Theme provider
+│   │   └── theme-toggle-button.tsx # Theme toggle
+│   ├── auth/             # Authentication components
+│   │   └── auth-check.tsx # Authentication checker
+│   ├── dashboard/        # Dashboard components
+│   │   └── simple-image-upload.tsx # Image upload demo
+│   └── landing/          # Landing page components
+│       └── navbar.tsx    # Navigation component
 ├── lib/                  # Utility functions
 │   ├── utils.ts         # Helper functions
 │   ├── query-client.ts  # React Query setup
-│   └── generated/       # Generated Prisma types
-├── prisma/              # Database schema
-│   └── schema.prisma    # Prisma schema file
-├── providers/           # Context providers
-│   └── query-provider.tsx
-├── public/              # Static assets
+│   ├── generated/       # Generated Prisma types
+│   └── utils/           # Additional utilities
+│       └── cloudinary.ts # Cloudinary integration
+├── server/               # Server-side code
+│   ├── db/              # Database schema
+│   │   └── schema.prisma # Prisma schema file
+│   ├── providers/       # Context providers
+│   │   └── query-provider.tsx
+│   └── services/        # Server services
 ├── stores/              # Zustand stores
-│   └── use-app-store.ts
+│   └── use-app-store.ts # Global app state
+├── public/              # Static assets
+│   ├── fonts/           # Custom fonts
+│   ├── icons/           # Icon files
+│   └── images/          # Image assets
 ├── middleware.ts        # Next.js middleware
 ├── next.config.ts       # Next.js configuration
-├── tailwind.config.ts   # Tailwind configuration
 ├── tsconfig.json        # TypeScript configuration
 └── package.json         # Project dependencies
 ```
@@ -239,6 +306,7 @@ snackstack/
 ### Other Platforms
 
 SnackStack can be deployed to any platform that supports Next.js:
+
 - [Netlify](https://www.netlify.com/)
 - [Railway](https://railway.app/)
 - [Render](https://render.com/)
