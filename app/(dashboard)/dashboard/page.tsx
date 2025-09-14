@@ -18,7 +18,7 @@ import {
   Bell,
   Image as ImageIcon,
 } from "lucide-react";
-import { SimpleImageUpload } from "@/components/features/dashboard/simple-image-upload";
+import { SimpleImageUpload } from "@/components/dashboard/simple-image-upload";
 
 const DashboardPage = () => {
   return (
