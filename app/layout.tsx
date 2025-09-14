@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/server/providers/query-provider";
 import { NotificationContainer } from "@/components/ui/notification";
+import { RedirectHandler } from "@/components/auth/redirect-handler";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,8 +47,10 @@ export default function RootLayout({
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <QueryProvider>
-              {children}
-              <NotificationContainer />
+              <RedirectHandler>
+                {children}
+                <NotificationContainer />
+              </RedirectHandler>
             </QueryProvider>
           </ThemeProvider>
         </ClerkProvider>
