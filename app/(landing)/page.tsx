@@ -1,5 +1,5 @@
 import AuthCheck from "@/components/auth/auth-check";
-import Navbar from "@/components/layout/navbar";
+import Navbar from "@/components/landing/navbar";
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
 
 const Page = () => {
