@@ -1,11 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import {
-  mockNotes,
-  generateUniqueSlug,
-  type Note,
-} from "@/lib/mock-data/notes";
+import { db } from "@/lib/db";
+import { generateUniqueSlug } from "@/lib/utils/notes";
 
 const updateNoteSchema = z.object({
   title: z
@@ -30,9 +27,22 @@ export async function GET(
     }
 
     const params = await context.params;
-    const note = mockNotes.find(
-      (n) => n.id === params.id && n.userId === userId
-    );
+
+    // First, find the user in our database
+    const user = await db.user.findFirst({
+      where: { email: userId }, // Using Clerk userId as email identifier
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    const note = await db.note.findFirst({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+    });
 
     if (!note) {
       return NextResponse.json({ error: "Note not found" }, { status: 404 });
@@ -64,30 +74,45 @@ export async function PUT(
     const validatedData = updateNoteSchema.parse(body);
     const params = await context.params;
 
-    const noteIndex = mockNotes.findIndex(
-      (n) => n.id === params.id && n.userId === userId
-    );
+    // First, find the user in our database
+    const user = await db.user.findFirst({
+      where: { email: userId }, // Using Clerk userId as email identifier
+    });
 
-    if (noteIndex === -1) {
-      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const existingNote = mockNotes[noteIndex];
+    // Find the existing note
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+    });
+
+    if (!existingNote) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    }
 
     // Update slug if title changed
     let slug = existingNote.slug;
     if (validatedData.title && validatedData.title !== existingNote.title) {
-      slug = generateUniqueSlug(validatedData.title, params.id);
+      slug = await generateUniqueSlug(validatedData.title, params.id);
     }
 
-    const updatedNote = {
-      ...existingNote,
-      ...validatedData,
-      slug,
-      updatedAt: new Date().toISOString(),
-    };
-
-    mockNotes[noteIndex] = updatedNote;
+    const updatedNote = await db.note.update({
+      where: { id: params.id },
+      data: {
+        title: validatedData.title || existingNote.title,
+        content: validatedData.content || existingNote.content,
+        imageUrl:
+          validatedData.imageUrl !== undefined
+            ? validatedData.imageUrl
+            : existingNote.imageUrl,
+        slug,
+      },
+    });
 
     return NextResponse.json({ note: updatedNote });
   } catch (error) {
@@ -119,15 +144,32 @@ export async function DELETE(
     }
 
     const params = await context.params;
-    const noteIndex = mockNotes.findIndex(
-      (n) => n.id === params.id && n.userId === userId
-    );
 
-    if (noteIndex === -1) {
+    // First, find the user in our database
+    const user = await db.user.findFirst({
+      where: { email: userId }, // Using Clerk userId as email identifier
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Check if note exists and belongs to user
+    const existingNote = await db.note.findFirst({
+      where: {
+        id: params.id,
+        userId: user.id,
+      },
+    });
+
+    if (!existingNote) {
       return NextResponse.json({ error: "Note not found" }, { status: 404 });
     }
 
-    mockNotes.splice(noteIndex, 1);
+    // Delete the note
+    await db.note.delete({
+      where: { id: params.id },
+    });
 
     return NextResponse.json({ message: "Note deleted successfully" });
   } catch (error) {
