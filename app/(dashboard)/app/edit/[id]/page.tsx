@@ -65,7 +65,7 @@ export default function EditNotePage() {
   // Handle successful save (redirect to view page)
   const handleSave = () => {
     if (note) {
-      router.push(`/notes/${note.slug}`);
+      router.push(`/app/${note.slug}`);
     }
   };
 
@@ -87,7 +87,7 @@ export default function EditNotePage() {
         <p className="text-muted-foreground">
           The note you're trying to edit doesn't exist or has been deleted.
         </p>
-        <Button onClick={() => router.push("/notes")} variant="outline">
+        <Button onClick={() => router.push("/app")} variant="outline">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Notes
         </Button>
@@ -102,7 +102,7 @@ export default function EditNotePage() {
         <div className="max-w-4xl mx-auto p-6">
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => router.push(`/notes/${note.slug}`)}
+              onClick={() => router.push(`/app/${note.slug}`)}
               variant="ghost"
               size="sm"
             >

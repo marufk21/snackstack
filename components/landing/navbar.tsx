@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
@@ -21,19 +22,19 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: "Product",
-    href: "/product",
+    href: "/app", // Main dashboard/notes app
   },
   {
     label: "Teams",
-    href: "/teams",
+    href: "/app/new", // Create new note (collaborate)
   },
   {
     label: "Resources",
-    href: "/resources",
+    href: "/app", // Notes library/resources
   },
   {
     label: "Community",
-    href: "/community",
+    href: "/", // Landing page/community
   },
 ];
 
@@ -42,6 +43,10 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { theme } = useTheme();
+  const pathname = usePathname();
+
+  // Hide navigation items when in app routes
+  const isInAppRoutes = pathname?.startsWith("/app");
 
   // Handle scroll effect
   useEffect(() => {
@@ -151,11 +156,13 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-1">
-              {navItems.map((item) => (
-                <NavItem key={item.href} item={item} />
-              ))}
-            </div>
+            {!isInAppRoutes && (
+              <div className="hidden lg:flex items-center gap-1">
+                {navItems.map((item) => (
+                  <NavItem key={item.href} item={item} />
+                ))}
+              </div>
+            )}
 
             {/* Right side actions */}
             <div className="flex items-center gap-3">
@@ -173,14 +180,6 @@ export default function Navbar() {
                 </SignInButton>
               </SignedOut>
               <SignedIn>
-                <Link href="/notes">
-                  <Button
-                    variant="outline"
-                    className="hidden sm:flex text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200"
-                  >
-                    My Notes
-                  </Button>
-                </Link>
                 <UserButton />
               </SignedIn>
 
@@ -215,9 +214,10 @@ export default function Navbar() {
               className="lg:hidden overflow-hidden bg-background/95 backdrop-blur-xl border-t border-border"
             >
               <div className="px-4 py-6 space-y-2">
-                {navItems.map((item) => (
-                  <MobileNavItem key={item.href} item={item} />
-                ))}
+                {!isInAppRoutes &&
+                  navItems.map((item) => (
+                    <MobileNavItem key={item.href} item={item} />
+                  ))}
 
                 {/* Mobile Actions */}
                 <div className="pt-6">
@@ -232,7 +232,7 @@ export default function Navbar() {
                   </SignedOut>
                   <SignedIn>
                     <div className="space-y-2">
-                      <Link href="/notes">
+                      <Link href="/app">
                         <Button className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
                           My Notes
                         </Button>

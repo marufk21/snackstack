@@ -4,7 +4,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"]);
 
 // Protected routes
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)", "/notes(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/app(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   // Protect routes that require authentication
@@ -12,16 +12,10 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
 
-  // If user is signed in and trying to access public routes, redirect to notes
+  // If user is signed in and trying to access public routes, redirect to app
   if (isPublicRoute(req) && (auth as any).userId) {
-    const notesUrl = new URL("/notes", req.url);
-    return Response.redirect(notesUrl);
-  }
-
-  // If user is signed in and trying to access generic dashboard, redirect to notes
-  if (req.nextUrl.pathname === "/dashboard" && (auth as any).userId) {
-    const notesUrl = new URL("/notes", req.url);
-    return Response.redirect(notesUrl);
+    const appUrl = new URL("/app", req.url);
+    return Response.redirect(appUrl);
   }
 });
 

@@ -19,8 +19,8 @@ export default function NewNotePage() {
   // Handle successful save (redirect to view page)
   const handleSave = (noteId: string) => {
     // We'll need to get the note to find its slug for redirection
-    // For now, just redirect to notes list
-    router.push("/notes");
+    // For now, just redirect to app list
+    router.push("/app");
   };
 
   return (
@@ -30,7 +30,7 @@ export default function NewNotePage() {
         <div className="max-w-4xl mx-auto p-6">
           <div className="flex items-center gap-4">
             <Button
-              onClick={() => router.push("/notes")}
+              onClick={() => router.push("/app")}
               variant="ghost"
               size="sm"
             >

@@ -70,7 +70,7 @@ export default function NotePage() {
         <p className="text-muted-foreground">
           The note you're looking for doesn't exist or has been deleted.
         </p>
-        <Button onClick={() => router.push("/notes")} variant="outline">
+        <Button onClick={() => router.push("/app")} variant="outline">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Notes
         </Button>
@@ -87,13 +87,13 @@ export default function NotePage() {
     <div className="max-w-4xl mx-auto p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <Button onClick={() => router.push("/notes")} variant="ghost" size="sm">
+        <Button onClick={() => router.push("/app")} variant="ghost" size="sm">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Notes
         </Button>
 
         <Button
-          onClick={() => router.push(`/notes/edit/${note.id}`)}
+          onClick={() => router.push(`/app/edit/${note.id}`)}
           variant="outline"
           size="sm"
         >
@@ -250,7 +250,7 @@ export default function NotePage() {
 
       {/* Footer */}
       <div className="mt-8 text-center">
-        <Button onClick={() => router.push(`/notes/edit/${note.id}`)} size="lg">
+        <Button onClick={() => router.push(`/app/edit/${note.id}`)} size="lg">
           <Edit className="w-4 h-4 mr-2" />
           Edit this Note
         </Button>
