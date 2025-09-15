@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { NoteEditor } from "@/components/notes/note-editor";
+import { NoteEditor } from "@/components/dashboard/note-editor";
 import { useNoteEditorStore } from "@/stores/use-note-editor-store";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
