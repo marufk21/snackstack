@@ -1,5 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
+import Navbar from "@/components/landing/navbar";
 
 export const metadata: Metadata = {
   title: "Notes - SnackStack",
@@ -11,5 +12,10 @@ export default function NotesLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="min-h-screen bg-background">{children}</div>;
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      {children}
+    </div>
+  );
 }

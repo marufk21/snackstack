@@ -42,8 +42,8 @@ export default function RootLayout({
                 "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
             },
           }}
-          afterSignInUrl="/notes"
-          afterSignUpUrl="/notes"
+          afterSignInUrl="/app"
+          afterSignUpUrl="/app"
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <QueryProvider>

@@ -84,7 +84,7 @@ export default function NotesPage() {
           </p>
         </div>
 
-        <Button onClick={() => router.push("/notes/new")} size="lg">
+        <Button onClick={() => router.push("/app/new")} size="lg">
           <Plus className="w-5 h-5 mr-2" />
           New Note
         </Button>
@@ -99,7 +99,7 @@ export default function NotesPage() {
             Create your first note to get started with your AI-powered
             note-taking experience.
           </p>
-          <Button onClick={() => router.push("/notes/new")} size="lg">
+          <Button onClick={() => router.push("/app/new")} size="lg">
             <Plus className="w-5 h-5 mr-2" />
             Create First Note
           </Button>
@@ -171,7 +171,7 @@ export default function NotesPage() {
                   {/* Actions */}
                   <div className="flex items-center gap-2">
                     <Button
-                      onClick={() => router.push(`/notes/${note.slug}`)}
+                      onClick={() => router.push(`/app/${note.slug}`)}
                       variant="outline"
                       size="sm"
                       className="flex-1"
@@ -181,7 +181,7 @@ export default function NotesPage() {
                     </Button>
 
                     <Button
-                      onClick={() => router.push(`/notes/edit/${note.id}`)}
+                      onClick={() => router.push(`/app/edit/${note.id}`)}
                       variant="outline"
                       size="sm"
                       className="flex-1"

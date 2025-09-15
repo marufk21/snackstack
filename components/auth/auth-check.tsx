@@ -11,7 +11,7 @@ export default function AuthCheck() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      router.push("/dashboard");
+      router.push("/app");
     }
   }, [isLoaded, isSignedIn, router]);
 
@@ -21,7 +21,9 @@ export default function AuthCheck() {
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="w-6 h-6 animate-spin text-primary" />
-          <span className="text-muted-foreground">Checking authentication...</span>
+          <span className="text-muted-foreground">
+            Checking authentication...
+          </span>
         </div>
       </div>
     );
