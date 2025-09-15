@@ -3,10 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import OpenAI from "openai";
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI only when needed
+const getOpenAI = () => {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OpenAI API key not configured");
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+};
 
 const aiSuggestionSchema = z.object({
   content: z.string().min(1, "Content is required"),
@@ -51,6 +56,8 @@ export async function POST(request: NextRequest) {
       default:
         prompt = `Please improve the following markdown content:\n\n${content}`;
     }
+
+    const openai = getOpenAI();
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",

@@ -3,21 +3,11 @@
 import React, { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getNoteById, type Note } from "@/server/api";
 import { NoteEditor } from "@/components/dashboard/note-editor";
 import { useNoteEditorStore } from "@/stores/use-note-editor-store";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  slug: string;
-  imageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export default function EditNotePage() {
   const params = useParams();
@@ -32,10 +22,7 @@ export default function EditNotePage() {
     error,
   } = useQuery({
     queryKey: ["note", noteId],
-    queryFn: async () => {
-      const response = await axios.get(`/api/notes/${noteId}`);
-      return response.data.note as Note;
-    },
+    queryFn: () => getNoteById(noteId),
     enabled: !!noteId,
   });
 

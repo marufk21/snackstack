@@ -5,14 +5,23 @@ import { useAppStore } from "@/stores/use-app-store";
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const notificationIcons = {
+type NotificationType = "success" | "error" | "warning" | "info";
+
+interface Notification {
+  id: string;
+  type: NotificationType;
+  message: string;
+  timestamp: number;
+}
+
+const notificationIcons: Record<NotificationType, any> = {
   success: CheckCircle,
   error: AlertCircle,
   warning: AlertTriangle,
   info: Info,
 };
 
-const notificationStyles = {
+const notificationStyles: Record<NotificationType, string> = {
   success:
     "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200",
   error:
@@ -22,7 +31,11 @@ const notificationStyles = {
   info: "bg-blue-50 border-blue-200 text-blue-800 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200",
 };
 
-export function NotificationToast({ notification }: { notification: any }) {
+export function NotificationToast({
+  notification,
+}: {
+  notification: Notification;
+}) {
   const removeNotification = useAppStore((state) => state.removeNotification);
   const Icon = notificationIcons[notification.type];
 

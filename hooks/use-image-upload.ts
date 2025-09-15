@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { uploadFile } from "@/server/api";
 
 export interface UploadResult {
   public_id: string;
@@ -20,35 +21,19 @@ export function useImageUpload() {
     setError(null);
 
     try {
-      // Create FormData for the upload
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || ""
-      );
+      const result = await uploadFile(file);
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      if (!response.ok) {
+      if (!result.success) {
         throw new Error("Upload failed");
       }
 
-      const result = await response.json();
-
       return {
-        public_id: result.public_id,
-        secure_url: result.secure_url,
-        width: result.width,
-        height: result.height,
-        format: result.format,
-        bytes: result.bytes,
+        public_id: result.data.public_id,
+        secure_url: result.data.secure_url,
+        width: result.data.width || 0,
+        height: result.data.height || 0,
+        format: result.data.format || "",
+        bytes: result.data.bytes || 0,
       };
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Upload failed";
