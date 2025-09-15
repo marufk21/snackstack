@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getNotes, type Note } from "@/server/api";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -19,16 +19,6 @@ import {
   ImageIcon,
 } from "lucide-react";
 
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  slug: string;
-  imageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export default function NotePage() {
   const params = useParams();
   const router = useRouter();
@@ -39,8 +29,7 @@ export default function NotePage() {
     queryKey: ["note", slug],
     queryFn: async () => {
       // We need to get all notes and find by slug since we don't have a slug endpoint
-      const response = await axios.get("/api/notes");
-      const notes = response.data.notes as Note[];
+      const notes = await getNotes();
       const note = notes.find((n) => n.slug === slug);
 
       if (!note) {

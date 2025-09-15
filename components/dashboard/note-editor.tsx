@@ -15,7 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { createNote, updateNote, generateAiSuggestion } from "@/server/api";
 import { useAppStore } from "../../stores/use-app-store";
 
 interface NoteEditorProps {
@@ -56,12 +56,10 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
     }) => {
       if (noteId) {
         // Update existing note
-        const response = await axios.put(`/api/notes/${noteId}`, data);
-        return response.data;
+        return updateNote(noteId, data);
       } else {
         // Create new note
-        const response = await axios.post("/api/notes", data);
-        return response.data;
+        return createNote(data);
       }
     },
     onMutate: () => {
@@ -73,8 +71,8 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
 
       // If this was a new note, call onSave with the new ID
-      if (!noteId && data.note?.id && onSave) {
-        onSave(data.note.id);
+      if (!noteId && data?.id && onSave) {
+        onSave(data.id);
       }
 
       addNotification({
@@ -99,20 +97,16 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
     mutationFn: async (
       type: "improve" | "continue" | "summarize" | "expand"
     ) => {
-      const response = await axios.post("/api/ai-suggestion", {
-        content,
-        type,
-      });
-      return response.data;
+      return generateAiSuggestion({ content, type });
     },
     onMutate: () => {
       setIsGeneratingAI(true);
     },
-    onSuccess: (data) => {
-      if (data.suggestion) {
+    onSuccess: (suggestion) => {
+      if (suggestion) {
         // For now, we'll replace the content with the suggestion
         // In a real app, you might want to show this in a modal for user approval
-        setContent(data.suggestion);
+        setContent(suggestion);
         addNotification({
           type: "success",
           message: "AI suggestion applied",

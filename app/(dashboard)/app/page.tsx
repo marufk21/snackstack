@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { getNotes, type Note } from "@/server/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,26 +19,13 @@ import {
   ImageIcon,
 } from "lucide-react";
 
-interface Note {
-  id: string;
-  title: string;
-  content: string;
-  slug: string;
-  imageUrl?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export default function NotesPage() {
   const router = useRouter();
 
   // Fetch all notes
   const { data, isLoading, error } = useQuery({
     queryKey: ["notes"],
-    queryFn: async () => {
-      const response = await axios.get("/api/notes");
-      return response.data.notes as Note[];
-    },
+    queryFn: getNotes,
   });
 
   if (isLoading) {
