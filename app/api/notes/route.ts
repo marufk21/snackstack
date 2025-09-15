@@ -1,12 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import {
-  mockNotes,
-  createWelcomeNote,
-  generateUniqueSlug,
-  type Note,
-} from "@/lib/mock-data/notes";
+import { db } from "@/lib/db";
+import { createWelcomeNote, generateUniqueSlug } from "@/lib/utils/notes";
 
 // Validation schemas
 const createNoteSchema = z.object({
@@ -24,13 +20,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Filter notes by user and create welcome note if none exist
-    let userNotes = mockNotes.filter((note) => note.userId === userId);
+    // First, find or create the user in our database
+    let user = await db.user.findFirst({
+      where: { email: userId }, // Using Clerk userId as email identifier
+    });
+
+    if (!user) {
+      user = await db.user.create({
+        data: {
+          name: "New User",
+          email: userId,
+        },
+      });
+    }
+
+    // Get all notes for this user
+    let userNotes = await db.note.findMany({
+      where: { userId: user.id },
+      orderBy: { updatedAt: "desc" },
+    });
 
     // If user has no notes, create a welcome note
     if (userNotes.length === 0) {
-      const welcomeNote = createWelcomeNote(userId);
-      mockNotes.push(welcomeNote);
+      const welcomeNote = await createWelcomeNote(userId);
       userNotes = [welcomeNote];
     }
 
@@ -56,21 +68,32 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createNoteSchema.parse(body);
 
+    // First, find or create the user in our database
+    let user = await db.user.findFirst({
+      where: { email: userId }, // Using Clerk userId as email identifier
+    });
+
+    if (!user) {
+      user = await db.user.create({
+        data: {
+          name: "New User",
+          email: userId,
+        },
+      });
+    }
+
     // Generate unique slug
-    const slug = generateUniqueSlug(validatedData.title);
+    const slug = await generateUniqueSlug(validatedData.title);
 
-    const newNote = {
-      id: Math.random().toString(36).substr(2, 9),
-      userId,
-      title: validatedData.title,
-      content: validatedData.content,
-      slug,
-      imageUrl: validatedData.imageUrl || null,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    mockNotes.unshift(newNote);
+    const newNote = await db.note.create({
+      data: {
+        title: validatedData.title,
+        content: validatedData.content,
+        slug,
+        imageUrl: validatedData.imageUrl || null,
+        userId: user.id,
+      },
+    });
 
     return NextResponse.json({ note: newNote }, { status: 201 });
   } catch (error) {
