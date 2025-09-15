@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/db";
+import { db } from "@/lib/database";
 import { generateUniqueSlug } from "@/lib/utils/notes";
 
 const updateNoteSchema = z.object({

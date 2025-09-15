@@ -1,4 +1,4 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/database";
 
 // Helper function to generate slug
 export function generateSlug(title: string): string {
