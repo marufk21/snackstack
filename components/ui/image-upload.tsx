@@ -3,16 +3,18 @@
 import { useState, useRef } from "react";
 import { Button } from "./button";
 import { Card } from "./card";
-import { useImageUpload, type UploadResult } from "@/hooks/use-image-upload";
+import {
+  useImageUpload,
+  type UploadResult,
+} from "../../hooks/use-image-upload";
 import { Upload, X } from "lucide-react";
 
 interface ImageUploadProps {
-  onUpload: (result: UploadResult) => void;
+  onUpload: (url: string) => void;
   onRemove?: () => void;
   currentImage?: string;
   className?: string;
   disabled?: boolean;
-  multiple?: boolean;
 }
 
 export function ImageUpload({
@@ -21,7 +23,6 @@ export function ImageUpload({
   currentImage,
   className = "",
   disabled = false,
-  multiple = false,
 }: ImageUploadProps) {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,7 +35,7 @@ export function ImageUpload({
     const result = await uploadImage(file);
 
     if (result) {
-      onUpload(result);
+      onUpload(result.secure_url);
     }
   };
 
@@ -96,7 +97,6 @@ export function ImageUpload({
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          multiple={multiple}
           onChange={(e) => handleFileSelect(e.target.files)}
           className="hidden"
           disabled={disabled}
