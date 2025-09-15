@@ -181,14 +181,6 @@ export default function Navbar() {
                     My Notes
                   </Button>
                 </Link>
-                <Link href="/dashboard">
-                  <Button
-                    variant="outline"
-                    className="hidden sm:flex text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200"
-                  >
-                    Dashboard
-                  </Button>
-                </Link>
                 <UserButton />
               </SignedIn>
 
@@ -243,11 +235,6 @@ export default function Navbar() {
                       <Link href="/notes">
                         <Button className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
                           My Notes
-                        </Button>
-                      </Link>
-                      <Link href="/dashboard">
-                        <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
-                          Dashboard
                         </Button>
                       </Link>
                     </div>

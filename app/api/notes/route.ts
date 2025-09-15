@@ -1,28 +1,12 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-
-// Mock data store for demo
-let mockNotes: Array<{
-  id: string;
-  title: string;
-  content: string;
-  slug: string;
-  imageUrl: string | null;
-  createdAt: string;
-  updatedAt: string;
-}> = [
-  {
-    id: "1",
-    title: "Welcome to Your AI-Powered Notes",
-    content:
-      '# Welcome! 🎉\n\nThis is your first note in the AI-powered note editor. Here are some features you can try:\n\n## Features\n- **Markdown Support**: Write in markdown with live preview\n- **Auto-save**: Your changes are saved automatically\n- **AI Assistance**: Get writing help with AI suggestions\n- **Image Upload**: Add images to your notes\n\n## AI Commands\nTry these AI features:\n- **Improve**: Enhance clarity and structure\n- **Continue**: Let AI continue your writing\n- **Summarize**: Get bullet point summaries\n- **Expand**: Add more details and examples\n\n## Getting Started\n1. Click "Edit" to modify this note\n2. Try the AI suggestion buttons\n3. Upload an image\n4. Create a new note\n\nHappy writing! ✨',
-    slug: "welcome-to-your-ai-powered-notes",
-    imageUrl: null,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  },
-];
+import {
+  mockNotes,
+  createWelcomeNote,
+  generateUniqueSlug,
+  type Note,
+} from "@/lib/mock-data/notes";
 
 // Validation schemas
 const createNoteSchema = z.object({
@@ -30,38 +14,6 @@ const createNoteSchema = z.object({
   content: z.string(),
   imageUrl: z.string().url().optional(),
 });
-
-// Helper function to generate slug
-function generateSlug(title: string): string {
-  const baseSlug = title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .substring(0, 50);
-
-  return baseSlug || "untitled";
-}
-
-// Helper function to ensure unique slug
-function generateUniqueSlug(title: string, excludeId?: string): string {
-  let slug = generateSlug(title);
-  let counter = 1;
-
-  while (true) {
-    const existing = mockNotes.find(
-      (note) => note.slug === slug && note.id !== excludeId
-    );
-
-    if (!existing) {
-      return slug;
-    }
-
-    slug = `${generateSlug(title)}-${counter}`;
-    counter++;
-  }
-}
 
 // GET /api/notes - Get all notes for authenticated user
 export async function GET(request: NextRequest) {
@@ -72,7 +24,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    return NextResponse.json({ notes: mockNotes });
+    // Filter notes by user and create welcome note if none exist
+    let userNotes = mockNotes.filter((note) => note.userId === userId);
+
+    // If user has no notes, create a welcome note
+    if (userNotes.length === 0) {
+      const welcomeNote = createWelcomeNote(userId);
+      mockNotes.push(welcomeNote);
+      userNotes = [welcomeNote];
+    }
+
+    return NextResponse.json({ notes: userNotes });
   } catch (error) {
     console.error("Error fetching notes:", error);
     return NextResponse.json(
@@ -99,6 +61,7 @@ export async function POST(request: NextRequest) {
 
     const newNote = {
       id: Math.random().toString(36).substr(2, 9),
+      userId,
       title: validatedData.title,
       content: validatedData.content,
       slug,

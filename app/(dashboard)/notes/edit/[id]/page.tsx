@@ -4,9 +4,9 @@ import React, { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { NoteEditor } from "../../../../components/notes/note-editor";
-import { useNoteEditorStore } from "../../../../stores/use-note-editor-store";
-import { Button } from "../../../../components/ui/button";
+import { NoteEditor } from "@/components/notes/note-editor";
+import { useNoteEditorStore } from "@/stores/use-note-editor-store";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
 
 interface Note {

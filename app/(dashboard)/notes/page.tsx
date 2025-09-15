@@ -4,9 +4,10 @@ import React from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { WelcomeHeader } from "@/components/ui/welcome-header";
 import {
   Plus,
   Edit,
@@ -69,10 +70,13 @@ export default function NotesPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-6">
-      {/* Header */}
+      {/* Welcome Header */}
+      <WelcomeHeader className="mb-8" />
+
+      {/* Notes Stats and Actions */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">My Notes</h1>
+          <h2 className="text-2xl font-bold">My Notes</h2>
           <p className="text-muted-foreground mt-1">
             {notes.length > 0
               ? `${notes.length} note${notes.length === 1 ? "" : "s"}`
