@@ -2,9 +2,9 @@
 
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { NoteEditor } from "../../../components/notes/note-editor";
-import { useNoteEditorStore } from "../../../stores/use-note-editor-store";
-import { Button } from "../../../components/ui/button";
+import { NoteEditor } from "@/components/notes/note-editor";
+import { useNoteEditorStore } from "@/stores/use-note-editor-store";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
 export default function NewNotePage() {

@@ -14,9 +14,9 @@ export const RedirectHandler = ({ children }: RedirectHandlerProps) => {
 
   useEffect(() => {
     if (isLoaded && user) {
-      // Check if we're on a generic dashboard route and redirect to user-specific one
+      // Check if we're on a generic dashboard route and redirect to notes
       if (window.location.pathname === "/dashboard") {
-        router.replace(`/dashboard/${user.id}`);
+        router.replace("/notes");
       }
     }
   }, [isLoaded, user, router]);

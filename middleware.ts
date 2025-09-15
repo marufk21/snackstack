@@ -12,16 +12,16 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
 
-  // If user is signed in and trying to access public routes, redirect to their dashboard
+  // If user is signed in and trying to access public routes, redirect to notes
   if (isPublicRoute(req) && (auth as any).userId) {
-    const dashboardUrl = new URL(`/dashboard/${(auth as any).userId}`, req.url);
-    return Response.redirect(dashboardUrl);
+    const notesUrl = new URL("/notes", req.url);
+    return Response.redirect(notesUrl);
   }
 
-  // If user is signed in and trying to access generic dashboard, redirect to their specific dashboard
+  // If user is signed in and trying to access generic dashboard, redirect to notes
   if (req.nextUrl.pathname === "/dashboard" && (auth as any).userId) {
-    const dashboardUrl = new URL(`/dashboard/${(auth as any).userId}`, req.url);
-    return Response.redirect(dashboardUrl);
+    const notesUrl = new URL("/notes", req.url);
+    return Response.redirect(notesUrl);
   }
 });
 
