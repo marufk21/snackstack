@@ -21,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.7.0",
     "dotenv": "^17.2.2",
+    "gsap": "^3.13.0",
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.541.0",
     "next": "15.5.0",
@@ -33,6 +34,7 @@
     "react-textarea-autosize": "^8.5.9",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",
+    "three": "^0.180.0",
     "zod": "^4.1.0",
     "zustand": "^5.0.8"
   },
@@ -41,6 +43,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.180.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.12",
     "tailwind-merge": "^3.3.1",
