@@ -1,16 +1,15 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { aiSuggestionRateLimit, getUserIdentifier } from "@/lib/utils/rate-limit";
 
-// Initialize OpenAI only when needed
-const getOpenAI = () => {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new Error("OpenAI API key not configured");
+// Initialize Gemini only when needed
+const getGemini = () => {
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error("Gemini API key not configured");
   }
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 };
 
 const aiSuggestionSchema = z.object({
@@ -28,9 +27,32 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    // Apply rate limiting
+    const forwarded = request.headers.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+    const userIdentifier = getUserIdentifier(userId, ip);
+    const rateLimitResult = aiSuggestionRateLimit.check(userIdentifier);
+    
+    if (!rateLimitResult.allowed) {
+      const resetTime = rateLimitResult.resetTime ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000) : 60;
       return NextResponse.json(
-        { error: "OpenAI API key not configured" },
+        { 
+          error: "Rate limit exceeded. Please try again later.",
+          retryAfter: resetTime
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': resetTime.toString(),
+            'X-RateLimit-Remaining': '0'
+          }
+        }
+      );
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json(
+        { error: "Gemini API key not configured" },
         { status: 500 }
       );
     }
@@ -57,26 +79,15 @@ export async function POST(request: NextRequest) {
         prompt = `Please improve the following markdown content:\n\n${content}`;
     }
 
-    const openai = getOpenAI();
+    const genAI = getGemini();
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful writing assistant that helps improve markdown content. Always respond with well-formatted markdown. Be concise but helpful.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      max_tokens: 1000,
-      temperature: 0.7,
-    });
+    const systemPrompt = "You are a helpful writing assistant that helps improve markdown content. Always respond with well-formatted markdown. Be concise but helpful.";
+    const fullPrompt = `${systemPrompt}\n\n${prompt}`;
 
-    const suggestion = completion.choices[0]?.message?.content || "";
+    const result = await model.generateContent(fullPrompt);
+    const response = await result.response;
+    const suggestion = response.text();
 
     if (!suggestion) {
       return NextResponse.json(
@@ -96,10 +107,10 @@ export async function POST(request: NextRequest) {
 
     console.error("Error generating AI suggestion:", error);
 
-    // Handle OpenAI specific errors
+    // Handle Gemini specific errors
     if (error instanceof Error && error.message.includes("API key")) {
       return NextResponse.json(
-        { error: "Invalid OpenAI API key" },
+        { error: "Invalid Gemini API key" },
         { status: 401 }
       );
     }
