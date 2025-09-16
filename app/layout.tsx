@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { NotificationContainer } from "@/components/ui/notification";
 import { RedirectHandler } from "@/components/auth/redirect-handler";
+import ErrorBoundary from "@/components/auth/error-boundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,25 +36,29 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ClerkProvider
-          appearance={{
-            elements: {
-              formButtonPrimary:
-                "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
-            },
-          }}
-          afterSignInUrl="/app"
-          afterSignUpUrl="/app"
-        >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <QueryProvider>
-              <RedirectHandler>
-                {children}
-                <NotificationContainer />
-              </RedirectHandler>
-            </QueryProvider>
-          </ThemeProvider>
-        </ClerkProvider>
+        <ErrorBoundary>
+          <ClerkProvider
+            appearance={{
+              elements: {
+                formButtonPrimary:
+                  "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
+              },
+            }}
+            afterSignInUrl="/app"
+            afterSignUpUrl="/app"
+            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
+            dynamic
+          >
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+              <QueryProvider>
+                <RedirectHandler>
+                  {children}
+                  <NotificationContainer />
+                </RedirectHandler>
+              </QueryProvider>
+            </ThemeProvider>
+          </ClerkProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
