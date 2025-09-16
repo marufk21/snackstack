@@ -2,7 +2,10 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { aiSuggestionRateLimit, getUserIdentifier } from "@/lib/utils/rate-limit";
+import {
+  aiSuggestionRateLimit,
+  getUserIdentifier,
+} from "@/lib/utils/rate-limit";
 
 // Initialize Gemini only when needed
 const getGemini = () => {
@@ -28,24 +31,28 @@ export async function POST(request: NextRequest) {
     }
 
     // Apply rate limiting
-    const forwarded = request.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip') || 'unknown';
+    const forwarded = request.headers.get("x-forwarded-for");
+    const ip = forwarded
+      ? forwarded.split(",")[0]
+      : request.headers.get("x-real-ip") || "unknown";
     const userIdentifier = getUserIdentifier(userId, ip);
     const rateLimitResult = aiSuggestionRateLimit.check(userIdentifier);
-    
+
     if (!rateLimitResult.allowed) {
-      const resetTime = rateLimitResult.resetTime ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000) : 60;
+      const resetTime = rateLimitResult.resetTime
+        ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
+        : 60;
       return NextResponse.json(
-        { 
+        {
           error: "Rate limit exceeded. Please try again later.",
-          retryAfter: resetTime
+          retryAfter: resetTime,
         },
-        { 
+        {
           status: 429,
           headers: {
-            'Retry-After': resetTime.toString(),
-            'X-RateLimit-Remaining': '0'
-          }
+            "Retry-After": resetTime.toString(),
+            "X-RateLimit-Remaining": "0",
+          },
         }
       );
     }
@@ -82,7 +89,8 @@ export async function POST(request: NextRequest) {
     const genAI = getGemini();
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const systemPrompt = "You are a helpful writing assistant that helps improve markdown content. Always respond with well-formatted markdown. Be concise but helpful.";
+    const systemPrompt =
+      "You are a helpful writing assistant that helps improve markdown content. Always respond with well-formatted markdown. Be concise but helpful.";
     const fullPrompt = `${systemPrompt}\n\n${prompt}`;
 
     const result = await model.generateContent(fullPrompt);
