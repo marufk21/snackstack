@@ -9,12 +9,17 @@ class InMemoryRateLimit {
   private limit: number;
   private windowMs: number;
 
-  constructor(limit: number = 10, windowMs: number = 60000) { // 10 requests per minute by default
+  constructor(limit: number = 10, windowMs: number = 60000) {
+    // 10 requests per minute by default
     this.limit = limit;
     this.windowMs = windowMs;
   }
 
-  check(identifier: string): { allowed: boolean; resetTime?: number; remaining?: number } {
+  check(identifier: string): {
+    allowed: boolean;
+    resetTime?: number;
+    remaining?: number;
+  } {
     const now = Date.now();
     const entry = this.requests.get(identifier);
 
@@ -29,20 +34,20 @@ class InMemoryRateLimit {
 
     if (entry.count >= this.limit) {
       // Rate limit exceeded
-      return { 
-        allowed: false, 
+      return {
+        allowed: false,
         resetTime: entry.resetTime,
-        remaining: 0 
+        remaining: 0,
       };
     }
 
     // Increment count
     entry.count++;
     this.requests.set(identifier, entry);
-    
-    return { 
-      allowed: true, 
-      remaining: this.limit - entry.count 
+
+    return {
+      allowed: true,
+      remaining: this.limit - entry.count,
     };
   }
 
@@ -62,7 +67,7 @@ export const aiSuggestionRateLimit = new InMemoryRateLimit(5, 60000); // 5 reque
 
 // Utility function to get user identifier for rate limiting
 export function getUserIdentifier(userId: string, ip?: string): string {
-  return userId || ip || 'anonymous';
+  return userId || ip || "anonymous";
 }
 
 // Cleanup expired entries every 5 minutes
