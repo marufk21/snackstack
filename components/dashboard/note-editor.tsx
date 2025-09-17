@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { ImageUpload } from "../ui/image-upload";
+import { NoteBottomBar } from "./note-bottom-bar";
 import TextareaAutosize from "react-textarea-autosize";
 import {
   Save,
@@ -15,7 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createNote, updateNote, generateAiSuggestion } from "@/server/api";
+import { createNote, updateNote } from "@/server/api";
 import { useAppStore } from "../../stores/use-app-store";
 
 interface NoteEditorProps {
@@ -92,39 +93,6 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
     },
   });
 
-  // AI suggestion mutation
-  const aiSuggestionMutation = useMutation({
-    mutationFn: async (
-      type: "improve" | "continue" | "summarize" | "expand"
-    ) => {
-      return generateAiSuggestion({ content, type });
-    },
-    onMutate: () => {
-      setIsGeneratingAI(true);
-    },
-    onSuccess: (suggestion) => {
-      if (suggestion) {
-        // For now, we'll replace the content with the suggestion
-        // In a real app, you might want to show this in a modal for user approval
-        setContent(suggestion);
-        addNotification({
-          type: "success",
-          message: "AI suggestion applied",
-        });
-      }
-    },
-    onError: (error) => {
-      console.error("Error generating AI suggestion:", error);
-      addNotification({
-        type: "error",
-        message: "Failed to generate AI suggestion",
-      });
-    },
-    onSettled: () => {
-      setIsGeneratingAI(false);
-    },
-  });
-
   // Auto-save logic
   const scheduleAutosave = useCallback(() => {
     if (autosaveTimeoutRef.current) {
@@ -176,7 +144,7 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="max-w-4xl mx-auto p-6 space-y-6 pb-32">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -259,53 +227,6 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
               minRows={15}
             />
           </div>
-
-          {/* AI Actions */}
-          <div className="flex items-center gap-2 pt-4 border-t">
-            <Button
-              onClick={() => aiSuggestionMutation.mutate("improve")}
-              disabled={!content.trim() || isGeneratingAI}
-              variant="outline"
-              size="sm"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Improve with AI
-            </Button>
-
-            <Button
-              onClick={() => aiSuggestionMutation.mutate("continue")}
-              disabled={!content.trim() || isGeneratingAI}
-              variant="outline"
-              size="sm"
-            >
-              Continue
-            </Button>
-
-            <Button
-              onClick={() => aiSuggestionMutation.mutate("summarize")}
-              disabled={!content.trim() || isGeneratingAI}
-              variant="outline"
-              size="sm"
-            >
-              Summarize
-            </Button>
-
-            <Button
-              onClick={() => aiSuggestionMutation.mutate("expand")}
-              disabled={!content.trim() || isGeneratingAI}
-              variant="outline"
-              size="sm"
-            >
-              Expand
-            </Button>
-
-            {isGeneratingAI && (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                Generating AI suggestion...
-              </div>
-            )}
-          </div>
         </div>
       </Card>
 
@@ -319,6 +240,9 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
           />
         </Card>
       )}
+
+      {/* Fixed Bottom Bar with AI and Upload */}
+      <NoteBottomBar />
     </div>
   );
 }
