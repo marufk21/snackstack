@@ -1,26 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getNotes, type Note } from "@/server/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { WelcomeHeader } from "@/components/ui/welcome-header";
-import {
-  Plus,
-  Edit,
-  Eye,
-  Calendar,
-  Clock,
-  Loader2,
-  FileText,
-  ImageIcon,
-} from "lucide-react";
+import { NoteCard } from "@/components/dashboard/note-card";
+import { NoteViewModal } from "@/components/dashboard/note-view-modal";
+import { Plus, Loader2, FileText } from "lucide-react";
 
 export default function NotesPage() {
   const router = useRouter();
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch all notes
   const { data, isLoading, error } = useQuery({
@@ -92,96 +86,31 @@ export default function NotesPage() {
           </Button>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {notes.map((note) => {
-            const createdDate = new Date(note.createdAt);
-            const updatedDate = new Date(note.updatedAt);
-            const isUpdated = updatedDate.getTime() !== createdDate.getTime();
-
-            // Extract first few lines of content for preview
-            const preview = note.content
-              .split("\n")
-              .slice(0, 3)
-              .join(" ")
-              .substring(0, 150);
-
-            return (
-              <Card
+        <>
+          {/* Modern Notes Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {notes.map((note) => (
+              <NoteCard
                 key={note.id}
-                className="p-6 hover:shadow-lg transition-shadow"
-              >
-                <div className="flex flex-col h-full">
-                  {/* Title and metadata */}
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold mb-2 line-clamp-2">
-                      {note.title}
-                    </h3>
+                note={note}
+                onClick={() => {
+                  setSelectedNote(note);
+                  setIsModalOpen(true);
+                }}
+              />
+            ))}
+          </div>
 
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <Calendar className="w-3 h-3" />
-                      {createdDate.toLocaleDateString()}
-
-                      {isUpdated && (
-                        <>
-                          <span>•</span>
-                          <Clock className="w-3 h-3" />
-                          Updated {updatedDate.toLocaleDateString()}
-                        </>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary" className="text-xs">
-                        {note.slug}
-                      </Badge>
-
-                      {note.imageUrl && (
-                        <Badge
-                          variant="outline"
-                          className="text-xs flex items-center gap-1"
-                        >
-                          <ImageIcon className="w-3 h-3" />
-                          Image
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Content preview */}
-                  <div className="flex-1 mb-4">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
-                      {preview}
-                      {preview.length >= 150 ? "..." : ""}
-                    </p>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={() => router.push(`/app/${note.slug}`)}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      View
-                    </Button>
-
-                    <Button
-                      onClick={() => router.push(`/app/edit/${note.id}`)}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+          {/* Note View/Edit Modal */}
+          <NoteViewModal
+            note={selectedNote}
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setSelectedNote(null);
+            }}
+          />
+        </>
       )}
     </div>
   );
