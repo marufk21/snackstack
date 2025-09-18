@@ -2,8 +2,6 @@
 
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { type Note } from "@/server/api";
 import {
   Calendar,
@@ -57,51 +55,6 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
           <h3 className="text-lg font-semibold mb-3 line-clamp-2 group-hover:text-foreground transition-colors">
             {note.title}
           </h3>
-
-          {/* Metadata */}
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-            <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              <span>{createdDate.toLocaleDateString()}</span>
-            </div>
-
-            {isUpdated && (
-              <>
-                <span>•</span>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  <span>Updated {updatedDate.toLocaleDateString()}</span>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Tags */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <Badge variant="secondary" className="text-xs px-2 py-1">
-              {note.slug}
-            </Badge>
-
-            {note.imageUrl && (
-              <Badge
-                variant="outline"
-                className="text-xs px-2 py-1 flex items-center gap-1"
-              >
-                <ImageIcon className="w-3 h-3" />
-                <span>Image</span>
-              </Badge>
-            )}
-
-            {note.content.length > 1000 && (
-              <Badge
-                variant="outline"
-                className="text-xs px-2 py-1 flex items-center gap-1"
-              >
-                <FileText className="w-3 h-3" />
-                <span>Long</span>
-              </Badge>
-            )}
-          </div>
         </div>
 
         {/* Image preview */}
@@ -117,42 +70,14 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
 
         {/* Content preview */}
         <div className="flex-1 mb-4">
-          <p className="text-sm text-muted-foreground line-clamp-4 leading-relaxed">
+          <p className="text-sm text-muted-foreground truncate leading-relaxed">
             {preview}
             {preview.length >= 180 ? "..." : ""}
           </p>
         </div>
 
         {/* Quick action buttons - show on hover */}
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
-          <Button
-            onClick={(e) => {
-              e.stopPropagation();
-              onClick();
-            }}
-            variant="ghost"
-            size="sm"
-            className="flex-1 h-8 text-xs"
-          >
-            <Edit3 className="w-3 h-3 mr-1" />
-            Edit
-          </Button>
-
-          {/* AI suggestion indicator */}
-          {note.content.length > 100 && (
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onClick(); // Open modal for AI features
-              }}
-              variant="ghost"
-              size="sm"
-              className="h-8 text-xs"
-            >
-              <Sparkles className="w-3 h-3" />
-            </Button>
-          )}
-        </div>
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0"></div>
 
         {/* Subtle corner decoration */}
         <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-white/20 to-transparent dark:from-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

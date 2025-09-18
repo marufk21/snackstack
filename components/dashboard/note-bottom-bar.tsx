@@ -14,6 +14,9 @@ import {
   X,
   Upload,
   Loader2,
+  Clock,
+  Calendar,
+  CircleDot,
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { generateAiSuggestion } from "@/server/api";
@@ -23,20 +26,45 @@ import { useImageUpload } from "@/hooks/use-image-upload";
 
 interface NoteBottomBarProps {
   className?: string;
+  isModal?: boolean;
+  // Optional props for modal mode
+  modalContent?: string;
+  modalSetContent?: (content: string) => void;
+  modalImageUrl?: string | null;
+  modalSetImageUrl?: (url: string | null) => void;
+  // Image upload handler
+  onImageUpload?: (url: string) => void;
+  // Status info for modal
+  lastSaved?: Date | null;
+  updatedDate?: Date | null;
+  isDirty?: boolean;
 }
 
-export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
+export function NoteBottomBar({
+  className = "",
+  isModal = false,
+  modalContent,
+  modalSetContent,
+  modalImageUrl,
+  modalSetImageUrl,
+  onImageUpload,
+  lastSaved,
+  updatedDate,
+  isDirty,
+}: NoteBottomBarProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showImageUpload, setShowImageUpload] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
-    content,
+    content: storeContent,
     isGeneratingAI,
-    setContent,
-    setImageUrl,
+    setContent: setStoreContent,
     setIsGeneratingAI,
   } = useNoteEditorStore();
+
+  // Use modal props if in modal mode, otherwise use store
+  const content = isModal ? modalContent || "" : storeContent;
+  const setContent = isModal ? modalSetContent || (() => {}) : setStoreContent;
 
   const { addNotification } = useAppStore();
   const { uploadImage, isUploading, error } = useImageUpload();
@@ -80,12 +108,17 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
     const result = await uploadImage(file);
 
     if (result) {
-      setImageUrl(result.secure_url);
+      // Use modal setImageUrl if in modal mode, otherwise use onImageUpload callback
+      if (isModal && modalSetImageUrl) {
+        modalSetImageUrl(result.secure_url);
+      } else if (onImageUpload) {
+        onImageUpload(result.secure_url);
+      }
+
       addNotification({
         type: "success",
         message: "Image uploaded successfully",
       });
-      setShowImageUpload(false);
     }
   };
 
@@ -95,9 +128,6 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
 
   const toggleExpanded = () => {
     setIsExpanded(!isExpanded);
-    if (showImageUpload) {
-      setShowImageUpload(false);
-    }
   };
 
   const handleAISuggestion = (
@@ -115,88 +145,61 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
 
   return (
     <>
-      {/* Image Upload Modal */}
-      {showImageUpload && (
-        <div className="fixed inset-0 bg-black/50 z-40 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Upload Image</h3>
-              <Button
-                onClick={() => setShowImageUpload(false)}
-                variant="ghost"
-                size="sm"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div
-              className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
-              onClick={handleFileSelect}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e.target.files)}
-                className="hidden"
-              />
-
-              {isUploading ? (
-                <div className="flex flex-col items-center space-y-2">
-                  <Loader2 className="w-8 h-8 animate-spin text-primary" />
-                  <p className="text-sm text-muted-foreground">Uploading...</p>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center space-y-2">
-                  <Upload className="w-8 h-8 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm font-medium">
-                      Drop an image here or click to browse
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      PNG, JPG, GIF, WebP up to 5MB
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {error && <p className="text-sm text-destructive mt-2">{error}</p>}
-          </Card>
-        </div>
-      )}
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={(e) => handleImageUpload(e.target.files)}
+        className="hidden"
+      />
 
       {/* Fixed Bottom Bar */}
-      <div className={`fixed bottom-0 left-0 right-0 z-30 ${className}`}>
-        <div className="bg-background/95 backdrop-blur-sm border-t border-border">
-          <div className="max-w-4xl mx-auto p-4">
-            <Card className="shadow-lg border-border/50">
+      <div
+        className={`${
+          isModal ? "relative" : "fixed bottom-0 left-0 right-0"
+        } z-30 ${className}`}
+      >
+        <div
+          className={`${
+            isModal
+              ? ""
+              : "bg-background/95 backdrop-blur-sm border-t border-border"
+          }`}
+        >
+          <div className={`${isModal ? "" : "max-w-4xl mx-auto"} p-4`}>
+           
+            <Card className="shadow-xl border-border/40 bg-card/95 backdrop-blur-sm">
               <div className="p-4">
-                {/* Expanded AI Actions */}
+                {/* Expanded AI Actions - Modern Design */}
                 {isExpanded && (
-                  <div className="mb-4 space-y-3">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div className="mb-6 space-y-4">
+                    <div className="flex items-center gap-3 pb-3 border-b border-border/30">
                       <Sparkles className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-medium">AI Assistant</span>
+                      <span className="text-sm font-semibold text-foreground">
+                        AI Assistant
+                      </span>
                       {isGeneratingAI && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge
+                          variant="secondary"
+                          className="text-xs bg-primary/10 text-primary border-primary/20"
+                        >
                           <Loader2 className="w-3 h-3 animate-spin mr-1" />
                           Working...
                         </Badge>
                       )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-3">
                       <Button
                         onClick={() => handleAISuggestion("improve")}
                         disabled={isGeneratingAI}
                         variant="outline"
                         size="sm"
-                        className="text-xs"
+                        className="h-10 text-xs font-medium border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all"
                       >
-                        <Wand2 className="w-3 h-3 mr-1" />
-                        Improve
+                        <Wand2 className="w-3 h-3 mr-2" />
+                        Improve Text
                       </Button>
 
                       <Button
@@ -204,10 +207,10 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
                         disabled={isGeneratingAI}
                         variant="outline"
                         size="sm"
-                        className="text-xs"
+                        className="h-10 text-xs font-medium border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all"
                       >
-                        <Type className="w-3 h-3 mr-1" />
-                        Continue
+                        <Type className="w-3 h-3 mr-2" />
+                        Continue Writing
                       </Button>
 
                       <Button
@@ -215,9 +218,9 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
                         disabled={isGeneratingAI}
                         variant="outline"
                         size="sm"
-                        className="text-xs"
+                        className="h-10 text-xs font-medium border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all"
                       >
-                        <Sparkles className="w-3 h-3 mr-1" />
+                        <Sparkles className="w-3 h-3 mr-2" />
                         Summarize
                       </Button>
 
@@ -226,24 +229,24 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
                         disabled={isGeneratingAI}
                         variant="outline"
                         size="sm"
-                        className="text-xs"
+                        className="h-10 text-xs font-medium border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all"
                       >
-                        <Mic className="w-3 h-3 mr-1" />
-                        Expand
+                        <Mic className="w-3 h-3 mr-2" />
+                        Expand Content
                       </Button>
                     </div>
                   </div>
                 )}
 
-                {/* Main Action Bar */}
+                {/* Main Action Bar - Modern Design */}
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     {/* Image Upload Button */}
                     <Button
-                      onClick={() => setShowImageUpload(true)}
+                      onClick={handleFileSelect}
                       variant="ghost"
                       size="sm"
-                      className="rounded-full w-9 h-9 p-0"
+                      className="w-10 h-10 p-0 rounded-xl hover:bg-primary/10 hover:text-primary transition-all"
                       disabled={isUploading}
                     >
                       {isUploading ? (
@@ -259,9 +262,9 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
                       disabled={!content.trim() || isGeneratingAI}
                       variant="ghost"
                       size="sm"
-                      className="text-xs px-3"
+                      className="h-10 px-4 text-xs font-medium hover:bg-primary/10 hover:text-primary transition-all"
                     >
-                      <Sparkles className="w-3 h-3 mr-1" />
+                      <Sparkles className="w-3 h-3 mr-2" />
                       {isGeneratingAI ? "Working..." : "AI Assist"}
                     </Button>
                   </div>
@@ -271,10 +274,20 @@ export function NoteBottomBar({ className = "" }: NoteBottomBarProps) {
                     onClick={toggleExpanded}
                     variant="ghost"
                     size="sm"
-                    className="text-xs"
+                    className="h-10 px-4 text-xs font-medium hover:bg-muted/60 transition-colors"
                   >
-                    {isExpanded ? "Less" : "More AI"}
+                    {isExpanded ? "Show Less" : "More AI Tools"}
                   </Button>
+
+                  {updatedDate && (
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Calendar className="w-3 h-3" />
+                      <span className="font-medium">Updated:</span>
+                      <span className="text-foreground">
+                        {updatedDate.toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>

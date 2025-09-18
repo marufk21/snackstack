@@ -6,9 +6,8 @@ import { updateNote, type Note } from "@/server/api";
 import { useAppStore } from "@/stores/use-app-store";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ImageUpload } from "@/components/ui/image-upload";
+
 import { NoteBottomBar } from "./note-bottom-bar";
-import TextareaAutosize from "react-textarea-autosize";
 import {
   Dialog,
   DialogContent,
@@ -128,129 +127,124 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-4xl max-h-[90vh] overflow-hidden p-0"
+        className="max-w-4xl h-[95vh] flex flex-col p-0"
         showCloseButton={false}
       >
-        {/* Custom Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <div className="flex items-center gap-3">
-            <DialogTitle className="text-xl font-semibold">
-              Edit Note
-            </DialogTitle>
-            {isDirty && <Badge variant="secondary">Unsaved changes</Badge>}
-            {isSaving && (
-              <Badge variant="outline" className="flex items-center gap-1">
-                <Loader2 className="w-3 h-3 animate-spin" />
-                Saving...
-              </Badge>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Metadata */}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mr-4">
-              <div className="flex items-center gap-1">
-                <Calendar className="w-3 h-3" />
-                {createdDate.toLocaleDateString()}
-              </div>
-              {isUpdated && (
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {updatedDate.toLocaleDateString()}
-                </div>
-              )}
-              {lastSaved && (
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {lastSaved.toLocaleTimeString()}
-                </div>
-              )}
-            </div>
-
-            {/* Action buttons */}
-            <Button
-              onClick={handleSave}
-              disabled={!isDirty || !title.trim() || isSaving}
-              variant="outline"
-              size="sm"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Save
-            </Button>
-
-            <Button onClick={onClose} variant="ghost" size="sm">
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Content - Always in Edit Mode */}
-        <div className="flex-1 overflow-y-auto p-6 pb-32">
-          <div className="space-y-6">
-            {/* Title */}
-            <div>
+        <DialogHeader className="flex-shrink-0 px-8 py-0 pt-4 border-b border-border/20 bg-background/98 backdrop-blur-md">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-xl font-semibold tracking-tight text-foreground">
               <input
                 type="text"
                 placeholder="Enter note title..."
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className="w-full text-2xl font-bold bg-transparent border-none outline-none placeholder-muted-foreground"
+                className="w-full text-3xl font-bold bg-transparent border-none outline-none placeholder-muted-foreground/50 focus:placeholder-muted-foreground/30 transition-all duration-200 text-foreground"
               />
-              <Badge variant="secondary" className="mt-2">
-                {note.slug}
-              </Badge>
-            </div>
+            </DialogTitle>
 
-            {/* Image Upload */}
-            <div className="flex items-center gap-4">
-              <ImageUpload onUpload={handleImageUpload} />
-              {imageUrl && (
-                <div className="flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4" />
-                  <span className="text-sm text-muted-foreground">
-                    Image attached
-                  </span>
-                  <Button
-                    onClick={() => {
-                      setImageUrl(null);
-                      setIsDirty(true);
-                    }}
-                    variant="ghost"
-                    size="sm"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              )}
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={handleSave}
+                disabled={!isDirty || !title.trim() || isSaving}
+                variant="default"
+                size="sm"
+                className="min-w-24 h-9 px-4 font-medium bg-primary hover:bg-primary/90 transition-colors"
+              >
+                {isSaving ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4 mr-2" />
+                )}
+                {isSaving ? "Saving..." : "Save"}
+              </Button>
+              <Button
+                onClick={onClose}
+                variant="ghost"
+                size="sm"
+                className="w-9 h-9 p-0 rounded-lg hover:bg-muted/60 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </DialogHeader>
+
+        {/* Content - With Scroll */}
+        <div className="flex-1 overflow-y-auto px-8 py-0">
+          <div className="space-y-8 max-w-none">
+            {/* Title Section */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 pt-2 border-t border-border/20">
+                {isDirty && (
+                  <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                    <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                    Unsaved changes
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Attached Image Preview */}
             {imageUrl && (
-              <div className="border rounded-lg p-4">
+              <div className="relative border border-border/30 rounded-xl p-4 bg-muted/20">
+                <Button
+                  onClick={() => {
+                    setImageUrl(null);
+                    setIsDirty(true);
+                  }}
+                  variant="ghost"
+                  size="sm"
+                  className="absolute top-2 right-2 w-8 h-8 p-0 rounded-full bg-background/80 hover:bg-destructive/10 hover:text-destructive transition-colors backdrop-blur-sm border border-border/20 z-10"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
                 <img
                   src={imageUrl}
                   alt="Note attachment"
-                  className="max-w-full h-auto rounded-lg"
+                  className="max-w-full h-auto rounded-lg shadow-sm"
                 />
               </div>
             )}
 
             {/* Content Editor */}
-            <div>
-              <TextareaAutosize
-                placeholder="Start writing your note in markdown..."
-                value={content}
-                onChange={(e) => handleContentChange(e.target.value)}
-                className="w-full min-h-[400px] p-4 bg-muted/50 rounded-lg border-none outline-none resize-none font-mono text-sm"
-                minRows={15}
-              />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                  Content
+                </label>
+                <Badge variant="outline" className="text-xs">
+                  Markdown Supported
+                </Badge>
+              </div>
+              <div className="relative">
+                <textarea
+                  placeholder="Start writing your note in markdown...\n\nSupported formatting:\n- **bold** and *italic*\n- # Headers\n- - Lists\n- `code` blocks"
+                  value={content}
+                  onChange={(e) => handleContentChange(e.target.value)}
+                  className="w-full min-h-[450px] p-6 bg-muted/20 rounded-xl border border-border/30 outline-none resize-none font-mono text-sm leading-relaxed focus:ring-2 focus:ring-primary/15 focus:border-primary/40 focus:bg-background/50 transition-all duration-200 placeholder:text-muted-foreground/40"
+                  rows={18}
+                />
+                <div className="absolute bottom-4 right-4 text-xs text-muted-foreground bg-background/80 px-2 py-1 rounded">
+                  {content.length} characters
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar for Modal */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <NoteBottomBar />
+        <div className="flex-shrink-0 border-t border-border/20 bg-background/98 backdrop-blur-md">
+          <NoteBottomBar
+            isModal={true}
+            modalContent={content}
+            modalSetContent={handleContentChange}
+            modalImageUrl={imageUrl}
+            modalSetImageUrl={setImageUrl}
+            onImageUpload={handleImageUpload}
+            lastSaved={lastSaved}
+            updatedDate={isUpdated ? updatedDate : null}
+            isDirty={isDirty}
+          />
         </div>
       </DialogContent>
     </Dialog>
