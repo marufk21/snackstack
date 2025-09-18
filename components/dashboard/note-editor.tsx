@@ -5,7 +5,7 @@ import { useNoteEditorStore } from "../../stores/use-note-editor-store";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { ImageUpload } from "../ui/image-upload";
+
 import { NoteBottomBar } from "./note-bottom-bar";
 import TextareaAutosize from "react-textarea-autosize";
 import {
@@ -197,25 +197,22 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
             )}
           </div>
 
-          {/* Image Upload */}
-          <div className="flex items-center gap-4">
-            <ImageUpload onUpload={handleImageUpload} />
-            {imageUrl && (
-              <div className="flex items-center gap-2">
-                <ImageIcon className="w-4 h-4" />
-                <span className="text-sm text-muted-foreground">
-                  Image attached
-                </span>
-                <Button
-                  onClick={() => setImageUrl(null)}
-                  variant="ghost"
-                  size="sm"
-                >
-                  Remove
-                </Button>
-              </div>
-            )}
-          </div>
+          {/* Image Display */}
+          {imageUrl && (
+            <div className="flex items-center gap-2">
+              <ImageIcon className="w-4 h-4" />
+              <span className="text-sm text-muted-foreground">
+                Image attached
+              </span>
+              <Button
+                onClick={() => setImageUrl(null)}
+                variant="ghost"
+                size="sm"
+              >
+                Remove
+              </Button>
+            </div>
+          )}
 
           {/* Content Editor */}
           <div>
@@ -242,7 +239,7 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
       )}
 
       {/* Fixed Bottom Bar with AI and Upload */}
-      <NoteBottomBar />
+      <NoteBottomBar onImageUpload={handleImageUpload} />
     </div>
   );
 }
