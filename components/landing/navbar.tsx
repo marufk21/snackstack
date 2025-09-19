@@ -25,6 +25,10 @@ const navItems: NavItem[] = [
     href: "/app", // Main dashboard/notes app
   },
   {
+    label: "Pricing",
+    href: "/app/pricing", // Pricing page
+  },
+  {
     label: "Teams",
     href: "/app/new", // Create new note (collaborate)
   },

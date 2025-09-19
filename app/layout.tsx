@@ -44,8 +44,8 @@ export default function RootLayout({
                   "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
               },
             }}
-            afterSignInUrl="/app"
-            afterSignUpUrl="/app"
+            signInFallbackRedirectUrl="/app"
+            signUpFallbackRedirectUrl="/app"
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
             dynamic
           >
