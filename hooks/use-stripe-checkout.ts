@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-
-// Get publishable key from environment (client-side safe)
-const getStripePublishableKey = () => {
-  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-    throw new Error("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set");
-  }
-  return process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-};
+import { getStripePublishableKey } from "@/config/stripe-client";
 
 export function useStripeCheckout() {
   const [loading, setLoading] = useState(false);
