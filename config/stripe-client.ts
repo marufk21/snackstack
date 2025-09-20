@@ -2,10 +2,12 @@
 // Only contains data that's safe to expose to the browser
 
 export const stripePriceIds = {
-  basic: process.env.STRIPE_PRICE_ID_BASIC || "price_basic_fallback",
-  pro: process.env.STRIPE_PRICE_ID_PRO || "price_pro_fallback",
+  basic:
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC || "price_basic_fallback",
+  pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "price_pro_fallback",
   enterprise:
-    process.env.STRIPE_PRICE_ID_ENTERPRISE || "price_enterprise_fallback",
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE ||
+    "price_enterprise_fallback",
 } as const;
 
 export const getStripePublishableKey = () => {
