@@ -1,10 +1,11 @@
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
-import LiquidEther from "@/components/LiquidEther";
+import LiquidEther from "@/components/landing/liquid-ether";
+import PageWrapper from "@/components/landing/page-wrapper";
 
 const Page = () => {
   return (
     <>
-      <section className="py-0 px-4 sm:px-6 lg:px-8 h-full">
+      <PageWrapper>
         <div className="absolute inset-0 z-0">
           <LiquidEther
             colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
@@ -49,7 +50,7 @@ const Page = () => {
             </SignInButton>
           </div>
         </div>
-      </section>
+      </PageWrapper>
     </>
   );
 };
