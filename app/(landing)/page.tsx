@@ -1,8 +1,12 @@
+"use client";
+
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
 import LiquidEther from "@/components/landing/liquid-ether";
 import PageWrapper from "@/components/landing/page-wrapper";
+import { usePostHog } from "@/hooks/use-posthog";
 
 const Page = () => {
+  const { capture } = usePostHog();
   return (
     <>
       <PageWrapper>
@@ -39,12 +43,28 @@ const Page = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <SignUpButton>
-              <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
+              <button
+                onClick={() =>
+                  capture("get_started_clicked", {
+                    button: "get_started",
+                    location: "landing_page",
+                  })
+                }
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
                 Get Started
               </button>
             </SignUpButton>
             <SignInButton>
-              <button className="border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 px-8 py-4 rounded-lg font-medium transition-all duration-200">
+              <button
+                onClick={() =>
+                  capture("sign_in_clicked", {
+                    button: "sign_in",
+                    location: "landing_page",
+                  })
+                }
+                className="border border-border text-muted-foreground hover:text-foreground hover:border-foreground/50 px-8 py-4 rounded-lg font-medium transition-all duration-200"
+              >
                 Sign In
               </button>
             </SignInButton>
