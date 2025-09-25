@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
+import { PostHogProvider } from "@/providers/posthog-provider";
 import { NotificationContainer } from "@/components/ui/notification";
 import { RedirectHandler } from "@/components/auth/redirect-handler";
 import ErrorBoundary from "@/components/auth/error-boundary";
@@ -49,14 +50,20 @@ export default function RootLayout({
             publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
             dynamic
           >
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-              <QueryProvider>
-                <RedirectHandler>
-                  {children}
-                  <NotificationContainer />
-                </RedirectHandler>
-              </QueryProvider>
-            </ThemeProvider>
+            <PostHogProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+              >
+                <QueryProvider>
+                  <RedirectHandler>
+                    {children}
+                    <NotificationContainer />
+                  </RedirectHandler>
+                </QueryProvider>
+              </ThemeProvider>
+            </PostHogProvider>
           </ClerkProvider>
         </ErrorBoundary>
       </body>
