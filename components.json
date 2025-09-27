@@ -4,12 +4,13 @@
   "rsc": true,
   "tsx": true,
   "tailwind": {
-    "config": "",
+    "config": "tailwind.config.ts",
     "css": "app/globals.css",
-    "baseColor": "stone",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
+  "iconLibrary": "radix",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
@@ -17,5 +18,12 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "iconLibrary": "lucide"
+
+  "registries": {
+    "@aceternity": "https://ui.aceternity.com/registry/{name}.json"
+  },
+
+  "comment": {
+    "add-registries-from-shadcn": "https://ui.shadcn.com/r/registries.json"
+  }
 }
