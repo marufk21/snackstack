@@ -20,9 +20,46 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SnackStack - Modern Web App Starter",
+  title: "SnackStack - Modern Development Solutions",
   description:
-    "A production-ready Next.js starter template with authentication, database integration, state management, and beautiful UI components.",
+    "Transform your development workflow with SnackStack. Build faster, scale better, and deliver exceptional digital experiences with our cutting-edge platform.",
+  keywords: [
+    "web development",
+    "full-stack development", 
+    "React",
+    "Next.js",
+    "TypeScript",
+    "modern development",
+    "scalable solutions",
+    "developer tools"
+  ],
+  authors: [{ name: "SnackStack Team" }],
+  creator: "SnackStack",
+  publisher: "SnackStack",
+  openGraph: {
+    title: "SnackStack - Modern Development Solutions",
+    description: "Transform your development workflow with SnackStack. Build faster, scale better, and deliver exceptional digital experiences.",
+    siteName: "SnackStack",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SnackStack - Modern Development Solutions",
+    description: "Transform your development workflow with SnackStack. Build faster, scale better, and deliver exceptional digital experiences.",
+    creator: "@snackstack",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
