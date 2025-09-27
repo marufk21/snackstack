@@ -1,0 +1,57 @@
+# SnackStack Project - Cursor Rules
+
+## Project Overview
+
+SnackStack is a Next.js 15+ application with TypeScript, featuring note-taking functionality with AI suggestions, authentication, and subscription management.
+
+## Tech Stack
+
+- **Framework**: Next.js 14+ with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **Database**: Prisma ORM with PostgreSQL
+- **Authentication**: Clerk
+- **Payments**: Stripe
+- **Analytics**: PostHog
+- **State Management**: Zustand
+- **Data Fetching**: React Query (TanStack Query)
+- **File Upload**: Cloudinary
+- **AI**: Gemini API
+
+## Documentation Structure
+
+This project follows organized documentation split across multiple files:
+
+📁 **Detailed Guidelines:**
+
+- 📄 [Code Conventions](./.cursor/code-conventions.md) - TypeScript, component structure, naming
+- 📄 [Project Structure](./.cursor/project-structure.md) - Folder organization and architecture
+- 📄 [API Guidelines](./.cursor/api-guidelines.md) - API routes, database, authentication
+- 📄 [Styling Guide](./.cursor/styling-guide.md) - Tailwind CSS, shadcn/ui, design system
+- 📄 [Integrations](./.cursor/integrations.md) - Third-party services and configurations
+
+## Quick Reference
+
+### Essential Rules
+- Always use Pnpm for install and build commands
+- Use TypeScript strictly (no `any` types)
+- Prefer function declarations for components
+- Use kebab-case for files/folders
+- Always use MCP Shadcn Server for UI components
+- Follow established patterns in the codebase
+
+### File Types
+
+- Components: `.tsx`
+- Utilities: `.ts`
+- API routes: `route.ts`
+- Pages: `page.tsx`
+
+### Key Folders
+
+- `/app` - Next.js App Router
+- `/components` - UI components by feature
+- `/lib` - Utilities and shared logic
+- `/server` - Server-side logic and database
+
+For detailed information on any topic, refer to the specific documentation files listed above.
