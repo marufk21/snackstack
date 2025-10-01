@@ -1,3 +1,28 @@
+// Environment validation
+const validateEnvironment = () => {
+  const requiredEnvVars = ["DATABASE_URL", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"];
+
+  const missingVars = requiredEnvVars.filter(
+    (varName) => !process.env[varName]
+  );
+
+  if (missingVars.length > 0) {
+    console.warn(
+      `Missing required environment variables: ${missingVars.join(", ")}`
+    );
+  }
+
+  // PostHog is optional
+  if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+    console.warn(
+      "NEXT_PUBLIC_POSTHOG_KEY is not set. PostHog analytics will be disabled."
+    );
+  }
+};
+
+// Validate environment on import
+validateEnvironment();
+
 // Application-wide configuration
 export const appConfig = {
   name: "SnackStack",
