@@ -20,6 +20,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Check if database is available
+    try {
+      await db.$connect();
+    } catch (dbError) {
+      console.error("Database connection error:", dbError);
+      return NextResponse.json(
+        { error: "Database connection failed" },
+        { status: 503 }
+      );
+    }
+
     // First, find or create the user in our database
     let user = await db.user.findFirst({
       where: { email: userId }, // Using Clerk userId as email identifier
@@ -49,10 +60,31 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ notes: userNotes });
   } catch (error) {
     console.error("Error fetching notes:", error);
+
+    // More specific error handling
+    if (error instanceof Error) {
+      if (error.message.includes("connection")) {
+        return NextResponse.json(
+          { error: "Database connection failed" },
+          { status: 503 }
+        );
+      }
+      if (error.message.includes("timeout")) {
+        return NextResponse.json({ error: "Request timeout" }, { status: 408 });
+      }
+    }
+
     return NextResponse.json(
       { error: "Failed to fetch notes" },
       { status: 500 }
     );
+  } finally {
+    // Ensure database connection is closed
+    try {
+      await db.$disconnect();
+    } catch (disconnectError) {
+      console.error("Error disconnecting from database:", disconnectError);
+    }
   }
 }
 

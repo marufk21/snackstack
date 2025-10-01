@@ -17,9 +17,24 @@ export default function NotesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch all notes
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["notes"],
     queryFn: getNotes,
+    retry: (failureCount, error) => {
+      // Don't retry on 401, 403, 404, 503 errors
+      if (error && typeof error === "object" && "response" in error) {
+        const response = (error as any).response;
+        if (
+          response?.status === 401 ||
+          response?.status === 403 ||
+          response?.status === 404 ||
+          response?.status === 503
+        ) {
+          return false;
+        }
+      }
+      return failureCount < 2;
+    },
   });
 
   if (isLoading) {
@@ -34,15 +49,26 @@ export default function NotesPage() {
   }
 
   if (error) {
+    const errorMessage =
+      error && typeof error === "object" && "response" in error
+        ? (error as any).response?.data?.error ||
+          "Something went wrong while loading your notes."
+        : "Something went wrong while loading your notes.";
+
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4">
         <h1 className="text-2xl font-bold">Error loading notes</h1>
-        <p className="text-muted-foreground">
-          Something went wrong while loading your notes.
+        <p className="text-muted-foreground text-center max-w-md">
+          {errorMessage}
         </p>
-        <Button onClick={() => window.location.reload()} variant="outline">
-          Try Again
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => refetch()} variant="outline">
+            Try Again
+          </Button>
+          <Button onClick={() => window.location.reload()} variant="default">
+            Reload Page
+          </Button>
+        </div>
       </div>
     );
   }

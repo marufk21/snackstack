@@ -6,7 +6,7 @@ import posthog from "posthog-js";
 export function usePostHog() {
   const capture = useCallback(
     (event: string, properties?: Record<string, any>) => {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && posthog.__loaded) {
         posthog.capture(event, properties);
       }
     },
@@ -15,7 +15,7 @@ export function usePostHog() {
 
   const identify = useCallback(
     (userId: string, properties?: Record<string, any>) => {
-      if (typeof window !== "undefined") {
+      if (typeof window !== "undefined" && posthog.__loaded) {
         posthog.identify(userId, properties);
       }
     },
@@ -23,7 +23,7 @@ export function usePostHog() {
   );
 
   const reset = useCallback(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && posthog.__loaded) {
       posthog.reset();
     }
   }, []);
