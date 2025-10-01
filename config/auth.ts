@@ -4,8 +4,8 @@ export const authConfig = {
   secretKey: process.env.CLERK_SECRET_KEY,
   signInUrl: '/sign-in',
   signUpUrl: '/sign-up',
-  afterSignInUrl: '/app',
-  afterSignUpUrl: '/app',
+  fallbackRedirectUrl: '/app',
+  forceRedirectUrl: '/app',
 } as const
 
 export const getAuthConfig = () => {

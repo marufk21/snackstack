@@ -55,3 +55,22 @@ This project follows organized documentation split across multiple files:
 - `/server` - Server-side logic and database
 
 For detailed information on any topic, refer to the specific documentation files listed above.
+
+## General Guidelines
+
+- **TypeScript Strict**: No `any` types unless absolutely necessary
+- **Function Style**: Prefer function declarations over arrow functions for components
+- **Naming**: Use descriptive variable and function names
+- **Types**: Always add proper TypeScript types for props and return values
+- **Const Assertions**: Use where appropriate for better type inference
+
+## File Naming Conventions
+
+| File Type  | Convention          | Example            |
+| ---------- | ------------------- | ------------------ |
+| Components | kebab-case + `.tsx` | `note-card.tsx`    |
+| Utilities  | kebab-case + `.ts`  | `rate-limit.ts`    |
+| API Routes | `route.ts`          | `route.ts`         |
+| Pages      | `page.tsx`          | `page.tsx`         |
+| Hooks      | kebab-case + `.ts`  | `use-posthog.ts`   |
+| Stores     | kebab-case + `.ts`  | `use-app-store.ts` |

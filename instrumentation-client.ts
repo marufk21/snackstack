@@ -7,5 +7,11 @@ posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
   capture_pageview: true,
   capture_pageleave: true,
   capture_exceptions: true, // This enables capturing exceptions using Error Tracking
-  debug: process.env.NODE_ENV === "development",
+  debug: false, // Disable debug mode to reduce console logs
+  disable_session_recording: true, // Disable session recording to reduce logs
+  disable_persistence: false, // Keep persistence enabled
+  loaded: (posthog) => {
+    // Disable debug mode completely
+    posthog.debug(false);
+  },
 });

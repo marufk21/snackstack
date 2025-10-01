@@ -13,6 +13,8 @@ export default function SignInPage() {
           </p>
         </div>
         <SignIn
+          fallbackRedirectUrl="/app"
+          forceRedirectUrl="/app"
           appearance={{
             elements: {
               formButtonPrimary:
