@@ -32,14 +32,16 @@ const Hero = () => {
 
       <div className="relative z-10 text-center h-full flex flex-col justify-center py-36">
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold text-foreground mb-6">
-          {" "}
           <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-            SnackStack
+            AI-Powered Notes
+          </span>
+          <br />
+          <span className="text-2xl sm:text-3xl lg:text-4xl font-light text-muted-foreground">
+            for Modern Teams
           </span>
         </h1>
         <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-          Modern solutions for modern problems. Build faster, scale better,
-          and deliver exceptional experiences.
+          Capture, organize, and enhance your ideas with the power of artificial intelligence. The smart way to take notes for individuals and teams.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <SignUpButton>

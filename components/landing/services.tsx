@@ -3,42 +3,42 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { 
-  Code2, 
-  Database, 
-  Cloud, 
-  Smartphone, 
+  Lightbulb, 
+  Sparkles, 
+  Brain, 
+  FileText,
   ArrowRight,
-  Sparkles
+  Wand2
 } from "lucide-react";
 
 const Services = () => {
   const services = [
     {
-      icon: <Code2 className="w-8 h-8" />,
-      title: "Full-Stack Development",
-      description: "Complete web applications built with modern frameworks like Next.js, React, and Node.js. From conception to deployment.",
-      features: ["React & Next.js", "TypeScript", "API Development", "Testing"],
-      gradient: "from-blue-500 to-cyan-500"
-    },
-    {
-      icon: <Database className="w-8 h-8" />,
-      title: "Database Solutions",
-      description: "Scalable database architecture and optimization. We handle everything from schema design to performance tuning.",
-      features: ["PostgreSQL", "Prisma ORM", "Redis Caching", "Data Migration"],
+      icon: <Wand2 className="w-8 h-8" />,
+      title: "AI-Powered Suggestions",
+      description: "Get intelligent suggestions and insights as you write. Our AI helps you organize thoughts, find connections, and enhance your notes.",
+      features: ["Smart Summarization", "Content Enhancement", "Related Ideas", "Grammar & Style"],
       gradient: "from-purple-500 to-pink-500"
     },
     {
-      icon: <Cloud className="w-8 h-8" />,
-      title: "Cloud Infrastructure",
-      description: "Robust cloud deployment and DevOps solutions. Automated CI/CD pipelines and infrastructure as code.",
-      features: ["AWS/Vercel", "Docker", "CI/CD", "Monitoring"],
+      icon: <Brain className="w-8 h-8" />,
+      title: "Intelligent Organization",
+      description: "Automatically categorize and tag your notes with AI. Find what you need instantly with powerful search and smart filters.",
+      features: ["Auto-Tagging", "Smart Categories", "Quick Search", "Relationship Mapping"],
+      gradient: "from-blue-500 to-cyan-500"
+    },
+    {
+      icon: <Sparkles className="w-8 h-8" />,
+      title: "Collaborative Features",
+      description: "Work together seamlessly with real-time collaboration. Share notes, get feedback, and build on each other's ideas.",
+      features: ["Real-time Editing", "Commenting", "Sharing Controls", "Version History"],
       gradient: "from-green-500 to-emerald-500"
     },
     {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: "Mobile-First Design",
-      description: "Responsive, accessible, and beautiful user interfaces that work seamlessly across all devices and platforms.",
-      features: ["Responsive Design", "Accessibility", "Performance", "UX/UI"],
+      icon: <FileText className="w-8 h-8" />,
+      title: "Rich Note-Taking",
+      description: "Create beautiful, rich notes with markdown support, images, and embedded content. All your information in one place.",
+      features: ["Markdown Support", "Image Uploads", "Embed Content", "Custom Templates"],
       gradient: "from-orange-500 to-red-500"
     }
   ];
@@ -57,18 +57,18 @@ const Services = () => {
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
-              Our Services
+              Powerful Features
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Everything You Need to{" "}
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Succeed
+              Capture Ideas
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            From concept to deployment, we provide comprehensive development services 
-            that help your business thrive in the digital landscape.
+            From simple notes to complex knowledge bases, our AI-powered platform 
+            helps you capture, organize, and enhance your thoughts like never before.
           </p>
         </motion.div>
 
@@ -143,10 +143,9 @@ const Services = () => {
               Our Mission
             </h3>
             <p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-              To empower developers and businesses with tools that make building 
-              exceptional digital experiences effortless. We believe in the power 
-              of great technology to transform ideas into reality, and we're here 
-              to make that journey as smooth as possible.
+              To empower individuals and teams to capture, organize, and enhance their ideas through 
+              the power of artificial intelligence. We believe that better note-taking leads to better 
+              thinking, and we're here to make that process as seamless and intelligent as possible.
             </p>
           </div>
         </motion.div>

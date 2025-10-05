@@ -21,7 +21,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: "Product",
+    label: "How Its Works",
     href: "/app",
   },
   {
@@ -29,16 +29,12 @@ const navItems: NavItem[] = [
     href: "/app/pricing",
   },
   {
-    label: "Teams",
-    href: "/app/new",
-  },
-  {
-    label: "Resources",
+    label: "Blogs",
     href: "/app",
   },
   {
-    label: "Community",
-    href: "/",
+    label: "Contact Us",
+    href: "/app/new",
   },
 ];
 
@@ -156,7 +152,7 @@ export default function Navbar() {
                   <div className="relative">
                     <div
                       className={cn(
-                        "bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg transition-all duration-500 ease-in-out",
+                        "bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-500 ease-in-out",
                         scrolled ? "w-8 h-8" : "w-10 h-10"
                       )}
                     >
@@ -169,7 +165,6 @@ export default function Navbar() {
                         S
                       </span>
                     </div>
-                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-background" />
                   </div>
                   <div className="block sm:block">
                     <span
@@ -180,9 +175,9 @@ export default function Navbar() {
                     >
                       SnackStack
                     </span>
-                    <div className="text-xs text-muted-foreground hidden sm:block">
+                    {/* <div className="text-xs text-muted-foreground hidden sm:block">
                       Modern Solutions
-                    </div>
+                    </div> */}
                   </div>
                 </motion.div>
               </Link>

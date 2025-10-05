@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
+import { Loader2, Sparkles } from "lucide-react";
 
 interface WelcomeHeaderProps {
   className?: string;
@@ -27,11 +27,14 @@ export function WelcomeHeader({ className = "" }: WelcomeHeaderProps) {
 
   return (
     <div className={`${className}`}>
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-        Welcome back, {firstName}! 👋
-      </h1>
-      <p className="text-muted-foreground mt-1">
-        Ready to capture your thoughts and ideas?
+      <div className="flex items-center gap-2 mb-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          Welcome back, {firstName}! 👋
+        </h1>
+        <Sparkles className="w-5 h-5 text-purple-500" />
+      </div>
+      <p className="text-muted-foreground">
+        Ready to capture and enhance your ideas with AI?
       </p>
     </div>
   );

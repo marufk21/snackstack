@@ -71,26 +71,26 @@ export async function POST(request: NextRequest) {
 
     switch (type) {
       case "improve":
-        prompt = `Please improve the following markdown content by enhancing clarity, structure, and readability. Keep the same general meaning but make it more engaging and well-formatted:\n\n${content}`;
+        prompt = `You are an AI-powered note enhancement assistant. Please improve the following markdown note by enhancing clarity, structure, and readability. Keep the same general meaning but make it more engaging and well-formatted. Add insights or connections that might not be immediately obvious. Make suggestions to help the user think more deeply about their ideas:\n\n${content}`;
         break;
       case "continue":
-        prompt = `Please continue writing the following markdown content in a natural and coherent way. Maintain the same style and tone:\n\n${content}`;
+        prompt = `You are an AI-powered note continuation assistant. Please continue writing the following markdown note in a natural and coherent way. Maintain the same style and tone. Help the user explore their ideas further by suggesting related concepts or asking thought-provoking questions:\n\n${content}`;
         break;
       case "summarize":
-        prompt = `Please provide a concise summary of the following markdown content in bullet points:\n\n${content}`;
+        prompt = `You are an AI-powered note summarization assistant. Please provide a concise summary of the following markdown note in bullet points. Identify the key ideas and main takeaways. Help the user distill their thoughts into actionable insights:\n\n${content}`;
         break;
       case "expand":
-        prompt = `Please expand on the following markdown content by adding more details, examples, and explanations while maintaining the original structure:\n\n${content}`;
+        prompt = `You are an AI-powered note expansion assistant. Please expand on the following markdown note by adding more details, examples, and explanations while maintaining the original structure. Help the user think more deeply about their ideas by suggesting related concepts, asking questions, or providing additional context:\n\n${content}`;
         break;
       default:
-        prompt = `Please improve the following markdown content:\n\n${content}`;
+        prompt = `You are an AI-powered note enhancement assistant. Please improve the following markdown note:\n\n${content}`;
     }
 
     const genAI = getGemini();
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const systemPrompt =
-      "You are a helpful writing assistant that helps improve markdown content. Always respond with well-formatted markdown. Be concise but helpful.";
+      "You are a helpful AI note-taking assistant that helps users capture, organize, and enhance their ideas. Always respond with well-formatted markdown. Be concise but helpful. Focus on helping users think more deeply about their ideas and make connections between concepts.";
     const fullPrompt = `${systemPrompt}\n\n${prompt}`;
 
     const result = await model.generateContent(fullPrompt);
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(
-      { error: "Failed to generate AI suggestion" },
+      { error: "Failed to generate AI-powered note enhancement" },
       { status: 500 }
     );
   }

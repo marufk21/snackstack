@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/card";
 import { WelcomeHeader } from "@/components/ui/welcome-header";
 import { NoteCard } from "@/components/dashboard/note-card";
 import { NoteViewModal } from "@/components/dashboard/note-view-modal";
-import { Plus, Loader2, FileText } from "lucide-react";
+import { Plus, Loader2, FileText, Sparkles } from "lucide-react";
 
 export default function NotesPage() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function NotesPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex items-center gap-2">
           <Loader2 className="w-6 h-6 animate-spin" />
-          <span>Loading notes...</span>
+          <span>Loading your notes...</span>
         </div>
       </div>
     );
@@ -83,10 +83,15 @@ export default function NotesPage() {
       {/* Notes Stats and Actions */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold">My Notes</h2>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            My Notes
+            {notes.length > 0 && (
+              <Sparkles className="w-5 h-5 text-purple-500" />
+            )}
+          </h2>
           <p className="text-muted-foreground mt-1">
             {notes.length > 0
-              ? `${notes.length} note${notes.length === 1 ? "" : "s"}`
+              ? `${notes.length} note${notes.length === 1 ? "" : "s"} with AI-powered insights`
               : "No notes yet"}
           </p>
         </div>
@@ -104,7 +109,7 @@ export default function NotesPage() {
           <h2 className="text-xl font-semibold mb-2">No notes yet</h2>
           <p className="text-muted-foreground mb-6">
             Create your first note to get started with your AI-powered
-            note-taking experience.
+            note-taking experience. Our AI will help you organize and enhance your ideas.
           </p>
           <Button onClick={() => router.push("/app/new")} size="lg">
             <Plus className="w-5 h-5 mr-2" />

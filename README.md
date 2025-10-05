@@ -1,6 +1,6 @@
-# 🍔 SnackStack
+# 🍔 SnackStack - AI-Powered Notes SaaS
 
-A modern, full-stack web application starter template built with Next.js 15, featuring authentication, database integration, state management, image uploads, and a beautiful UI with dark mode support.
+A modern, full-stack web application starter template built with Next.js 15, featuring AI-powered note-taking capabilities, authentication, database integration, state management, image uploads, and a beautiful UI with dark mode support.
 
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.0-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
@@ -11,10 +11,11 @@ A modern, full-stack web application starter template built with Next.js 15, fea
 
 ## 🚀 Overview
 
-SnackStack is a production-ready starter template that combines the best modern web development tools and practices. It provides a solid foundation for building scalable web applications with built-in authentication, database connectivity, state management, and a responsive UI.
+SnackStack is a production-ready AI-powered note-taking SaaS application that combines the best modern web development tools and practices. It provides a solid foundation for building scalable web applications with built-in authentication, database connectivity, state management, and a responsive UI, enhanced with AI capabilities for intelligent note-taking.
 
 ### ✨ Key Features
 
+- **🧠 AI-Powered Note-Taking**: Intelligent suggestions, content enhancement, and organization powered by Google Gemini
 - **🔐 Authentication**: Secure user authentication with Clerk (sign up, sign in, user management)
 - **🎨 Modern UI**: Beautiful, responsive design with Tailwind CSS and custom components
 - **🌓 Dark Mode**: Built-in theme switching with next-themes and smooth transitions
@@ -47,6 +48,7 @@ SnackStack is a production-ready starter template that combines the best modern 
 - **Database**: PostgreSQL (configurable)
 - **API**: Next.js API Routes
 - **Image CDN**: [Cloudinary](https://cloudinary.com/) 2.7.0
+- **AI**: [Google Gemini](https://ai.google.dev/) for AI-powered suggestions
 
 ### Authentication & Authorization
 
@@ -112,6 +114,9 @@ CLERK_SECRET_KEY=your_clerk_secret_key
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 NEXT_PUBLIC_CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# Google Gemini API (for AI features)
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### 4. Set up the database
@@ -168,6 +173,13 @@ Open [http://localhost:3000](http://localhost:3000) to see your application.
 3. Add the credentials to your `.env.local` file
 4. The app will automatically use these for image uploads
 
+### Google Gemini API Setup (for AI Features)
+
+1. Create a [Google AI](https://ai.google.dev/) account
+2. Get your API key from the Google AI Studio
+3. Add the key to your `.env.local` file as `GEMINI_API_KEY`
+4. The app will automatically use this for AI-powered suggestions
+
 ## 📖 Usage Guide
 
 ### Available Scripts
@@ -190,6 +202,14 @@ pnpm type-check   # Run TypeScript compiler check
 
 ### Key Features Implementation
 
+#### 🧠 AI-Powered Note-Taking
+
+- Intelligent writing suggestions with AI enhancement
+- Content summarization and expansion
+- Note continuation and improvement
+- Rate-limited API access to prevent abuse
+- Integration with Google Gemini for natural language processing
+
 #### 🔐 Authentication
 
 - Sign up/Sign in pages at `/sign-up` and `/sign-in`
@@ -207,6 +227,7 @@ pnpm type-check   # Run TypeScript compiler check
 #### 📊 State Management
 
 - Global app state with Zustand in `stores/use-app-store.ts`
+- Note editor state management with `stores/use-note-editor-store.ts`
 - Server state caching with React Query
 - Optimistic updates for better UX
 
@@ -254,6 +275,7 @@ snackstack/
 │   ├── (landing)/         # Landing page
 │   │   └── page.tsx       # Landing page
 │   └── api/               # API routes
+│       ├── ai-suggestion/ # AI suggestion endpoint
 │       └── upload/        # Image upload endpoint
 ├── components/            # React components
 │   ├── ui/               # Reusable UI components
@@ -267,7 +289,10 @@ snackstack/
 │   ├── auth/             # Authentication components
 │   │   └── auth-check.tsx # Authentication checker
 │   ├── dashboard/        # Dashboard components
-│   │   └── simple-image-upload.tsx # Image upload demo
+│   │   ├── note-card.tsx # Note card component
+│   │   ├── note-editor.tsx # Note editor component
+│   │   ├── note-bottom-bar.tsx # Note editor bottom bar
+│   │   └── note-view-modal.tsx # Note view modal
 │   └── landing/          # Landing page components
 │       └── navbar.tsx    # Navigation component
 ├── lib/                  # Utility functions
@@ -283,7 +308,8 @@ snackstack/
 │   │   └── query-provider.tsx
 │   └── services/        # Server services
 ├── stores/              # Zustand stores
-│   └── use-app-store.ts # Global app state
+│   ├── use-app-store.ts # Global app state
+│   └── use-note-editor-store.ts # Note editor state
 ├── public/              # Static assets
 │   ├── fonts/           # Custom fonts
 │   ├── icons/           # Icon files
@@ -349,6 +375,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Vercel](https://vercel.com/) for hosting and deployment
 - [Clerk](https://clerk.com/) for authentication
 - [Prisma](https://www.prisma.io/) for the excellent ORM
+- [Google AI](https://ai.google.dev/) for the Gemini API
 - All the open-source contributors
 
 ## 📞 Support

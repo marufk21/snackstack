@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Zap, Shield, Rocket } from "lucide-react";
+import { CheckCircle2, Zap, Shield, Rocket, Brain, Sparkles } from "lucide-react";
 
 const About = () => {
   const features = [
@@ -17,9 +17,9 @@ const About = () => {
       description: "Enterprise-grade security with 99.9% uptime guarantee"
     },
     {
-      icon: <Rocket className="w-6 h-6" />,
-      title: "Scalable Solutions",
-      description: "Built to grow with your business needs and requirements"
+      icon: <Brain className="w-6 h-6" />,
+      title: "AI-Powered",
+      description: "Intelligent suggestions and organization powered by AI"
     }
   ];
 
@@ -48,9 +48,9 @@ const About = () => {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We're revolutionizing how teams collaborate and build digital experiences. 
-            Our platform combines cutting-edge technology with intuitive design to 
-            deliver powerful solutions that scale with your ambitions.
+            We're revolutionizing how people capture and organize their ideas. 
+            Our AI-powered note-taking platform combines cutting-edge technology 
+            with intuitive design to deliver powerful solutions that enhance your thinking.
           </p>
         </motion.div>
 
@@ -66,21 +66,22 @@ const About = () => {
           >
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-foreground">
-                Built for the Modern Web
+                AI-Powered Note-Taking
               </h3>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                SnackStack was born from the need for faster, more reliable development 
-                tools. Our team of experienced engineers and designers have crafted a 
-                platform that eliminates complexity while maximizing productivity.
+                SnackStack was built for the modern need to capture and enhance ideas. 
+                Our team of experienced engineers and AI specialists have crafted a 
+                platform that uses artificial intelligence to help you organize thoughts, 
+                find connections, and express ideas more effectively.
               </p>
             </div>
 
             <div className="space-y-4">
               {[
-                "Advanced real-time collaboration features",
-                "AI-powered code suggestions and optimization",
-                "Seamless deployment and scaling infrastructure",
-                "Comprehensive analytics and monitoring tools"
+                "AI-powered suggestions and content enhancement",
+                "Intelligent organization and automatic tagging",
+                "Seamless collaboration with real-time editing",
+                "Powerful search and relationship mapping"
               ].map((item, index) => (
                 <motion.div
                   key={index}
