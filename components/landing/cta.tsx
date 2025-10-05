@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SignUpButton } from "@clerk/nextjs";
-import { ArrowRight, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Sparkles, CheckCircle2, Lightbulb } from "lucide-react";
 import { usePostHog } from "@/hooks/use-posthog";
 
 const CTA = () => {
@@ -13,7 +13,7 @@ const CTA = () => {
     "14-day free trial",
     "No credit card required",
     "Cancel anytime",
-    "24/7 support included"
+    "AI-powered features included"
   ];
 
   return (
@@ -34,7 +34,7 @@ const CTA = () => {
         >
           <Sparkles className="w-5 h-5 text-purple-500" />
           <span className="text-purple-600 dark:text-purple-400 font-medium">
-            Ready to Get Started?
+            Ready to Enhance Your Ideas?
           </span>
         </motion.div>
 
@@ -46,10 +46,10 @@ const CTA = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-8 leading-tight"
         >
-          Transform Your Development
+          Transform How You Capture
           <br />
           <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
-            Experience Today
+            Your Ideas Today
           </span>
         </motion.h2>
 
@@ -61,8 +61,8 @@ const CTA = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed"
         >
-          Join thousands of developers and teams who are already building faster, 
-          scaling better, and delivering exceptional experiences with SnackStack.
+          Join thousands of individuals and teams who are already using AI-powered 
+          note-taking to capture, organize, and enhance their ideas with SnackStack.
         </motion.p>
 
         {/* Benefits List */}
@@ -124,9 +124,10 @@ const CTA = () => {
                 location: "cta_section",
               })
             }
-            className="border border-border hover:border-purple-500/50 text-foreground hover:text-purple-600 dark:hover:text-purple-400 px-10 py-4 rounded-xl font-semibold transition-all duration-300 hover:bg-purple-500/5"
+            className="border border-border hover:border-purple-500/50 text-foreground hover:text-purple-600 dark:hover:text-purple-400 px-10 py-4 rounded-xl font-semibold transition-all duration-300 hover:bg-purple-500/5 flex items-center gap-2"
           >
-            Book a Demo
+            <Lightbulb className="w-5 h-5" />
+            See How It Works
           </motion.button>
         </motion.div>
 
@@ -139,15 +140,15 @@ const CTA = () => {
           className="mt-16 pt-12 border-t border-border"
         >
           <div className="text-sm text-muted-foreground mb-6">
-            Trusted by teams at
+            Trusted by professionals at
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12 opacity-60 hover:opacity-80 transition-opacity duration-300">
             {[
-              "TechCorp",
-              "StartupXYZ", 
-              "InnovateLabs",
-              "DevStudio",
-              "CodeCraft"
+              "Google",
+              "Microsoft", 
+              "Adobe",
+              "Spotify",
+              "MIT"
             ].map((company, index) => (
               <motion.div
                 key={index}
@@ -174,7 +175,7 @@ const CTA = () => {
           <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 rounded-full px-4 py-2">
             <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" />
             <span className="text-orange-600 dark:text-orange-400 text-sm font-medium">
-              Limited time: Get 3 months free with annual plans
+              Limited time: Get 30% off annual plans
             </span>
           </div>
         </motion.div>

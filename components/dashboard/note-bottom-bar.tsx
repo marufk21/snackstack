@@ -17,6 +17,7 @@ import {
   Clock,
   Calendar,
   CircleDot,
+  Brain,
 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { generateAiSuggestion } from "@/server/api";
@@ -175,9 +176,9 @@ export function NoteBottomBar({
                 {isExpanded && (
                   <div className="mb-6 space-y-4">
                     <div className="flex items-center gap-3 pb-3 border-b border-border/30">
-                      <Sparkles className="w-4 h-4 text-primary" />
+                      <Brain className="w-4 h-4 text-primary" />
                       <span className="text-sm font-semibold text-foreground">
-                        AI Assistant
+                        AI-Powered Assistant
                       </span>
                       {isGeneratingAI && (
                         <Badge
@@ -185,7 +186,7 @@ export function NoteBottomBar({
                           className="text-xs bg-primary/10 text-primary border-primary/20"
                         >
                           <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                          Working...
+                          Generating...
                         </Badge>
                       )}
                     </div>
@@ -199,7 +200,7 @@ export function NoteBottomBar({
                         className="h-10 text-xs font-medium border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all"
                       >
                         <Wand2 className="w-3 h-3 mr-2" />
-                        Improve Text
+                        Improve Writing
                       </Button>
 
                       <Button
@@ -262,10 +263,10 @@ export function NoteBottomBar({
                       disabled={!content.trim() || isGeneratingAI}
                       variant="ghost"
                       size="sm"
-                      className="h-10 px-4 text-xs font-medium hover:bg-primary/10 hover:text-primary transition-all"
+                      className="h-10 px-4 text-xs font-medium hover:bg-primary/10 hover:text-primary transition-all flex items-center gap-2"
                     >
-                      <Sparkles className="w-3 h-3 mr-2" />
-                      {isGeneratingAI ? "Working..." : "AI Assist"}
+                      <Sparkles className="w-3 h-3" />
+                      {isGeneratingAI ? "Generating..." : "AI Assist"}
                     </Button>
                   </div>
 
@@ -274,9 +275,10 @@ export function NoteBottomBar({
                     onClick={toggleExpanded}
                     variant="ghost"
                     size="sm"
-                    className="h-10 px-4 text-xs font-medium hover:bg-muted/60 transition-colors"
+                    className="h-10 px-4 text-xs font-medium hover:bg-muted/60 transition-colors flex items-center gap-2"
                   >
-                    {isExpanded ? "Show Less" : "More AI Tools"}
+                    <Brain className="w-3 h-3" />
+                    {isExpanded ? "Show Less" : "AI Tools"}
                   </Button>
 
                   {updatedDate && (

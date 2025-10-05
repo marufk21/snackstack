@@ -14,6 +14,8 @@ import {
   Image as ImageIcon,
   Clock,
   Loader2,
+  Wand2,
+  Brain,
 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote, updateNote } from "@/server/api";
@@ -148,7 +150,10 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold">Note Editor</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold">AI-Powered Note Editor</h1>
+            <Sparkles className="w-5 h-5 text-purple-500" />
+          </div>
           {isDirty && <Badge variant="secondary">Unsaved changes</Badge>}
           {isSaving && (
             <Badge variant="outline" className="flex items-center gap-1">
@@ -191,8 +196,9 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
               className="w-full text-3xl font-bold bg-transparent border-none outline-none placeholder-muted-foreground"
             />
             {title && (
-              <p className="text-sm text-muted-foreground mt-1">
-                Slug: {getSlugFromTitle(title)}
+              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
+                <Wand2 className="w-4 h-4" />
+                AI will enhance this note with suggestions
               </p>
             )}
           </div>
@@ -217,7 +223,7 @@ export function NoteEditor({ noteId, onSave }: NoteEditorProps) {
           {/* Content Editor */}
           <div>
             <TextareaAutosize
-              placeholder="Start writing your note in markdown..."
+              placeholder="Start writing your note in markdown... Our AI will provide suggestions as you type."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="w-full min-h-[400px] p-4 bg-muted/50 rounded-lg border-none outline-none resize-none font-mono text-sm"

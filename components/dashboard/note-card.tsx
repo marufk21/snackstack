@@ -10,6 +10,7 @@ import {
   Edit3,
   FileText,
   Sparkles,
+  Brain,
 } from "lucide-react";
 
 interface NoteCardProps {
@@ -52,9 +53,12 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       <div className="relative p-6 h-full flex flex-col">
         {/* Header */}
         <div className="mb-4">
-          <h3 className="text-lg font-semibold mb-3 line-clamp-2 group-hover:text-foreground transition-colors">
-            {note.title}
-          </h3>
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-foreground transition-colors">
+              {note.title}
+            </h3>
+            <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70" />
+          </div>
         </div>
 
         {/* Image preview */}
@@ -76,6 +80,12 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
           </p>
         </div>
 
+        {/* AI Badge */}
+        <div className="inline-flex items-center gap-1 bg-purple-500/10 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded-full w-fit mb-3">
+          <Brain className="w-3 h-3" />
+          <span>AI-Powered</span>
+        </div>
+
         {/* Quick action buttons - show on hover */}
         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0"></div>
 
@@ -87,6 +97,8 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       <div
         className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-300 ${
           note.imageUrl
+            ? "bg-gradient-to-b from-purple-500 to-purple-600"
+            : note.content.length > 500
             ? "bg-gradient-to-b from-purple-500 to-purple-600"
             : note.content.length > 1000
             ? "bg-gradient-to-b from-green-500 to-green-600"

@@ -10,30 +10,30 @@ const Testimonials = () => {
     {
       id: 1,
       name: "Sarah Chen",
-      role: "CTO at TechCorp",
+      role: "Product Manager",
       company: "TechCorp",
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      content: "SnackStack completely transformed our development workflow. The performance improvements and developer experience are outstanding. Our team's productivity has increased by 40% since we started using it.",
+      content: "SnackStack has completely transformed how I capture and organize my thoughts. The AI suggestions help me express ideas more clearly and find connections I would have otherwise missed. It's like having a thinking partner!",
       rating: 5,
       featured: true
     },
     {
       id: 2,
       name: "Marcus Rodriguez",
-      role: "Lead Developer",
-      company: "StartupXYZ",
+      role: "Research Scientist",
+      company: "InnovateLabs",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      content: "The scalability and reliability of SnackStack is impressive. We've handled massive traffic spikes without any issues. The AI-powered suggestions have saved us countless hours of debugging.",
+      content: "As someone who takes thousands of notes, SnackStack's AI-powered organization has saved me countless hours. The automatic tagging and relationship mapping features are game-changers for research work.",
       rating: 5,
       featured: false
     },
     {
       id: 3,
       name: "Emily Johnson",
-      role: "Product Manager",
-      company: "InnovateLabs",
+      role: "Content Creator",
+      company: "CreativeStudio",
       avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      content: "What impressed me most is how intuitive SnackStack is for both technical and non-technical team members. The collaboration features are game-changing for cross-functional teams.",
+      content: "The collaborative features are outstanding. My team and I use SnackStack to brainstorm ideas, and the AI suggestions often spark new creative directions we hadn't considered. It's become essential to our workflow.",
       rating: 5,
       featured: false
     }
@@ -72,12 +72,12 @@ const Testimonials = () => {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             What Our{" "}
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Customers Say
+              Users Say
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Don't just take our word for it. See what industry leaders and 
-            development teams are saying about SnackStack.
+            Don't just take our word for it. See how SnackStack is helping 
+            individuals and teams capture and enhance their ideas.
           </p>
         </motion.div>
 
@@ -161,11 +161,11 @@ const Testimonials = () => {
         >
           <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-2xl p-8">
             <h3 className="text-2xl font-bold text-foreground mb-4">
-              Join Thousands of Happy Customers
+              Join Thousands of Happy Users
             </h3>
             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Ready to transform your development workflow? Start your journey with 
-              SnackStack today and experience the difference.
+              Ready to transform how you capture and enhance your ideas? Start your journey with 
+              SnackStack today and experience the power of AI-powered note-taking.
             </p>
             <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105">
               Start Free Trial
