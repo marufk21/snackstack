@@ -24,7 +24,6 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed":
         const session = event.data.object as Stripe.Checkout.Session;
-        console.log("Checkout session completed:", session.id);
 
         // TODO: Save subscription data to your database
         // You might want to:
@@ -37,14 +36,6 @@ export async function POST(req: NextRequest) {
           const subscription = await stripe.subscriptions.retrieve(
             session.subscription as string
           );
-
-          console.log("Subscription created:", {
-            subscriptionId: subscription.id,
-            customerId: subscription.customer,
-            userId: session.metadata?.userId,
-            status: subscription.status,
-            priceId: subscription.items.data[0]?.price.id,
-          });
 
           // Here you would typically save this to your database
           // Example:
@@ -62,7 +53,6 @@ export async function POST(req: NextRequest) {
 
       case "customer.subscription.updated":
         const updatedSubscription = event.data.object as Stripe.Subscription;
-        console.log("Subscription updated:", updatedSubscription.id);
 
         // TODO: Update subscription in your database
         // Handle plan changes, status updates, etc.
@@ -70,7 +60,6 @@ export async function POST(req: NextRequest) {
 
       case "customer.subscription.deleted":
         const deletedSubscription = event.data.object as Stripe.Subscription;
-        console.log("Subscription cancelled:", deletedSubscription.id);
 
         // TODO: Handle subscription cancellation
         // Update user's access, send cancellation email, etc.
@@ -78,7 +67,6 @@ export async function POST(req: NextRequest) {
 
       case "invoice.payment_succeeded":
         const invoice = event.data.object as Stripe.Invoice;
-        console.log("Payment succeeded:", invoice.id);
 
         // TODO: Handle successful payment
         // Extend subscription, send receipt, etc.
@@ -86,14 +74,12 @@ export async function POST(req: NextRequest) {
 
       case "invoice.payment_failed":
         const failedInvoice = event.data.object as Stripe.Invoice;
-        console.log("Payment failed:", failedInvoice.id);
 
         // TODO: Handle failed payment
         // Send dunning emails, update subscription status, etc.
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });

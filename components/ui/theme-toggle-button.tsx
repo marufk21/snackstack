@@ -17,7 +17,6 @@ export default function ThemeToggleButton({
 
   const toggleTheme = React.useCallback(() => {
     const newTheme = theme === "light" ? "dark" : "light";
-    console.log("Switching theme from", theme, "to", newTheme);
     setTheme(newTheme);
   }, [theme, setTheme]);
 

@@ -11,12 +11,6 @@ export function useStripeCheckout() {
       setLoading(true);
       setError(null);
 
-      console.log("Starting checkout with priceId:", priceId);
-      console.log(
-        "Stripe publishable key exists:",
-        !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-      );
-
       // Create checkout session
       const response = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -25,9 +19,6 @@ export function useStripeCheckout() {
         },
         body: JSON.stringify({ priceId }),
       });
-
-      console.log("Response status:", response.status);
-      console.log("Response ok:", response.ok);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -44,7 +35,6 @@ export function useStripeCheckout() {
       }
 
       const { sessionId } = await response.json();
-      console.log("Got session ID:", sessionId);
 
       // Redirect to Stripe Checkout
       const stripe = await loadStripe(getStripePublishableKey());
@@ -53,7 +43,6 @@ export function useStripeCheckout() {
         throw new Error("Stripe failed to load");
       }
 
-      console.log("Redirecting to Stripe checkout...");
       const { error } = await stripe.redirectToCheckout({
         sessionId,
       });
