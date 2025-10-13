@@ -137,10 +137,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           priority: Math.min(priority, 1.0), // Ensure max priority is 1.0
         };
       });
-
-    console.log(
-      `Generated sitemap with ${staticRoutes.length} static and ${dynamicRoutes.length} dynamic routes`
-    );
   } catch (error) {
     console.error("Error generating dynamic sitemap routes:", error);
     // Continue with static routes only if database fails

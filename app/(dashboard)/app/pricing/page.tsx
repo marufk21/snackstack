@@ -72,7 +72,6 @@ export default function PricingPage() {
   const { redirectToCheckout, loading, error } = useStripeCheckout();
 
   const handleSelectPlan = async (priceId: string, planName: string) => {
-    console.log(`Selected plan: ${planName} with price ID: ${priceId}`);
     await redirectToCheckout(priceId);
   };
 

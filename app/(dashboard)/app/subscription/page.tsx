@@ -41,7 +41,6 @@ export default function SubscriptionPage() {
     setLoading(true);
     // In a real app, you would make an API call to cancel the subscription
     try {
-      console.log("Canceling subscription...");
       // await cancelSubscription();
       // Update UI accordingly
     } catch (error) {
@@ -54,7 +53,6 @@ export default function SubscriptionPage() {
   const handleReactivateSubscription = async () => {
     setLoading(true);
     try {
-      console.log("Reactivating subscription...");
       // await reactivateSubscription();
     } catch (error) {
       console.error("Error reactivating subscription:", error);

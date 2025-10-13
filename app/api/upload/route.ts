@@ -56,18 +56,10 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    console.log("Uploading file to Cloudinary:", {
-      fileName: file.name,
-      fileSize: file.size,
-      fileType: file.type,
-    });
-
     // Upload to Cloudinary using utility function
     const result = await uploadToCloudinary(buffer, {
       folder: "snackstack",
     });
-
-    console.log("Upload successful:", result);
 
     return NextResponse.json({
       success: true,
