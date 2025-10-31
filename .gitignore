@@ -43,5 +43,3 @@ next-env.d.ts
 
 /server/lib/generated/prisma
 
-Tasks.md*
-resume.md*

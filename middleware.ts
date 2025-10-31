@@ -2,7 +2,13 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 // Public routes
-const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/notes/(.*)", // Public note sharing
+  "/api/stripe/webhook", // Stripe webhooks
+]);
 
 // Protected routes
 const isProtectedRoute = createRouteMatcher(["/app(.*)"]);

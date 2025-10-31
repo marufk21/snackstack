@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { stripe } from "@/config/stripe";
 import Stripe from "stripe";
+import {
+  upsertSubscriptionFromStripe,
+  deleteSubscriptionByStripeId,
+  updateSubscriptionByStripeId,
+  getSubscriptionByStripeId,
+} from "@/lib/database/subscription";
+import { getOrCreateUserByEmail } from "@/lib/database/user";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -22,64 +29,146 @@ export async function POST(req: NextRequest) {
 
   try {
     switch (event.type) {
-      case "checkout.session.completed":
+      case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-
-        // TODO: Save subscription data to your database
-        // You might want to:
-        // 1. Store the subscription in your database
-        // 2. Update user's subscription status
-        // 3. Send confirmation email
-        // 4. Grant access to premium features
+        console.log("Checkout session completed:", session.id);
 
         if (session.mode === "subscription") {
           const subscription = await stripe.subscriptions.retrieve(
             session.subscription as string
           );
 
-          // Here you would typically save this to your database
-          // Example:
-          // await createOrUpdateSubscription({
-          //   userId: session.metadata?.userId,
-          //   subscriptionId: subscription.id,
-          //   customerId: subscription.customer as string,
-          //   status: subscription.status,
-          //   priceId: subscription.items.data[0]?.price.id,
-          //   currentPeriodStart: new Date(subscription.current_period_start * 1000),
-          //   currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          // });
+          const clerkUserId = session.metadata?.userId;
+          const userEmail =
+            session.metadata?.userEmail || session.customer_email;
+
+          if (!clerkUserId || !userEmail) {
+            console.error("Missing user information in session metadata");
+            break;
+          }
+
+          // Get or create user in database
+          const user = await getOrCreateUserByEmail(
+            userEmail,
+            session.customer_details?.name || "User"
+          );
+
+          // Create or update subscription
+          await upsertSubscriptionFromStripe(
+            subscription,
+            user.id,
+            clerkUserId
+          );
+
+          console.log(
+            `Subscription created/updated for user ${user.email}: ${subscription.id}`
+          );
         }
         break;
+      }
 
-      case "customer.subscription.updated":
+      case "customer.subscription.updated": {
         const updatedSubscription = event.data.object as Stripe.Subscription;
+        console.log("Subscription updated:", updatedSubscription.id);
 
-        // TODO: Update subscription in your database
-        // Handle plan changes, status updates, etc.
+        const existingSubscription = await getSubscriptionByStripeId(
+          updatedSubscription.id
+        );
+
+        if (existingSubscription) {
+          await upsertSubscriptionFromStripe(
+            updatedSubscription,
+            existingSubscription.userId,
+            existingSubscription.clerkUserId
+          );
+          console.log(
+            `Subscription ${updatedSubscription.id} updated in database`
+          );
+        } else {
+          console.warn(
+            `Subscription ${updatedSubscription.id} not found in database for update`
+          );
+        }
         break;
+      }
 
-      case "customer.subscription.deleted":
+      case "customer.subscription.deleted": {
         const deletedSubscription = event.data.object as Stripe.Subscription;
+        console.log("Subscription deleted:", deletedSubscription.id);
 
-        // TODO: Handle subscription cancellation
-        // Update user's access, send cancellation email, etc.
+        const existingSubscription = await getSubscriptionByStripeId(
+          deletedSubscription.id
+        );
+
+        if (existingSubscription) {
+          // Mark as canceled instead of deleting
+          await updateSubscriptionByStripeId(deletedSubscription.id, {
+            status: "canceled",
+            canceledAt: new Date(),
+          });
+          console.log(
+            `Subscription ${deletedSubscription.id} marked as canceled in database`
+          );
+        }
         break;
+      }
 
-      case "invoice.payment_succeeded":
+      case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
+        console.log("Payment succeeded for invoice:", invoice.id);
 
-        // TODO: Handle successful payment
-        // Extend subscription, send receipt, etc.
+        if (invoice.subscription) {
+          const subscription = await stripe.subscriptions.retrieve(
+            invoice.subscription as string
+          );
+
+          const existingSubscription = await getSubscriptionByStripeId(
+            subscription.id
+          );
+
+          if (existingSubscription) {
+            // Update subscription period and status
+            await upsertSubscriptionFromStripe(
+              subscription,
+              existingSubscription.userId,
+              existingSubscription.clerkUserId
+            );
+            console.log(
+              `Subscription ${subscription.id} renewed after successful payment`
+            );
+          }
+        }
         break;
+      }
 
-      case "invoice.payment_failed":
+      case "invoice.payment_failed": {
         const failedInvoice = event.data.object as Stripe.Invoice;
+        console.log("Payment failed for invoice:", failedInvoice.id);
 
-        // TODO: Handle failed payment
-        // Send dunning emails, update subscription status, etc.
+        if (failedInvoice.subscription) {
+          const subscription = await stripe.subscriptions.retrieve(
+            failedInvoice.subscription as string
+          );
+
+          const existingSubscription = await getSubscriptionByStripeId(
+            subscription.id
+          );
+
+          if (existingSubscription) {
+            // Update subscription status to reflect payment failure
+            await updateSubscriptionByStripeId(subscription.id, {
+              status: subscription.status as any,
+            });
+            console.log(
+              `Subscription ${subscription.id} status updated after payment failure`
+            );
+          }
+        }
         break;
+      }
 
       default:
+        console.log(`Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });

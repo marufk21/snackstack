@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -6,6 +5,7 @@ import {
   aiSuggestionRateLimit,
   getUserIdentifier,
 } from "@/lib/utils/rate-limit";
+import { protectSubscriptionRoute } from "@/lib/utils/api-protection";
 
 // Initialize Gemini only when needed
 const getGemini = () => {
@@ -24,18 +24,16 @@ const aiSuggestionSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Protect route - require Pro subscription for AI features
+    const { error, user, subscription } = await protectSubscriptionRoute("pro");
+    if (error) return error;
 
     // Apply rate limiting
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded
       ? forwarded.split(",")[0]
       : request.headers.get("x-real-ip") || "unknown";
-    const userIdentifier = getUserIdentifier(userId, ip);
+    const userIdentifier = getUserIdentifier(user.id, ip);
     const rateLimitResult = aiSuggestionRateLimit.check(userIdentifier);
 
     if (!rateLimitResult.allowed) {
