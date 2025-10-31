@@ -95,6 +95,4 @@ Write-Host "Next steps:"
 Write-Host "1. Restart your development server"
 Write-Host "2. Configure Stripe webhooks"
 Write-Host "3. Test the subscription flow"
-Write-Host ""
-Write-Host "See STRIPE_INTEGRATION_GUIDE.md for more details."
 

@@ -96,6 +96,4 @@ echo "Next steps:"
 echo "1. Restart your development server"
 echo "2. Configure Stripe webhooks"
 echo "3. Test the subscription flow"
-echo ""
-echo "See STRIPE_INTEGRATION_GUIDE.md for more details."
 

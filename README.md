@@ -282,7 +282,6 @@ snackstack/
 │   │   ├── button.tsx    # Button component
 │   │   ├── card.tsx      # Card component
 │   │   ├── badge.tsx     # Badge component
-│   │   ├── image-upload.tsx # Image upload component
 │   │   ├── notification.tsx # Notification system
 │   │   ├── theme-provider.tsx # Theme provider
 │   │   └── theme-toggle-button.tsx # Theme toggle
@@ -296,11 +295,16 @@ snackstack/
 │   └── landing/          # Landing page components
 │       └── navbar.tsx    # Navigation component
 ├── lib/                  # Utility functions
-│   ├── utils.ts         # Helper functions
-│   ├── query-client.ts  # React Query setup
-│   ├── generated/       # Generated Prisma types
-│   └── utils/           # Additional utilities
-│       └── cloudinary.ts # Cloudinary integration
+│   ├── utils/           # Utility functions
+│   │   ├── index.ts     # Helper functions (cn utility)
+│   │   ├── notes.ts     # Note-related utilities
+│   │   ├── api-protection.ts # API protection utilities
+│   │   ├── rate-limit.ts # Rate limiting
+│   │   └── subscription-check.ts # Subscription checks
+│   ├── database/        # Database utilities
+│   ├── server/          # Server utilities
+│   ├── services/        # Business logic services
+│   └── validations/     # Validation schemas
 ├── server/               # Server-side code
 │   ├── db/              # Database schema
 │   │   └── schema.prisma # Prisma schema file
