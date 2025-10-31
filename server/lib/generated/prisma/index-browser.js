@@ -122,9 +122,14 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
+  clerkUserId: 'clerkUserId',
   name: 'name',
   email: 'email',
-  createdAt: 'createdAt'
+  imageUrl: 'imageUrl',
+  isSubscribed: 'isSubscribed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  lastActiveAt: 'lastActiveAt'
 };
 
 exports.Prisma.NoteScalarFieldEnum = {
@@ -134,6 +139,30 @@ exports.Prisma.NoteScalarFieldEnum = {
   slug: 'slug',
   imageUrl: 'imageUrl',
   userId: 'userId',
+  isPublic: 'isPublic',
+  views: 'views',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  clerkUserId: 'clerkUserId',
+  stripeCustomerId: 'stripeCustomerId',
+  stripeSubscriptionId: 'stripeSubscriptionId',
+  stripePriceId: 'stripePriceId',
+  stripeProductId: 'stripeProductId',
+  status: 'status',
+  planType: 'planType',
+  currentPeriodStart: 'currentPeriodStart',
+  currentPeriodEnd: 'currentPeriodEnd',
+  cancelAtPeriodEnd: 'cancelAtPeriodEnd',
+  canceledAt: 'canceledAt',
+  trialStart: 'trialStart',
+  trialEnd: 'trialEnd',
+  notesCreatedThisMonth: 'notesCreatedThisMonth',
+  lastResetDate: 'lastResetDate',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -156,7 +185,8 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
-  Note: 'Note'
+  Note: 'Note',
+  Subscription: 'Subscription'
 };
 
 /**

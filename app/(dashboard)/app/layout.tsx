@@ -1,6 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
-import Navbar from "@/components/landing/navbar";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/dashboard/app-sidebar";
 
 export const metadata: Metadata = {
   title: "Notes - SnackStack",
@@ -13,9 +14,19 @@ export default function NotesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      {children}
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+          <SidebarTrigger />
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-semibold">Dashboard</h1>
+          </div>
+        </header>
+        <div className="flex-1 p-4">
+          {children}
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

@@ -33,7 +33,7 @@ This project follows organized documentation split across multiple files:
 ## Quick Reference
 
 ### Essential Rules
-- Always use Pnpm for install and build commands
+- Always use pnpm for install and build commands
 - Use TypeScript strictly (no `any` types)
 - Prefer function declarations for components
 - Use kebab-case for files/folders

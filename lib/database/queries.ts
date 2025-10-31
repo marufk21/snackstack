@@ -1,4 +1,4 @@
-// Database query utilities can be added here as the project grows
-// For example: user queries, note queries, etc.
-
+// Database query utilities
 export * from "./client";
+export * from "./user";
+export * from "./subscription";

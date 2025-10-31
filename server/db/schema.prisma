@@ -15,11 +15,31 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
-  createdAt DateTime @default(now())
-  notes Note[]
+  id           Int      @id @default(autoincrement())
+  clerkUserId  String   @unique // Link to Clerk authentication
+  name         String
+  email        String   @unique
+  
+  // Profile fields
+  imageUrl     String?
+  
+  // Subscription tracking (denormalized for performance)
+  isSubscribed Boolean  @default(false)
+  
+  // Timestamps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActiveAt DateTime @default(now())
+  
+  // Relations
+  notes        Note[]
+  subscription Subscription?
+  
+  // Indexes for performance
+  @@index([clerkUserId])
+  @@index([email])
+  @@index([isSubscribed])
+  @@index([lastActiveAt])
 }
 
 model Note {
@@ -28,11 +48,67 @@ model Note {
   content   String   @db.Text
   slug      String   @unique
   imageUrl  String?
+  
+  // User relationship
   userId    Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Metadata
+  isPublic  Boolean  @default(false)
+  views     Int      @default(0)
+  
+  // Timestamps
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  // Indexes for performance
   @@index([userId])
   @@index([slug])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([isPublic])
+  @@index([createdAt(sort: Desc)])
+}
+
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               Int      @unique
+  clerkUserId          String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Stripe fields
+  stripeCustomerId     String   @unique
+  stripeSubscriptionId String   @unique
+  stripePriceId        String
+  stripeProductId      String?
+  
+  // Subscription details
+  status               String   // active, canceled, incomplete, incomplete_expired, past_due, trialing, unpaid
+  planType             String   // basic, pro, enterprise
+  
+  // Billing period
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean  @default(false)
+  canceledAt           DateTime?
+  
+  // Trial info
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  
+  // Usage tracking
+  notesCreatedThisMonth Int     @default(0)
+  lastResetDate         DateTime @default(now())
+  
+  // Timestamps
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  // Indexes for performance
+  @@index([clerkUserId])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@index([status])
+  @@index([userId, status])
+  @@index([currentPeriodEnd])
+  @@index([status, currentPeriodEnd])
 }
