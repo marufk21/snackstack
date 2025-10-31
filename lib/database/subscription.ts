@@ -1,13 +1,13 @@
 import { db as prisma } from "./client";
 import Stripe from "stripe";
 
-export type SubscriptionStatus = 
-  | "active" 
-  | "canceled" 
-  | "incomplete" 
-  | "incomplete_expired" 
-  | "past_due" 
-  | "trialing" 
+export type SubscriptionStatus =
+  | "active"
+  | "canceled"
+  | "incomplete"
+  | "incomplete_expired"
+  | "past_due"
+  | "trialing"
   | "unpaid";
 
 export type PlanType = "basic" | "pro" | "enterprise";
@@ -145,7 +145,9 @@ export async function getSubscriptionByUserId(userId: number) {
 /**
  * Delete a subscription by Stripe subscription ID
  */
-export async function deleteSubscriptionByStripeId(stripeSubscriptionId: string) {
+export async function deleteSubscriptionByStripeId(
+  stripeSubscriptionId: string
+) {
   return await prisma.subscription.delete({
     where: { stripeSubscriptionId },
   });
@@ -154,31 +156,36 @@ export async function deleteSubscriptionByStripeId(stripeSubscriptionId: string)
 /**
  * Check if a user has an active subscription
  */
-export async function hasActiveSubscription(clerkUserId: string): Promise<boolean> {
+export async function hasActiveSubscription(
+  clerkUserId: string
+): Promise<boolean> {
   const subscription = await getSubscriptionByClerkUserId(clerkUserId);
-  
+
   if (!subscription) {
     return false;
   }
-  
+
   // Check if subscription is active and not expired
   const now = new Date();
-  const isActive = subscription.status === "active" || subscription.status === "trialing";
+  const isActive =
+    subscription.status === "active" || subscription.status === "trialing";
   const notExpired = subscription.currentPeriodEnd > now;
-  
+
   return isActive && notExpired;
 }
 
 /**
  * Get user's subscription tier
  */
-export async function getUserSubscriptionTier(clerkUserId: string): Promise<PlanType | "free"> {
+export async function getUserSubscriptionTier(
+  clerkUserId: string
+): Promise<PlanType | "free"> {
   const subscription = await getSubscriptionByClerkUserId(clerkUserId);
-  
+
   if (!subscription || !(await hasActiveSubscription(clerkUserId))) {
     return "free";
   }
-  
+
   return subscription.planType as PlanType;
 }
 
@@ -220,23 +227,27 @@ export async function upsertSubscriptionFromStripe(
     stripeProductId: productId,
     status: stripeSubscription.status as SubscriptionStatus,
     planType,
-    currentPeriodStart: new Date(stripeSubscription.current_period_start * 1000),
-    currentPeriodEnd: new Date(stripeSubscription.current_period_end * 1000),
-    cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
-    canceledAt: stripeSubscription.canceled_at 
-      ? new Date(stripeSubscription.canceled_at * 1000) 
+    currentPeriodStart: new Date(
+      (stripeSubscription as any).current_period_start * 1000
+    ),
+    currentPeriodEnd: new Date(
+      (stripeSubscription as any).current_period_end * 1000
+    ),
+    cancelAtPeriodEnd: (stripeSubscription as any).cancel_at_period_end,
+    canceledAt: (stripeSubscription as any).canceled_at
+      ? new Date((stripeSubscription as any).canceled_at * 1000)
       : null,
-    trialStart: stripeSubscription.trial_start 
-      ? new Date(stripeSubscription.trial_start * 1000) 
+    trialStart: (stripeSubscription as any).trial_start
+      ? new Date((stripeSubscription as any).trial_start * 1000)
       : null,
-    trialEnd: stripeSubscription.trial_end 
-      ? new Date(stripeSubscription.trial_end * 1000) 
+    trialEnd: (stripeSubscription as any).trial_end
+      ? new Date((stripeSubscription as any).trial_end * 1000)
       : null,
   };
 
   // Try to update existing subscription first
   const existing = await getSubscriptionByStripeId(stripeSubscription.id);
-  
+
   if (existing) {
     return await updateSubscriptionByStripeId(stripeSubscription.id, {
       status: subscriptionData.status,
@@ -259,13 +270,10 @@ export async function upsertSubscriptionFromStripe(
  */
 export async function getExpiredActiveSubscriptions() {
   const now = new Date();
-  
+
   return await prisma.subscription.findMany({
     where: {
-      OR: [
-        { status: "active" },
-        { status: "trialing" },
-      ],
+      OR: [{ status: "active" }, { status: "trialing" }],
       currentPeriodEnd: {
         lt: now,
       },
@@ -281,7 +289,7 @@ export async function getExpiredActiveSubscriptions() {
  */
 export async function markExpiredSubscriptionsAsCanceled() {
   const expiredSubscriptions = await getExpiredActiveSubscriptions();
-  
+
   const results = await Promise.allSettled(
     expiredSubscriptions.map((subscription) =>
       updateSubscriptionByStripeId(subscription.stripeSubscriptionId, {
@@ -301,4 +309,3 @@ export async function markExpiredSubscriptionsAsCanceled() {
     expiredSubscriptions,
   };
 }
-

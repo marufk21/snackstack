@@ -117,9 +117,15 @@ export async function POST(req: NextRequest) {
         const invoice = event.data.object as Stripe.Invoice;
         console.log("Payment succeeded for invoice:", invoice.id);
 
-        if (invoice.subscription) {
+        // Invoice.subscription can be a string (ID) or a Subscription object
+        const subscriptionId =
+          typeof (invoice as any).subscription === "string"
+            ? (invoice as any).subscription
+            : (invoice as any).subscription?.id;
+
+        if (subscriptionId) {
           const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
+            subscriptionId
           );
 
           const existingSubscription = await getSubscriptionByStripeId(
@@ -145,9 +151,15 @@ export async function POST(req: NextRequest) {
         const failedInvoice = event.data.object as Stripe.Invoice;
         console.log("Payment failed for invoice:", failedInvoice.id);
 
-        if (failedInvoice.subscription) {
+        // Invoice.subscription can be a string (ID) or a Subscription object
+        const subscriptionId =
+          typeof (failedInvoice as any).subscription === "string"
+            ? (failedInvoice as any).subscription
+            : (failedInvoice as any).subscription?.id;
+
+        if (subscriptionId) {
           const subscription = await stripe.subscriptions.retrieve(
-            failedInvoice.subscription as string
+            subscriptionId
           );
 
           const existingSubscription = await getSubscriptionByStripeId(

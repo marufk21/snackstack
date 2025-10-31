@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { markExpiredSubscriptionsAsCanceled } from "@/lib/database/subscription";
 
 // Force dynamic rendering to prevent caching issues with cron jobs
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 /**
  * Cron job to check and handle expired subscriptions
  * This should be called periodically (e.g., every 6 hours via Vercel Cron)
- * 
+ *
  * Cron setup in vercel.json:
  * - path: /api/cron/check-subscriptions
- * - schedule: 0 */6 * * * (every 6 hours)
- * 
+ * - schedule: 0 *\/6 * * * (every 6 hours)
+ *
  * Note: Vercel sends POST requests to cron endpoints with an authorization header
  * matching CRON_SECRET environment variable (if set).
  */
@@ -26,16 +26,15 @@ async function handleCronRequest(req: NextRequest) {
     if (cronSecret) {
       const expectedAuth = `Bearer ${cronSecret}`;
       if (authHeader !== expectedAuth) {
-        console.error("Unauthorized cron request - invalid authorization header");
-        return NextResponse.json(
-          { error: "Unauthorized" },
-          { status: 401 }
+        console.error(
+          "Unauthorized cron request - invalid authorization header"
         );
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
     }
 
     console.log("Starting subscription expiration check...");
-    
+
     const result = await markExpiredSubscriptionsAsCanceled();
 
     console.log(
@@ -62,9 +61,9 @@ async function handleCronRequest(req: NextRequest) {
   } catch (error) {
     console.error("Error checking expired subscriptions:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to check expired subscriptions",
-        details: error instanceof Error ? error.message : "Unknown error"
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
@@ -84,4 +83,3 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   return handleCronRequest(req);
 }
-

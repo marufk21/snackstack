@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/database";
@@ -33,14 +33,22 @@ export async function GET(request: NextRequest) {
 
     // First, find or create the user in our database
     let user = await db.user.findFirst({
-      where: { email: userId }, // Using Clerk userId as email identifier
+      where: { clerkUserId: userId },
     });
 
     if (!user) {
+      // Get user info from Clerk to get email and name
+      const clerkUser = await currentUser();
+      const userEmail = clerkUser?.emailAddresses?.[0]?.emailAddress || `${userId}@clerk.local`;
+      const userName = clerkUser?.firstName && clerkUser?.lastName
+        ? `${clerkUser.firstName} ${clerkUser.lastName}`
+        : clerkUser?.firstName || clerkUser?.username || "New User";
+
       user = await db.user.create({
         data: {
-          name: "New User",
-          email: userId,
+          clerkUserId: userId,
+          name: userName,
+          email: userEmail,
         },
       });
     }
@@ -102,14 +110,22 @@ export async function POST(request: NextRequest) {
 
     // First, find or create the user in our database
     let user = await db.user.findFirst({
-      where: { email: userId }, // Using Clerk userId as email identifier
+      where: { clerkUserId: userId },
     });
 
     if (!user) {
+      // Get user info from Clerk to get email and name
+      const clerkUser = await currentUser();
+      const userEmail = clerkUser?.emailAddresses?.[0]?.emailAddress || `${userId}@clerk.local`;
+      const userName = clerkUser?.firstName && clerkUser?.lastName
+        ? `${clerkUser.firstName} ${clerkUser.lastName}`
+        : clerkUser?.firstName || clerkUser?.username || "New User";
+
       user = await db.user.create({
         data: {
-          name: "New User",
-          email: userId,
+          clerkUserId: userId,
+          name: userName,
+          email: userEmail,
         },
       });
     }
