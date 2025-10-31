@@ -142,3 +142,92 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Glowing text effects for hero section */
+.text-glow-gradient {
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.8)) 
+          drop-shadow(0 0 60px rgba(59, 130, 246, 0.6))
+          drop-shadow(0 0 90px rgba(236, 72, 153, 0.5))
+          drop-shadow(0 0 120px rgba(168, 85, 247, 0.3));
+  animation: glow-pulse 2.5s ease-in-out infinite;
+  position: relative;
+}
+
+.text-glow-gradient::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: blur(20px) brightness(1.5);
+  opacity: 0.6;
+  animation: glow-bloom 2.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.8)) 
+            drop-shadow(0 0 60px rgba(59, 130, 246, 0.6))
+            drop-shadow(0 0 90px rgba(236, 72, 153, 0.5))
+            drop-shadow(0 0 120px rgba(168, 85, 247, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 50px rgba(168, 85, 247, 1)) 
+            drop-shadow(0 0 80px rgba(59, 130, 246, 0.8))
+            drop-shadow(0 0 110px rgba(236, 72, 153, 0.7))
+            drop-shadow(0 0 140px rgba(168, 85, 247, 0.5));
+  }
+}
+
+@keyframes glow-bloom {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
+}
+
+.text-glow-white {
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+               0 0 60px rgba(255, 255, 255, 0.6),
+               0 0 90px rgba(255, 255, 255, 0.4),
+               0 0 120px rgba(255, 255, 255, 0.2);
+  animation: white-glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes white-glow-pulse {
+  0%, 100% {
+    text-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+                 0 0 60px rgba(255, 255, 255, 0.6),
+                 0 0 90px rgba(255, 255, 255, 0.4),
+                 0 0 120px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(255, 255, 255, 1),
+                 0 0 80px rgba(255, 255, 255, 0.8),
+                 0 0 120px rgba(255, 255, 255, 0.6),
+                 0 0 160px rgba(255, 255, 255, 0.4);
+  }
+}

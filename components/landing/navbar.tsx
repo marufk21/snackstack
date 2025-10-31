@@ -21,20 +21,25 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    label: "How Its Works",
-    href: "/app",
+    label: "About",
+    href: "#about",
+  },
+  {
+    label: "Features",
+    href: "#features",
   },
   {
     label: "Pricing",
-    href: "/app/pricing",
+    href: "#pricing",
   },
   {
-    label: "Blogs",
-    href: "/app",
+    label: "Reviews",
+    href: "#testimonials",
   },
+
   {
     label: "Contact Us",
-    href: "/app/new",
+    href: "#contact",
   },
 ];
 
@@ -88,15 +93,36 @@ export default function Navbar() {
     };
   }, [isOpen]);
 
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    // Only handle smooth scroll for anchor links
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const element = document.querySelector(href);
+      if (element) {
+        const navbarHeight = 100; // Approximate navbar height
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }
+    setIsOpen(false);
+    setActiveDropdown(null);
+  };
+
   const NavItem = ({ item }: { item: NavItem }) => {
     return (
       <Link
         href={item.href}
-        className="relative text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-accent group"
-        onClick={() => {
-          setIsOpen(false);
-          setActiveDropdown(null);
-        }}
+        className="relative text-white/90 hover:text-white transition-colors duration-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 group"
+        onClick={(e) => handleNavClick(e, item.href)}
       >
         {item.label}
         <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/20 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
@@ -108,11 +134,8 @@ export default function Navbar() {
     return (
       <Link
         href={item.href}
-        className="block px-6 py-4 text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 border-b border-border last:border-b-0 text-base font-medium sm:text-lg"
-        onClick={() => {
-          setIsOpen(false);
-          setActiveDropdown(null);
-        }}
+        className="block px-6 py-4 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200 border-b border-white/10 last:border-b-0 text-base font-medium sm:text-lg"
+        onClick={(e) => handleNavClick(e, item.href)}
       >
         {item.label}
       </Link>

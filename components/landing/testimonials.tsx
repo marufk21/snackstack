@@ -12,31 +12,37 @@ const Testimonials = () => {
       name: "Sarah Chen",
       role: "Product Manager",
       company: "TechCorp",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-      content: "SnackStack has completely transformed how I capture and organize my thoughts. The AI suggestions help me express ideas more clearly and find connections I would have otherwise missed. It's like having a thinking partner!",
+      avatar:
+        "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+      content:
+        "SnackStack has completely transformed how I capture and organize my thoughts. The AI suggestions help me express ideas more clearly and find connections I would have otherwise missed. It's like having a thinking partner!",
       rating: 5,
-      featured: true
+      featured: false,
     },
     {
       id: 2,
       name: "Marcus Rodriguez",
       role: "Research Scientist",
       company: "InnovateLabs",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      content: "As someone who takes thousands of notes, SnackStack's AI-powered organization has saved me countless hours. The automatic tagging and relationship mapping features are game-changers for research work.",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      content:
+        "As someone who takes thousands of notes, SnackStack's AI-powered organization has saved me countless hours. The automatic tagging and relationship mapping features are game-changers for research work.",
       rating: 5,
-      featured: false
+      featured: false,
     },
     {
       id: 3,
       name: "Emily Johnson",
       role: "Content Creator",
       company: "CreativeStudio",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      content: "The collaborative features are outstanding. My team and I use SnackStack to brainstorm ideas, and the AI suggestions often spark new creative directions we hadn't considered. It's become essential to our workflow.",
+      avatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+      content:
+        "The collaborative features are outstanding. My team and I use SnackStack to brainstorm ideas, and the AI suggestions often spark new creative directions we hadn't considered. It's become essential to our workflow.",
       rating: 5,
-      featured: false
-    }
+      featured: false,
+    },
   ];
 
   const renderStars = (rating: number) => {
@@ -53,7 +59,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-muted/10">
+    <section id="testimonials" className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -76,7 +82,7 @@ const Testimonials = () => {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Don't just take our word for it. See how SnackStack is helping 
+            Don't just take our word for it. See how SnackStack is helping
             individuals and teams capture and enhance their ideas.
           </p>
         </motion.div>
@@ -97,7 +103,7 @@ const Testimonials = () => {
               <div className="bg-card border border-border rounded-2xl p-8 h-full hover:shadow-2xl transition-all duration-500 hover:border-purple-500/30 hover:-translate-y-1 relative overflow-hidden">
                 {/* Background Gradient Effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                
+
                 {/* Quote Icon */}
                 <div className="absolute top-6 right-6 text-purple-500/20 group-hover:text-purple-500/30 transition-colors duration-300">
                   <Quote className="w-8 h-8" />
@@ -150,28 +156,6 @@ const Testimonials = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-center mt-16"
-        >
-          <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-500/20 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-foreground mb-4">
-              Join Thousands of Happy Users
-            </h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Ready to transform how you capture and enhance your ideas? Start your journey with 
-              SnackStack today and experience the power of AI-powered note-taking.
-            </p>
-            <button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105">
-              Start Free Trial
-            </button>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

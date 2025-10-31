@@ -1,25 +1,24 @@
 "use client";
 
-import { 
-  Hero, 
-  About, 
-  Services, 
-  Testimonials, 
-  CTA, 
-  Footer 
+import {
+  Hero,
+  About,
+  Services,
+  Testimonials,
+  Pricing,
+  Contact,
+  Footer,
 } from "@/components/landing";
 
 const Page = () => {
   return (
     <>
-      {/* Hero Section */}
       <Hero />
-      
-      {/* Landing Page Sections */}
       <About />
       <Services />
+      <Pricing />
       <Testimonials />
-      <CTA />
+      <Contact />
       <Footer />
     </>
   );
