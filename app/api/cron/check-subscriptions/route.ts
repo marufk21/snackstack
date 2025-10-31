@@ -1,29 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
 import { markExpiredSubscriptionsAsCanceled } from "@/lib/database/subscription";
 
+// Force dynamic rendering to prevent caching issues with cron jobs
+export const dynamic = 'force-dynamic';
+
 /**
  * Cron job to check and handle expired subscriptions
- * This should be called periodically (e.g., daily via Vercel Cron or similar)
+ * This should be called periodically (e.g., every 6 hours via Vercel Cron)
  * 
- * Example cron setup in vercel.json:
- * {
- *   "crons": [{
- *     "path": "/api/cron/check-subscriptions",
- *     "schedule": "0 0 * * *"
- *   }]
- * }
+ * Cron setup in vercel.json:
+ * - path: /api/cron/check-subscriptions
+ * - schedule: 0 */6 * * * (every 6 hours)
+ * 
+ * Note: Vercel sends POST requests to cron endpoints with an authorization header
+ * matching CRON_SECRET environment variable (if set).
  */
-export async function GET(req: NextRequest) {
+async function handleCronRequest(req: NextRequest) {
   try {
     // Verify cron secret to prevent unauthorized access
+    // Vercel automatically sends authorization header matching CRON_SECRET
     const authHeader = req.headers.get("authorization");
     const cronSecret = process.env.CRON_SECRET;
 
-    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // If CRON_SECRET is set, verify the authorization header
+    if (cronSecret) {
+      const expectedAuth = `Bearer ${cronSecret}`;
+      if (authHeader !== expectedAuth) {
+        console.error("Unauthorized cron request - invalid authorization header");
+        return NextResponse.json(
+          { error: "Unauthorized" },
+          { status: 401 }
+        );
+      }
     }
 
     console.log("Starting subscription expiration check...");
@@ -64,9 +72,16 @@ export async function GET(req: NextRequest) {
 }
 
 /**
- * Also allow POST for manual triggering (protected by secret)
+ * Vercel sends POST requests to cron endpoints
  */
 export async function POST(req: NextRequest) {
-  return GET(req);
+  return handleCronRequest(req);
+}
+
+/**
+ * Also allow GET for manual testing (protected by secret)
+ */
+export async function GET(req: NextRequest) {
+  return handleCronRequest(req);
 }
 

@@ -61,37 +61,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.5,
     },
-    // Dashboard pages
-    {
-      url: `${normalizedBaseUrl}/app`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: `${normalizedBaseUrl}/app/new`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
-      url: `${normalizedBaseUrl}/app/pricing`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${normalizedBaseUrl}/app/subscription`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    {
-      url: `${normalizedBaseUrl}/app/subscription/success`,
-      lastModified: new Date(),
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
   ];
 
   // Dynamic routes from database
@@ -104,8 +73,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return staticRoutes;
     }
 
-    // Fetch notes with better performance considerations
+    // Fetch only PUBLIC notes with better performance considerations
+    // SECURITY: Only include public notes in sitemap to prevent data breach
     const notes = await db.note.findMany({
+      where: {
+        isPublic: true, // Only include public notes
+      },
       select: {
         slug: true,
         updatedAt: true,
@@ -180,5 +153,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
  * - Ensure NEXT_PUBLIC_APP_URL is set correctly
  * - Submit sitemap to Google Search Console
  * - Monitor indexing status regularly
- * - Ensure no private user data is exposed in sitemap URLs
+ * - SECURITY: Only public notes (isPublic: true) are included in sitemap
+ * - SECURITY: Dashboard routes are excluded from sitemap and robots.txt
  */

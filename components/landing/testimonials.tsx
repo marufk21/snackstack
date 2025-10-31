@@ -51,7 +51,7 @@ const Testimonials = () => {
         key={i}
         className={`w-4 h-4 ${
           i < rating
-            ? "text-yellow-400 fill-yellow-400"
+            ? "text-yellow-400 fill-yellow-400 dark:text-yellow-500 dark:fill-yellow-500"
             : "text-gray-300 dark:text-gray-600"
         }`}
       />
@@ -69,8 +69,8 @@ const Testimonials = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6">
-            <Quote className="w-4 h-4 text-blue-500" />
+          <div className="inline-flex items-center gap-2 bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/20 dark:border-blue-500/20 rounded-full px-4 py-2 mb-6">
+            <Quote className="w-4 h-4 text-blue-500 dark:text-blue-400" />
             <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
               Testimonials
             </span>

@@ -130,7 +130,7 @@ const Contact = () => {
                 onChange={handleChange}
                 placeholder="Tell us what's on your mind..."
                 rows={5}
-                className="w-full min-h-[100px] px-3 py-2 text-base md:text-sm bg-transparent dark:bg-input/30 border border-input rounded-md shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] placeholder:text-muted-foreground resize-none"
+                className="w-full min-h-[100px] px-3 py-2 text-base md:text-sm bg-background dark:bg-input/30 border border-input rounded-md shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] placeholder:text-muted-foreground resize-none text-foreground"
               />
             </div>
 

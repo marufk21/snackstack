@@ -1,10 +1,11 @@
 # UI:DB:CODE (MVP)
 
 # Landing Page 
-- Headless CMS
+- Headless CMS / Sitemaps
 - Resend/Nodemailer
+- Overall
 
-# Auth 
+# Authentication
 - UI
 - Link
 
@@ -22,9 +23,7 @@
 
 
 # Build 
-- Sitmap note in app
 - Clerk Production - Custom Domain
-
 
 
 PostHog
@@ -43,9 +42,6 @@ capture("cta_clicked", {
 button: "get_started",
 location: "landing_page",
 })
-</button>
-
-
 
 File Config file
 Dashboard

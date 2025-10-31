@@ -2,12 +2,16 @@
 
 import { SignUpButton, SignInButton } from "@clerk/nextjs";
 import Dither from "@/components/landing/dither";
+import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
 
 import PageWrapper from "@/components/landing/page-wrapper";
 import { usePostHog } from "@/hooks/use-posthog";
 
 const Hero = () => {
   const { capture } = usePostHog();
+  const { theme, resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark" || theme === "dark";
 
   return (
     <PageWrapper>
@@ -30,11 +34,21 @@ const Hero = () => {
             AI-Powered Notes
           </span>
           <br />
-          <span className="text-2xl sm:text-3xl lg:text-4xl font-light text-white">
+          <span
+            className={cn(
+              "text-2xl sm:text-3xl lg:text-4xl font-light drop-shadow-lg",
+              isDark ? "text-white" : "text-gray-900 dark:text-white"
+            )}
+          >
             for Modern Teams
           </span>
         </h1>
-        <p className="text-xl text-white mb-8 max-w-3xl mx-auto">
+        <p
+          className={cn(
+            "text-xl mb-8 max-w-3xl mx-auto drop-shadow-md",
+            isDark ? "text-white/90" : "text-gray-800 dark:text-white/90"
+          )}
+        >
           Capture, organize, and enhance your ideas with the power of artificial
           intelligence. The smart way to take notes for individuals and teams.
         </p>
@@ -47,7 +61,7 @@ const Hero = () => {
                   location: "landing_page",
                 })
               }
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg"
             >
               Get Started
             </button>
@@ -60,7 +74,12 @@ const Hero = () => {
                   location: "landing_page",
                 })
               }
-              className="border border-white/30 bg-white/10 backdrop-blur-sm text-white hover:text-white hover:border-white/60 hover:bg-white/20 px-8 py-4 rounded-lg font-medium transition-all duration-200 hover:scale-105"
+              className={cn(
+                "backdrop-blur-sm px-8 py-4 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg",
+                isDark
+                  ? "border border-white/30 bg-white/10 text-white hover:text-white hover:border-white/60 hover:bg-white/20"
+                  : "border border-gray-300/80 bg-white/80 text-gray-900 hover:text-gray-900 hover:border-gray-400/80 hover:bg-white/90 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:text-white dark:hover:border-white/60 dark:hover:bg-white/20"
+              )}
             >
               Sign In
             </button>

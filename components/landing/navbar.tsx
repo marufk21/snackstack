@@ -121,7 +121,7 @@ export default function Navbar() {
     return (
       <Link
         href={item.href}
-        className="relative text-white/90 hover:text-white transition-colors duration-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-white/10 group"
+        className="relative text-foreground/90 dark:text-white/90 hover:text-foreground dark:hover:text-white transition-colors duration-200 text-sm font-medium px-4 py-2 rounded-lg hover:bg-foreground/10 dark:hover:bg-white/10 group"
         onClick={(e) => handleNavClick(e, item.href)}
       >
         {item.label}
@@ -134,7 +134,7 @@ export default function Navbar() {
     return (
       <Link
         href={item.href}
-        className="block px-6 py-4 text-white/90 hover:text-white hover:bg-white/10 transition-all duration-200 border-b border-white/10 last:border-b-0 text-base font-medium sm:text-lg"
+        className="block px-6 py-4 text-foreground/90 dark:text-white/90 hover:text-foreground dark:hover:text-white hover:bg-foreground/10 dark:hover:bg-white/10 transition-all duration-200 border-b border-border/50 dark:border-white/10 last:border-b-0 text-base font-medium sm:text-lg"
         onClick={(e) => handleNavClick(e, item.href)}
       >
         {item.label}
@@ -155,7 +155,7 @@ export default function Navbar() {
             className={cn(
               "w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-600 ease-in-out",
               scrolled
-                ? "max-w-6xl py-2 bg-gray-100/10 dark:bg-gray-800/40 backdrop-blur-[50px] lg:rounded-full border border-gray-200/30 dark:border-gray-700/80 shadow-2xl "
+                ? "max-w-6xl py-2 bg-white/80 dark:bg-gray-800/40 backdrop-blur-[50px] lg:rounded-full border border-gray-200/60 dark:border-gray-700/80 shadow-lg dark:shadow-2xl"
                 : "max-w-screen rounded-3xl border-none"
             )}
           >
@@ -272,7 +272,7 @@ export default function Navbar() {
                 className={cn(
                   "lg:hidden overflow-hidden backdrop-blur-sm border-t transition-all duration-500 ease-in-out",
                   scrolled
-                    ? "bg-gray-100/30 dark:bg-gray-800/40 backdrop-blur-[50px] border-gray-200/30 dark:border-gray-700/30 mx-0.5 lg:mx-8 rounded-b-lg"
+                    ? "bg-white/90 dark:bg-gray-800/40 backdrop-blur-[50px] border-gray-200/60 dark:border-gray-700/30 mx-0.5 lg:mx-8 rounded-b-lg shadow-lg dark:shadow-2xl"
                     : "bg-gradient-to-r from-background/98 via-background/95 to-background/98 border-border"
                 )}
               >
