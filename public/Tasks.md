@@ -1,8 +1,8 @@
 # UI:DB:CODE (MVP)
 
 # Landing Page 
-- Content 
-- Refactor
+- Headless CMS
+- Resend/Nodemailer
 
 # Auth 
 - UI
