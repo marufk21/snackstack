@@ -20,19 +20,19 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/api/*",
-          "/app/subscription/success",
+          "/app/*", // SECURITY: Disallow all dashboard routes to prevent indexing
           "/_next/",
           "/.well-known/",
-          "/sign-in",
-          "/sign-up",
-          "/app/new",
-          "/app/subscription",
         ],
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/api/*", "/_next/", "/app/subscription/success"],
+        disallow: [
+          "/api/*",
+          "/app/*", // SECURITY: Disallow all dashboard routes
+          "/_next/",
+        ],
       },
     ],
     sitemap: `${normalizedBaseUrl}/sitemap.xml`,

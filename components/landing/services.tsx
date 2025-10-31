@@ -78,8 +78,8 @@ const Services = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
-            <Sparkles className="w-4 h-4 text-purple-500" />
+          <div className="inline-flex items-center gap-2 bg-purple-500/10 dark:bg-purple-500/10 border border-purple-500/20 dark:border-purple-500/20 rounded-full px-4 py-2 mb-6">
+            <Sparkles className="w-4 h-4 text-purple-500 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
               Powerful Features
             </span>
@@ -149,7 +149,7 @@ const Services = () => {
                   <div className="pt-6">
                     <button className="group/btn flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-medium transition-colors duration-200">
                       Learn More
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" />
+                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200 text-purple-600 dark:text-purple-400" />
                     </button>
                   </div>
                 </div>

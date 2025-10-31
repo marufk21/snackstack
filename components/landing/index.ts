@@ -7,5 +7,4 @@ export { default as Pricing } from "./pricing";
 export { default as Footer } from "./footer";
 export { default as Navbar } from "./navbar";
 export { default as PageWrapper } from "./page-wrapper";
-export { default as LiquidEther } from "./liquid-ether";
 export { default as Contact } from "./contact";
