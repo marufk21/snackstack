@@ -6,14 +6,17 @@ export const dynamic = "force-dynamic";
 
 /**
  * Cron job to check and handle expired subscriptions
- * This should be called periodically (e.g., every 6 hours via Vercel Cron)
+ * Runs once per day via Vercel Cron (Hobby plan limitation: max once per day)
  *
  * Cron setup in vercel.json:
  * - path: /api/cron/check-subscriptions
- * - schedule: 0 *\/6 * * * (every 6 hours)
+ * - schedule: 0 1 * * * (every day at 1 AM)
  *
  * Note: Vercel sends POST requests to cron endpoints with an authorization header
  * matching CRON_SECRET environment variable (if set).
+ *
+ * Note: On Hobby plan, cron jobs can only run once per day. For more frequent
+ * executions, upgrade to Pro plan which allows unlimited cron invocations.
  */
 async function handleCronRequest(req: NextRequest) {
   try {
