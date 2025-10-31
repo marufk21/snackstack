@@ -42,14 +42,18 @@ export async function generateUniqueSlug(
 export async function createWelcomeNote(clerkUserId: string) {
   // First, find or create the user in our database
   let user = await db.user.findFirst({
-    where: { email: clerkUserId }, // Using clerkUserId as email for now
+    where: { clerkUserId: clerkUserId },
   });
 
   if (!user) {
+    // Note: This function assumes the user already exists
+    // If not, it will create with a placeholder email
+    // Ideally, this should be called after user creation with proper email
     user = await db.user.create({
       data: {
+        clerkUserId: clerkUserId,
         name: "New User",
-        email: clerkUserId,
+        email: `${clerkUserId}@clerk.local`,
       },
     });
   }
