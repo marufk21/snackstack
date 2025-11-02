@@ -13,7 +13,9 @@ const Contact = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<
+    "idle" | "success" | "error"
+  >("idle");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -29,12 +31,16 @@ const Contact = () => {
 
     try {
       // Create mailto link
-      const mailtoLink = `mailto:hello@snackstack.com?subject=${encodeURIComponent(`Contact from ${formData.name}`)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`;
+      const mailtoLink = `mailto:hello@snackstack.com?subject=${encodeURIComponent(
+        `Contact from ${formData.name}`
+      )}&body=${encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      )}`;
       window.location.href = mailtoLink;
-      
+
       setSubmitStatus("success");
       setFormData({ name: "", email: "", message: "" });
-      
+
       setTimeout(() => {
         setSubmitStatus("idle");
       }, 3000);
@@ -56,16 +62,23 @@ const Contact = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
+            <Mail className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
+              Contact Us
+            </span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Get in{" "}
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               Touch
             </span>
           </h2>
-          <p className="text-lg text-muted-foreground">
-            Have a question? We'd love to hear from you.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Have a question or want to collaborate? We'd love to hear from you.
+            Send us a message and we'll respond as soon as possible.
           </p>
         </motion.div>
 

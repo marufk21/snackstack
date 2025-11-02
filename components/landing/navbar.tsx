@@ -41,6 +41,10 @@ const navItems: NavItem[] = [
     label: "Contact Us",
     href: "#contact",
   },
+  {
+    label: "Blogs",
+    href: "/blogs",
+  },
 ];
 
 export default function Navbar() {
@@ -50,8 +54,9 @@ export default function Navbar() {
   const { theme } = useTheme();
   const pathname = usePathname();
 
-  // Hide navigation items when in app routes
-  const isInAppRoutes = pathname?.startsWith("/app");
+  // Show navbar only on landing pages (home and /blogs)
+  const shouldShowNavbar = pathname === "/" || pathname === "/blogs" || pathname?.startsWith("/blogs/");
+  const isInAppRoutes = !shouldShowNavbar;
 
   // Handle scroll effect
   useEffect(() => {
@@ -100,6 +105,13 @@ export default function Navbar() {
     // Only handle smooth scroll for anchor links
     if (href.startsWith("#")) {
       e.preventDefault();
+      
+      // If we're not on the home page, navigate to home with the anchor
+      if (pathname !== "/") {
+        window.location.href = `/${href}`;
+        return;
+      }
+      
       const element = document.querySelector(href);
       if (element) {
         const navbarHeight = 100; // Approximate navbar height
@@ -141,6 +153,11 @@ export default function Navbar() {
       </Link>
     );
   };
+
+  // Don't render navbar on admin routes
+  if (!shouldShowNavbar) {
+    return null;
+  }
 
   return (
     <>

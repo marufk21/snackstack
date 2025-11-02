@@ -26,7 +26,7 @@ export default clerkMiddleware(async (auth, req) => {
     }
   }
 
-  // If user is signed in and trying to access auth routes, redirect to app
+  // If user is signed in and trying to access auth routes, redirect to app (NOT admin)
   if (
     userId &&
     (req.nextUrl.pathname === "/sign-in" || req.nextUrl.pathname === "/sign-up")
@@ -35,8 +35,15 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.redirect(url);
   }
 
-  // If user is signed in and on landing page, redirect to app
+  // If user is signed in and on landing page, redirect to app (NOT admin)
   if (userId && req.nextUrl.pathname === "/") {
+    url.pathname = "/app";
+    return NextResponse.redirect(url);
+  }
+
+  // Prevent Clerk-authenticated users from being redirected to admin panel
+  // Admin panel uses separate authentication (localStorage), not Clerk
+  if (userId && req.nextUrl.pathname === "/admin") {
     url.pathname = "/app";
     return NextResponse.redirect(url);
   }
