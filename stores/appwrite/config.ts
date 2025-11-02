@@ -1,4 +1,4 @@
-import conf from "@/conf/config";
+import conf from "@/config/appwrite";
 import { Client, ID, Databases, Storage, Query, Models } from "appwrite";
 
 // Initialize Appwrite client
@@ -19,7 +19,7 @@ export interface Blog {
   id: string;
   title: string;
   excerpt: string;
-  coverImage: string;
+  coverImage?: string;
   date: string;
   author: string;
   content: string;
@@ -31,10 +31,10 @@ export const createBlogDocument = (blog: Omit<Blog, "id" | "date">) => {
   return {
     title: blog.title,
     excerpt: blog.excerpt,
-    coverImage: blog.coverImage,
+    coverImage: blog.coverImage || "",
     author: blog.author,
     content: blog.content,
-    status: blog.status,
+    status: blog.status || "draft",
     date: new Date().toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
