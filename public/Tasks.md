@@ -4,8 +4,10 @@
 - Admin RichText Editor
 - Sitemaps
 - New Blogs Create
+- Update Readme
 - Resend/Nodemailer
 - Overall
+
 
 # Authentication
 - UI

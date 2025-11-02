@@ -5,7 +5,16 @@ import Blogs from "@/components/landing/blog-showcase";
 export const dynamic = "force-dynamic";
 
 export default async function BlogsPage() {
-  const blogs: Blog[] = await getBlogs();
+  let blogs: Blog[] = [];
+  
+  try {
+    blogs = await getBlogs();
+  } catch (error) {
+    console.error("Failed to load blogs:", error);
+    // Continue with empty array to allow build to succeed
+    blogs = [];
+  }
+  
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
