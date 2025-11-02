@@ -1,0 +1,38 @@
+import { getBlogs } from "@/lib/appwrite/services";
+import { Blog } from "@/lib/appwrite/config";
+import Blogs from "@/components/landing/blog-showcase";
+
+export const dynamic = "force-dynamic";
+
+export default async function BlogsPage() {
+  const blogs: Blog[] = await getBlogs();
+  return (
+    <section className="py-12 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
+            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
+              Blogs
+            </span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            Latest{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              Insights & Updates
+            </span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Discover expert insights, innovative strategies, and the latest
+            trends to help you stay ahead in your journey.
+          </p>
+        </div>
+
+        {/* Blog Grid */}
+        <div className="mt-8">
+          <Blogs blogs={blogs.filter((blog) => blog.status === "published")} />
+        </div>
+      </div>
+    </section>
+  );
+}

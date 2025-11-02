@@ -6,6 +6,7 @@ import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { stripePriceIds } from "@/config/stripe-client";
+import { DollarSign } from "lucide-react";
 import Link from "next/link";
 
 const pricingTiers: PricingTier[] = [
@@ -89,6 +90,7 @@ const Pricing = () => {
           className="text-center mb-16"
         >
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
+            <DollarSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
               Pricing
             </span>

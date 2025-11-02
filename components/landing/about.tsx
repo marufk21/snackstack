@@ -2,32 +2,39 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { CheckCircle2, Zap, Shield, Rocket, Brain, Sparkles } from "lucide-react";
+import {
+  CheckCircle2,
+  Zap,
+  Shield,
+  Rocket,
+  Brain,
+  Sparkles,
+} from "lucide-react";
 
 const About = () => {
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
       title: "Lightning Fast",
-      description: "Optimized for speed and performance across all devices"
+      description: "Optimized for speed and performance across all devices",
     },
     {
       icon: <Shield className="w-6 h-6" />,
       title: "Secure & Reliable",
-      description: "Enterprise-grade security with 99.9% uptime guarantee"
+      description: "Enterprise-grade security with 99.9% uptime guarantee",
     },
     {
       icon: <Brain className="w-6 h-6" />,
       title: "AI-Powered",
-      description: "Intelligent suggestions and organization powered by AI"
-    }
+      description: "Intelligent suggestions and organization powered by AI",
+    },
   ];
 
   const stats = [
     { number: "10K+", label: "Active Users" },
     { number: "99.9%", label: "Uptime" },
     { number: "24/7", label: "Support" },
-    { number: "50+", label: "Countries" }
+    { number: "50+", label: "Countries" },
   ];
 
   return (
@@ -41,6 +48,12 @@ const About = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
+          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
+            <Rocket className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
+              About Us
+            </span>
+          </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             About{" "}
             <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
@@ -48,9 +61,10 @@ const About = () => {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We're revolutionizing how people capture and organize their ideas. 
-            Our AI-powered note-taking platform combines cutting-edge technology 
-            with intuitive design to deliver powerful solutions that enhance your thinking.
+            We're revolutionizing how people capture and organize their ideas.
+            Our AI-powered note-taking platform combines cutting-edge technology
+            with intuitive design to deliver powerful solutions that enhance
+            your thinking.
           </p>
         </motion.div>
 
@@ -69,10 +83,11 @@ const About = () => {
                 AI-Powered Note-Taking
               </h3>
               <p className="text-lg text-muted-foreground leading-relaxed">
-                SnackStack was built for the modern need to capture and enhance ideas. 
-                Our team of experienced engineers and AI specialists have crafted a 
-                platform that uses artificial intelligence to help you organize thoughts, 
-                find connections, and express ideas more effectively.
+                SnackStack was built for the modern need to capture and enhance
+                ideas. Our team of experienced engineers and AI specialists have
+                crafted a platform that uses artificial intelligence to help you
+                organize thoughts, find connections, and express ideas more
+                effectively.
               </p>
             </div>
 
@@ -81,7 +96,7 @@ const About = () => {
                 "AI-powered suggestions and content enhancement",
                 "Intelligent organization and automatic tagging",
                 "Seamless collaboration with real-time editing",
-                "Powerful search and relationship mapping"
+                "Powerful search and relationship mapping",
               ].map((item, index) => (
                 <motion.div
                   key={index}
