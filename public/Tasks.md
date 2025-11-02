@@ -1,7 +1,9 @@
 # UI:DB:CODE (MVP)
 
 # Landing Page 
-- Headless CMS / Sitemaps
+- Admin RichText Editor
+- Sitemaps
+- New Blogs Create
 - Resend/Nodemailer
 - Overall
 

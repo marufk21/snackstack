@@ -9,17 +9,31 @@ import {
 } from "./config";
 import conf from "@/config/appwrite";
 
+// Define BlogDocument interface that extends Models.Document with blog-specific properties
+interface BlogDocument extends Models.Document {
+  title: string;
+  excerpt: string;
+  coverImage?: string;
+  date: string;
+  author: string;
+  content: string;
+  status: string;
+}
+
 // Helper to map Appwrite Document to Blog type
-const mapDocumentToBlog = (doc: Models.Document): Blog => ({
-  id: doc.$id,
-  title: doc.title,
-  excerpt: doc.excerpt,
-  coverImage: doc.coverImage,
-  date: doc.date,
-  author: doc.author,
-  content: doc.content,
-  status: doc.status,
-});
+const mapDocumentToBlog = (doc: Models.Document): Blog => {
+  const blogDoc = doc as unknown as BlogDocument;
+  return {
+    id: blogDoc.$id,
+    title: blogDoc.title,
+    excerpt: blogDoc.excerpt,
+    coverImage: blogDoc.coverImage,
+    date: blogDoc.date,
+    author: blogDoc.author,
+    content: blogDoc.content,
+    status: blogDoc.status,
+  };
+};
 
 // Get all blogs
 export const getBlogs = async (): Promise<Blog[]> => {
@@ -29,7 +43,7 @@ export const getBlogs = async (): Promise<Blog[]> => {
       BLOGS_COLLECTION_ID,
       [Query.orderDesc("date")]
     );
-    return response.documents.map(mapDocumentToBlog);
+    return response.documents.map((doc) => mapDocumentToBlog(doc));
   } catch (error) {
     console.error("Error fetching blogs:", error);
     throw error;
@@ -94,11 +108,12 @@ export const updateBlog = async (
 export const deleteBlog = async (id: string): Promise<void> => {
   try {
     // First get the blog to get the image file ID
-    const blog = await databases.getDocument(
+    const blogDoc = await databases.getDocument(
       DATABASE_ID,
       BLOGS_COLLECTION_ID,
       id
     );
+    const blog = blogDoc as unknown as BlogDocument;
 
     // Extract file ID from the coverImage URL
     const coverImageUrl = blog.coverImage;
