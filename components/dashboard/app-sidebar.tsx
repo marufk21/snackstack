@@ -3,14 +3,9 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FilePlus, CreditCard, CheckCircle, LogOut } from "lucide-react";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-  useClerk,
-} from "@clerk/nextjs";
+import { Home, FilePlus, CreditCard, CheckCircle, LogOut, User } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import {
   Sidebar,
@@ -50,7 +45,11 @@ const navigationItems = [
 
 export function AppSidebar() {
   const pathname = usePathname();
-  const { signOut } = useClerk();
+  const { data: session } = useSession();
+
+  const handleSignOut = async () => {
+    await signOut({ callbackUrl: "/" });
+  };
 
   return (
     <Sidebar>
@@ -112,42 +111,41 @@ export function AppSidebar() {
 
       <SidebarFooter className="border-t border-sidebar-border mt-auto">
         <div className="p-2 space-y-2">
-          <SignedOut>
-            <SignInButton mode="modal">
+          {!session ? (
+            <Link href="/sign-in">
               <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
                 Sign In
               </Button>
-            </SignInButton>
-          </SignedOut>
-
-          <SignedIn>
+            </Link>
+          ) : (
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 flex-1 min-w-0">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8",
-                    },
-                  }}
-                />
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={session.user?.image || undefined} />
+                  <AvatarFallback>
+                    {session.user?.name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-sm font-medium truncate">Account</span>
-                  <span className="text-xs text-muted-foreground">
-                    Manage profile
+                  <span className="text-sm font-medium truncate">
+                    {session.user?.name || "Account"}
+                  </span>
+                  <span className="text-xs text-muted-foreground truncate">
+                    {session.user?.email}
                   </span>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => signOut()}
+                onClick={handleSignOut}
                 className="shrink-0"
                 title="Sign Out"
               >
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
-          </SignedIn>
+          )}
         </div>
       </SidebarFooter>
     </Sidebar>

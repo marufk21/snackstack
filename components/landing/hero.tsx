@@ -1,6 +1,6 @@
 "use client";
 
-import { SignUpButton, SignInButton } from "@clerk/nextjs";
+import Link from "next/link";
 import Dither from "@/components/landing/dither";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
@@ -53,7 +53,7 @@ const Hero = () => {
           intelligence. The smart way to take notes for individuals and teams.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <SignUpButton>
+          <Link href="/sign-in">
             <button
               onClick={() =>
                 capture("get_started_clicked", {
@@ -65,8 +65,8 @@ const Hero = () => {
             >
               Get Started
             </button>
-          </SignUpButton>
-          <SignInButton>
+          </Link>
+          <Link href="/sign-in">
             <button
               onClick={() =>
                 capture("sign_in_clicked", {
@@ -83,7 +83,7 @@ const Hero = () => {
             >
               Sign In
             </button>
-          </SignInButton>
+          </Link>
         </div>
       </div>
     </PageWrapper>

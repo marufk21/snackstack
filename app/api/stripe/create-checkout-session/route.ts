@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { stripe } from "@/config/stripe";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await currentUser();
+    const session = await auth();
+    const user = session?.user;
 
-    if (!user) {
+    if (!user?.id || !user?.email) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
@@ -32,11 +33,11 @@ export async function POST(req: NextRequest) {
         },
       ],
       mode: "subscription",
-      customer_email: user.emailAddresses[0]?.emailAddress,
+      customer_email: user.email,
       client_reference_id: user.id,
       metadata: {
         userId: user.id,
-        userEmail: user.emailAddresses[0]?.emailAddress || "",
+        userEmail: user.email,
       },
       success_url: `${
         process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ sessionId: checkoutSession.id });
   } catch (error) {
     console.error("Error creating checkout session:", error);
     console.error("Error details:", {

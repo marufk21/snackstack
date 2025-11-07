@@ -38,11 +38,11 @@ export async function POST(req: NextRequest) {
             session.subscription as string
           );
 
-          const clerkUserId = session.metadata?.userId;
+          const userId = session.metadata?.userId;
           const userEmail =
             session.metadata?.userEmail || session.customer_email;
 
-          if (!clerkUserId || !userEmail) {
+          if (!userId || !userEmail) {
             console.error("Missing user information in session metadata");
             break;
           }
@@ -56,8 +56,7 @@ export async function POST(req: NextRequest) {
           // Create or update subscription
           await upsertSubscriptionFromStripe(
             subscription,
-            user.id,
-            clerkUserId
+            user.id
           );
 
           console.log(
@@ -78,8 +77,7 @@ export async function POST(req: NextRequest) {
         if (existingSubscription) {
           await upsertSubscriptionFromStripe(
             updatedSubscription,
-            existingSubscription.userId,
-            existingSubscription.clerkUserId
+            existingSubscription.userId
           );
           console.log(
             `Subscription ${updatedSubscription.id} updated in database`
@@ -136,8 +134,7 @@ export async function POST(req: NextRequest) {
             // Update subscription period and status
             await upsertSubscriptionFromStripe(
               subscription,
-              existingSubscription.userId,
-              existingSubscription.clerkUserId
+              existingSubscription.userId
             );
             console.log(
               `Subscription ${subscription.id} renewed after successful payment`

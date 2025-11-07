@@ -1,49 +1,49 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
 
-// Public routes
-const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-up(.*)",
-  "/notes/(.*)", // Public note sharing
-  "/api/stripe/webhook", // Stripe webhooks
-]);
+// Protected routes that require authentication
+const protectedRoutes = ["/app"];
 
-// Protected routes
-const isProtectedRoute = createRouteMatcher(["/app(.*)"]);
+// Auth routes that should redirect to /app if already authenticated
+const authRoutes = ["/sign-in", "/sign-up"];
 
-export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
-  const url = req.nextUrl.clone();
+export default auth((req) => {
+  const { auth: session } = req;
+  const { pathname } = req.nextUrl;
+  const isAuthenticated = !!session?.userId;
+
+  // Check if current path is protected
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  // Check if current path is an auth route
+  const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 
   // Protect routes that require authentication
-  if (isProtectedRoute(req)) {
-    if (!userId) {
-      // Redirect to sign-in if not authenticated
-      url.pathname = "/sign-in";
-      return NextResponse.redirect(url);
-    }
+  if (isProtectedRoute && !isAuthenticated) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/sign-in";
+    return NextResponse.redirect(url);
   }
 
-  // If user is signed in and trying to access auth routes, redirect to app (NOT admin)
-  if (
-    userId &&
-    (req.nextUrl.pathname === "/sign-in" || req.nextUrl.pathname === "/sign-up")
-  ) {
+  // If user is authenticated and trying to access auth routes, redirect to app
+  if (isAuthenticated && isAuthRoute) {
+    const url = req.nextUrl.clone();
     url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 
-  // If user is signed in and on landing page, redirect to app (NOT admin)
-  if (userId && req.nextUrl.pathname === "/") {
+  // If user is authenticated and on landing page, redirect to app
+  if (isAuthenticated && pathname === "/") {
+    const url = req.nextUrl.clone();
     url.pathname = "/app";
     return NextResponse.redirect(url);
   }
 
-  // Prevent Clerk-authenticated users from being redirected to admin panel
-  // Admin panel uses separate authentication (localStorage), not Clerk
-  if (userId && req.nextUrl.pathname === "/admin") {
+  // Prevent authenticated users from accessing admin panel
+  if (isAuthenticated && pathname === "/admin") {
+    const url = req.nextUrl.clone();
     url.pathname = "/app";
     return NextResponse.redirect(url);
   }
