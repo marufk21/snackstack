@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { stripe } from "@/config/stripe";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await currentUser();
+    const session = await auth();
 
-    if (!user) {
+    if (!session?.user?.id) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }

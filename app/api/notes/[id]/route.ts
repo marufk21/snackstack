@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/database";
@@ -20,7 +20,8 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth();
+    const session = await auth();
+    const userId = session?.user?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -28,19 +29,10 @@ export async function GET(
 
     const params = await context.params;
 
-    // First, find the user in our database
-    const user = await db.user.findFirst({
-      where: { email: userId }, // Using Clerk userId as email identifier
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     const note = await db.note.findFirst({
       where: {
         id: params.id,
-        userId: user.id,
+        userId: userId,
       },
     });
 
@@ -64,7 +56,8 @@ export async function PUT(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth();
+    const session = await auth();
+    const userId = session?.user?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -74,20 +67,11 @@ export async function PUT(
     const validatedData = updateNoteSchema.parse(body);
     const params = await context.params;
 
-    // First, find the user in our database
-    const user = await db.user.findFirst({
-      where: { email: userId }, // Using Clerk userId as email identifier
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     // Find the existing note
     const existingNote = await db.note.findFirst({
       where: {
         id: params.id,
-        userId: user.id,
+        userId: userId,
       },
     });
 
@@ -137,7 +121,8 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await auth();
+    const session = await auth();
+    const userId = session?.user?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -145,20 +130,11 @@ export async function DELETE(
 
     const params = await context.params;
 
-    // First, find the user in our database
-    const user = await db.user.findFirst({
-      where: { email: userId }, // Using Clerk userId as email identifier
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
     // Check if note exists and belongs to user
     const existingNote = await db.note.findFirst({
       where: {
         id: params.id,
-        userId: user.id,
+        userId: userId,
       },
     });
 

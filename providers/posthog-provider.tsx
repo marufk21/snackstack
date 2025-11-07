@@ -3,12 +3,12 @@
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { user } = useUser();
+  const { data: session } = useSession();
 
   // Initialize PostHog if not already initialized and key is available
   useEffect(() => {
@@ -49,14 +49,13 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Identify user when they sign in, only if PostHog is loaded
-    if (user && posthog.__loaded) {
-      posthog.identify(user.id, {
-        email: user.emailAddresses[0]?.emailAddress,
-        name: user.fullName,
-        username: user.username,
+    if (session?.user && posthog.__loaded) {
+      posthog.identify(session.user.id, {
+        email: session.user.email,
+        name: session.user.name,
       });
     }
-  }, [user]);
+  }, [session]);
 
   return <>{children}</>;
 }

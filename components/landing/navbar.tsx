@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { Menu, X, User } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
@@ -53,6 +54,7 @@ export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { theme } = useTheme();
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   // Show navbar only on landing pages (home and /blogs)
   const shouldShowNavbar = pathname === "/" || pathname === "/blogs" || pathname?.startsWith("/blogs/");
@@ -249,8 +251,8 @@ export default function Navbar() {
                 </div>
 
                 {/* Authentication Buttons */}
-                <SignedOut>
-                  <SignInButton>
+                {!session ? (
+                  <Link href="/sign-in">
                     <Button
                       className={cn(
                         "hidden lg:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl",
@@ -259,11 +261,17 @@ export default function Navbar() {
                     >
                       Sign In
                     </Button>
-                  </SignInButton>
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
+                  </Link>
+                ) : (
+                  <Link href="/app">
+                    <Avatar className="w-8 h-8 cursor-pointer">
+                      <AvatarImage src={session.user?.image || undefined} />
+                      <AvatarFallback>
+                        {session.user?.name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Link>
+                )}
 
                 {/* Mobile Menu Button */}
                 <div className="flex items-center gap-2 lg:hidden">
@@ -303,16 +311,15 @@ export default function Navbar() {
 
                   {/* Mobile Actions */}
                   <div className="pt-6">
-                    <SignedOut>
+                    {!session ? (
                       <div className="space-y-2">
-                        <SignInButton>
+                        <Link href="/sign-in">
                           <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
                             Sign In
                           </Button>
-                        </SignInButton>
+                        </Link>
                       </div>
-                    </SignedOut>
-                    <SignedIn>
+                    ) : (
                       <div className="space-y-2">
                         <Link href="/app">
                           <Button className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white rounded-lg px-4 py-3 text-sm font-medium transition-all duration-200">
@@ -320,7 +327,7 @@ export default function Navbar() {
                           </Button>
                         </Link>
                       </div>
-                    </SignedIn>
+                    )}
                   </div>
                 </div>
               </motion.div>

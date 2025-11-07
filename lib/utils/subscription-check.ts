@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { 
   hasActiveSubscription, 
   getUserSubscriptionTier, 
@@ -43,9 +43,9 @@ export const PLAN_LIMITS = {
  * Check if user has an active subscription
  */
 export async function checkUserSubscription() {
-  const user = await currentUser();
+  const session = await auth();
   
-  if (!user) {
+  if (!session?.user?.id) {
     return {
       hasSubscription: false,
       tier: "free" as const,
@@ -53,8 +53,8 @@ export async function checkUserSubscription() {
     };
   }
 
-  const isActive = await hasActiveSubscription(user.id);
-  const tier = await getUserSubscriptionTier(user.id);
+  const isActive = await hasActiveSubscription(session.user.id);
+  const tier = await getUserSubscriptionTier(session.user.id);
 
   return {
     hasSubscription: isActive,
@@ -104,20 +104,20 @@ export async function getUserLimits() {
  * Require active subscription - throws error if no subscription
  */
 export async function requireSubscription(minTier?: PlanType) {
-  const user = await currentUser();
+  const session = await auth();
   
-  if (!user) {
+  if (!session?.user?.id) {
     throw new Error("Authentication required");
   }
 
-  const isActive = await hasActiveSubscription(user.id);
+  const isActive = await hasActiveSubscription(session.user.id);
   
   if (!isActive) {
     throw new Error("Active subscription required");
   }
 
   if (minTier) {
-    const tier = await getUserSubscriptionTier(user.id);
+    const tier = await getUserSubscriptionTier(session.user.id);
     const tierOrder = ["free", "basic", "pro", "enterprise"];
     const userTierIndex = tierOrder.indexOf(tier);
     const minTierIndex = tierOrder.indexOf(minTier);

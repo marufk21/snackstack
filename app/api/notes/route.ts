@@ -1,4 +1,4 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/database";
@@ -14,7 +14,8 @@ const createNoteSchema = z.object({
 // GET /api/notes - Get all notes for authenticated user
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const session = await auth();
+    const userId = session?.user?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,26 +32,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // First, find or create the user in our database
-    let user = await db.user.findFirst({
-      where: { clerkUserId: userId },
+    // Get user from database (user should already exist from NextAuth)
+    const user = await db.user.findUnique({
+      where: { id: userId },
     });
 
     if (!user) {
-      // Get user info from Clerk to get email and name
-      const clerkUser = await currentUser();
-      const userEmail = clerkUser?.emailAddresses?.[0]?.emailAddress || `${userId}@clerk.local`;
-      const userName = clerkUser?.firstName && clerkUser?.lastName
-        ? `${clerkUser.firstName} ${clerkUser.lastName}`
-        : clerkUser?.firstName || clerkUser?.username || "New User";
-
-      user = await db.user.create({
-        data: {
-          clerkUserId: userId,
-          name: userName,
-          email: userEmail,
-        },
-      });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Get all notes for this user
@@ -99,7 +87,8 @@ export async function GET(request: NextRequest) {
 // POST /api/notes - Create new note
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
+    const session = await auth();
+    const userId = session?.user?.id;
 
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -108,26 +97,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createNoteSchema.parse(body);
 
-    // First, find or create the user in our database
-    let user = await db.user.findFirst({
-      where: { clerkUserId: userId },
+    // Get user from database (user should already exist from NextAuth)
+    const user = await db.user.findUnique({
+      where: { id: userId },
     });
 
     if (!user) {
-      // Get user info from Clerk to get email and name
-      const clerkUser = await currentUser();
-      const userEmail = clerkUser?.emailAddresses?.[0]?.emailAddress || `${userId}@clerk.local`;
-      const userName = clerkUser?.firstName && clerkUser?.lastName
-        ? `${clerkUser.firstName} ${clerkUser.lastName}`
-        : clerkUser?.firstName || clerkUser?.username || "New User";
-
-      user = await db.user.create({
-        data: {
-          clerkUserId: userId,
-          name: userName,
-          email: userEmail,
-        },
-      });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     // Generate unique slug

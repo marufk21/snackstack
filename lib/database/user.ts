@@ -14,22 +14,9 @@ export async function getUserByEmail(email: string) {
 }
 
 /**
- * Get user by Clerk user ID
- */
-export async function getUserByClerkId(clerkUserId: string) {
-  return await prisma.user.findUnique({
-    where: { clerkUserId },
-    include: {
-      subscription: true,
-      notes: true,
-    },
-  });
-}
-
-/**
  * Get user by ID
  */
-export async function getUserById(id: number) {
+export async function getUserById(id: string) {
   return await prisma.user.findUnique({
     where: { id },
     include: {
@@ -40,20 +27,18 @@ export async function getUserById(id: number) {
 }
 
 /**
- * Create a new user
+ * Create a new user (typically called by NextAuth adapter)
  */
 export async function createUser(data: {
-  clerkUserId: string;
   name: string;
   email: string;
-  imageUrl?: string;
+  image?: string;
 }) {
   return await prisma.user.create({
     data: {
-      clerkUserId: data.clerkUserId,
       name: data.name,
       email: data.email,
-      imageUrl: data.imageUrl,
+      image: data.image,
       isSubscribed: false,
       lastActiveAt: new Date(),
     },
@@ -65,37 +50,13 @@ export async function createUser(data: {
 }
 
 /**
- * Get or create user by Clerk ID
- */
-export async function getOrCreateUserByClerkId(
-  clerkUserId: string,
-  email: string,
-  name: string,
-  imageUrl?: string
-) {
-  let user = await getUserByClerkId(clerkUserId);
-  
-  if (!user) {
-    user = await createUser({ clerkUserId, email, name, imageUrl });
-  } else {
-    // Update last active timestamp
-    user = await updateUser(user.id, { lastActiveAt: new Date() });
-  }
-  
-  return user;
-}
-
-/**
- * Get or create user by email (legacy support)
+ * Get or create user by email
  */
 export async function getOrCreateUserByEmail(email: string, name: string) {
   let user = await getUserByEmail(email);
   
   if (!user) {
-    // Create a placeholder clerkUserId if not available
-    // This should ideally not be used - prefer getOrCreateUserByClerkId
-    const tempClerkId = `temp_${Date.now()}_${email}`;
-    user = await createUser({ clerkUserId: tempClerkId, email, name });
+    user = await createUser({ email, name });
   }
   
   return user;
@@ -105,11 +66,11 @@ export async function getOrCreateUserByEmail(email: string, name: string) {
  * Update user
  */
 export async function updateUser(
-  id: number,
+  id: string,
   data: {
     name?: string;
     email?: string;
-    imageUrl?: string;
+    image?: string;
     isSubscribed?: boolean;
     lastActiveAt?: Date;
   }
@@ -128,7 +89,7 @@ export async function updateUser(
  * Update user's subscription status
  */
 export async function updateUserSubscriptionStatus(
-  userId: number,
+  userId: string,
   isSubscribed: boolean
 ) {
   return await prisma.user.update({
