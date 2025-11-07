@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "db:seed": "ts-node server/db/seed.ts",
-    "db:reset": "prisma migrate reset --force && npm run db:seed"
+    "db:reset": "prisma migrate reset --force && pnpm run db:seed"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^44.3.0",
