@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,7 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Loader2 } from "lucide-react";
 
-export default function SubscriptionSuccessPage() {
+function SubscriptionSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [loading, setLoading] = useState(true);
@@ -155,5 +155,26 @@ export default function SubscriptionSuccessPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function SubscriptionSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-16 max-w-2xl">
+          <Card className="text-center">
+            <CardContent className="py-16">
+              <Loader2 className="h-12 w-12 animate-spin mx-auto mb-4 text-primary" />
+              <h2 className="text-2xl font-semibold mb-2">
+                Loading...
+              </h2>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <SubscriptionSuccessContent />
+    </Suspense>
   );
 }

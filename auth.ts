@@ -1,10 +1,7 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@/server/lib/prisma";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -22,47 +19,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: "/sign-in",
   },
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        
-        // Get latest subscription status from database
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: { isSubscribed: true },
-        });
-        
-        if (dbUser) {
-          session.user.isSubscribed = dbUser.isSubscribed;
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+        // Get subscription status from token
+        if (token.isSubscribed !== undefined) {
+          session.user.isSubscribed = Boolean(token.isSubscribed);
         }
+        // Restore user properties from token
+        if (token.email) session.user.email = token.email as string;
+        if (token.name) session.user.name = token.name as string;
+        if (token.picture) session.user.image = token.picture as string;
       }
       return session;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
+    async jwt({ token, user, account, profile }) {
+      // On first sign-in, store user info in token
+      if (account && profile) {
+        token.sub = profile.email as string; // Use email as ID for now
+        token.email = profile.email;
+        token.name = profile.name;
+        token.picture = (profile as any).picture || profile.image;
+        token.isSubscribed = false; // Default value
+        
+        // Note: Actual user creation/update should be handled by API route or webhook
+        // This keeps auth.ts Edge Runtime compatible
       }
+
       return token;
     },
   },
-  events: {
-    async createUser({ user }) {
-      // Update lastActiveAt on user creation
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { lastActiveAt: new Date() },
-      });
-    },
-    async signIn({ user }) {
-      // Update lastActiveAt on sign in
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { lastActiveAt: new Date() },
-      });
-    },
-  },
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
   debug: process.env.NODE_ENV === "development",
 });

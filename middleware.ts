@@ -8,9 +8,9 @@ const protectedRoutes = ["/app"];
 const authRoutes = ["/sign-in", "/sign-up"];
 
 export default auth((req) => {
-  const { auth: session } = req;
+  const session = req.auth;
   const { pathname } = req.nextUrl;
-  const isAuthenticated = !!session?.userId;
+  const isAuthenticated = !!session?.user?.id;
 
   // Check if current path is protected
   const isProtectedRoute = protectedRoutes.some((route) =>

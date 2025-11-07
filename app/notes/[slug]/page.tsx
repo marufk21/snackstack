@@ -37,7 +37,17 @@ async function getNoteBySlug(slug: string): Promise<PublicNote | null> {
         },
       },
     });
-    return note;
+    
+    if (!note) return null;
+    
+    // Transform to match PublicNote type (handle null name)
+    return {
+      ...note,
+      user: {
+        name: note.user.name || "Anonymous",
+        email: note.user.email,
+      },
+    };
   } catch (error) {
     console.error("Error fetching note:", error);
     return null;

@@ -55,7 +55,6 @@ async function handleCronRequest(req: NextRequest) {
       expiredSubscriptions: result.expiredSubscriptions.map((sub) => ({
         id: sub.id,
         userId: sub.userId,
-        clerkUserId: sub.clerkUserId,
         status: sub.status,
         planType: sub.planType,
         currentPeriodEnd: sub.currentPeriodEnd,
@@ -86,8 +85,3 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   return handleCronRequest(req);
 }
-
-
-
-
-

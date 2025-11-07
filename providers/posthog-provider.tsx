@@ -1,13 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import posthog from "posthog-js";
 import { useSession } from "next-auth/react";
 
-export function PostHogProvider({ children }: { children: React.ReactNode }) {
+function PostHogPageView() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Track page views only if PostHog is loaded
+    if (pathname && posthog.__loaded) {
+      let url = window.origin + pathname;
+      if (searchParams.toString()) {
+        url = url + `?${searchParams.toString()}`;
+      }
+      posthog.capture("$pageview", {
+        $current_url: url,
+      });
+    }
+  }, [pathname, searchParams]);
+
+  return null;
+}
+
+export function PostHogProvider({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
 
   // Initialize PostHog if not already initialized and key is available
@@ -35,19 +53,6 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Track page views only if PostHog is loaded
-    if (pathname && posthog.__loaded) {
-      let url = window.origin + pathname;
-      if (searchParams.toString()) {
-        url = url + `?${searchParams.toString()}`;
-      }
-      posthog.capture("$pageview", {
-        $current_url: url,
-      });
-    }
-  }, [pathname, searchParams]);
-
-  useEffect(() => {
     // Identify user when they sign in, only if PostHog is loaded
     if (session?.user && posthog.__loaded) {
       posthog.identify(session.user.id, {
@@ -57,5 +62,12 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
     }
   }, [session]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <PostHogPageView />
+      </Suspense>
+      {children}
+    </>
+  );
 }
