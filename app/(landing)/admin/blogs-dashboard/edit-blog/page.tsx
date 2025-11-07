@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,12 +17,18 @@ import { ArrowLeftIcon } from "lucide-react";
 import { getBlogById, updateBlog } from "@/lib/appwrite/services";
 import { Blog } from "@/lib/appwrite/config";
 import Image from "next/image";
-import RichTextEditor from "@/components/landing/richtext-editor";
 import { storage } from "@/lib/appwrite/config";
 import { ID } from "appwrite";
 import conf from "@/config/appwrite";
+import dynamic from "next/dynamic";
 
-export default function EditBlog() {
+// Dynamically import RichTextEditor with no SSR
+const RichTextEditor = dynamic(
+  () => import("@/components/landing/richtext-editor"),
+  { ssr: false }
+);
+
+function EditBlogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const blogId = searchParams.get("id");
@@ -265,5 +271,13 @@ export default function EditBlog() {
         </Card>
       </main>
     </>
+  );
+}
+
+export default function EditBlog() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <EditBlogContent />
+    </Suspense>
   );
 }

@@ -16,10 +16,16 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeftIcon } from "lucide-react";
 import { createBlog } from "@/lib/appwrite/services";
 import Image from "next/image";
-import RichTextEditor from "@/components/landing/richtext-editor";
 import { storage } from "@/lib/appwrite/config";
 import { ID } from "appwrite";
 import conf from "@/config/appwrite";
+import dynamic from "next/dynamic";
+
+// Dynamically import RichTextEditor with no SSR
+const RichTextEditor = dynamic(
+  () => import("@/components/landing/richtext-editor"),
+  { ssr: false }
+);
 
 export default function NewBlog() {
   const router = useRouter();
