@@ -64,8 +64,9 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
       };
     }
 
+    const tier = await getUserSubscriptionTier(user.id);
+
     if (minTier) {
-      const tier = await getUserSubscriptionTier(user.id);
       const tierOrder = ["free", "basic", "pro", "enterprise"];
       const userTierIndex = tierOrder.indexOf(tier);
       const minTierIndex = tierOrder.indexOf(minTier);
@@ -88,8 +89,6 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
       }
     }
 
-    const tier = await getUserSubscriptionTier(user.id);
-
     return {
       error: null,
       user,
@@ -98,10 +97,16 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
   } catch (error) {
     console.error("Error checking subscription in API route:", error);
 
+    // Provide more detailed error information
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    const errorDetails =
+      process.env.NODE_ENV === "development" ? errorMessage : undefined;
+
     // In development, allow access if there's a database error
     if (process.env.NODE_ENV === "development") {
       console.warn(
-        "⚠️ Database error in protectSubscriptionRoute - allowing access in development mode"
+        `⚠️ Database error in protectSubscriptionRoute - allowing access in development mode: ${errorMessage}`
       );
       return {
         error: null,
@@ -117,6 +122,7 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
           error: "Service unavailable",
           message:
             "Unable to verify subscription status. Please try again later.",
+          ...(errorDetails && { details: errorDetails }),
         },
         { status: 503 }
       ),
@@ -136,7 +142,3 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
  *   // Your protected route logic here
  * }
  */
-
-
-
-

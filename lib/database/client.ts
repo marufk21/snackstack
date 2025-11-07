@@ -1,4 +1,4 @@
-import { PrismaClient } from "@/server/lib/generated/prisma";
+import { PrismaClient } from "../../server/lib/generated/prisma";
 
 declare global {
   // This prevents us from making multiple connections to the DB during development

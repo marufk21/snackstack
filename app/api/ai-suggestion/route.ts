@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -5,7 +6,6 @@ import {
   aiSuggestionRateLimit,
   getUserIdentifier,
 } from "@/lib/utils/rate-limit";
-import { protectSubscriptionRoute } from "@/lib/utils/api-protection";
 
 // Initialize Gemini only when needed
 const getGemini = () => {
@@ -24,16 +24,18 @@ const aiSuggestionSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    // Protect route - require Pro subscription for AI features
-    const { error, user, subscription } = await protectSubscriptionRoute("pro");
-    if (error) return error;
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     // Apply rate limiting
     const forwarded = request.headers.get("x-forwarded-for");
     const ip = forwarded
       ? forwarded.split(",")[0]
       : request.headers.get("x-real-ip") || "unknown";
-    const userIdentifier = getUserIdentifier(user.id, ip);
+    const userIdentifier = getUserIdentifier(userId, ip);
     const rateLimitResult = aiSuggestionRateLimit.check(userIdentifier);
 
     if (!rateLimitResult.allowed) {
@@ -85,7 +87,9 @@ export async function POST(request: NextRequest) {
     }
 
     const genAI = getGemini();
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Use gemini-pro for free tier compatibility
+    // Free tier users can use gemini-pro model
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const systemPrompt =
       "You are a helpful AI note-taking assistant that helps users capture, organize, and enhance their ideas. Always respond with well-formatted markdown. Be concise but helpful. Focus on helping users think more deeply about their ideas and make connections between concepts.";
@@ -114,11 +118,46 @@ export async function POST(request: NextRequest) {
     console.error("Error generating AI suggestion:", error);
 
     // Handle Gemini specific errors
-    if (error instanceof Error && error.message.includes("API key")) {
-      return NextResponse.json(
-        { error: "Invalid Gemini API key" },
-        { status: 401 }
-      );
+    if (error instanceof Error) {
+      if (error.message.includes("API key")) {
+        return NextResponse.json(
+          { error: "Invalid Gemini API key" },
+          { status: 401 }
+        );
+      }
+
+      // Handle quota/rate limit errors (common with free tier)
+      if (
+        error.message.includes("429") ||
+        error.message.includes("quota") ||
+        error.message.includes("rate limit") ||
+        error.message.includes("RESOURCE_EXHAUSTED")
+      ) {
+        return NextResponse.json(
+          {
+            error: "Daily quota exceeded",
+            message:
+              "You've reached your daily free tier limit. Please try again tomorrow or upgrade your plan.",
+          },
+          { status: 429 }
+        );
+      }
+
+      // Handle model not found errors
+      if (
+        error.message.includes("404") ||
+        error.message.includes("not found") ||
+        error.message.includes("is not found for API version")
+      ) {
+        return NextResponse.json(
+          {
+            error: "Model not available",
+            message:
+              "The selected model is not available. Please check your API key permissions or try a different model.",
+          },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json(
