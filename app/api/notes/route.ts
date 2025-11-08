@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
                 "1. Stop your dev server (Ctrl+C)",
                 "2. Run: npx prisma generate --schema=server/db/schema.prisma",
                 "3. Restart your dev server",
-                "Or POST to /api/debug/fix-schema to auto-fix"
+                "4. Run: npm run db:quick-fix to fix schema issues"
               ],
               details: process.env.NODE_ENV === "development" 
                 ? { message: errorMessage, code: errorCode, column: errorMessage.includes("emailVerified") ? "emailVerified" : "unknown" }
