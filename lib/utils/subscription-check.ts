@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
-import { 
-  hasActiveSubscription, 
-  getUserSubscriptionTier, 
-  PlanType 
+import { auth } from "@/config/auth";
+import {
+  hasActiveSubscription,
+  getUserSubscriptionTier,
+  PlanType,
 } from "@/lib/database/subscription";
 
 /**
@@ -44,7 +44,7 @@ export const PLAN_LIMITS = {
  */
 export async function checkUserSubscription() {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
     return {
       hasSubscription: false,
@@ -67,10 +67,12 @@ export async function checkUserSubscription() {
 /**
  * Check if user can access a specific feature
  */
-export async function canAccessFeature(feature: keyof typeof PLAN_LIMITS.free): Promise<boolean> {
+export async function canAccessFeature(
+  feature: keyof typeof PLAN_LIMITS.free
+): Promise<boolean> {
   const { tier } = await checkUserSubscription();
   const limits = PLAN_LIMITS[tier];
-  
+
   return limits[feature] as boolean;
 }
 
@@ -105,13 +107,13 @@ export async function getUserLimits() {
  */
 export async function requireSubscription(minTier?: PlanType) {
   const session = await auth();
-  
+
   if (!session?.user?.id) {
     throw new Error("Authentication required");
   }
 
   const isActive = await hasActiveSubscription(session.user.id);
-  
+
   if (!isActive) {
     throw new Error("Active subscription required");
   }
@@ -140,12 +142,6 @@ export function isTierSufficient(
   const tierOrder = ["free", "basic", "pro", "enterprise"];
   const currentIndex = tierOrder.indexOf(currentTier);
   const requiredIndex = tierOrder.indexOf(requiredTier);
-  
+
   return currentIndex >= requiredIndex;
 }
-
-
-
-
-
-

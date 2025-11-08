@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import { hasActiveSubscription } from "@/lib/database/subscription";
 

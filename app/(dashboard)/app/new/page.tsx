@@ -7,6 +7,9 @@ import { useNoteEditorStore } from "@/stores/use-note-editor-store";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
+
 export default function NewNotePage() {
   const router = useRouter();
   const { resetEditor } = useNoteEditorStore();

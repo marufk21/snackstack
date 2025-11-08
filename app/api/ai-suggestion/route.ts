@@ -1,4 +1,4 @@
-import { auth } from "@/auth";
+import { auth } from "@/config/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { GoogleGenerativeAI } from "@google/generative-ai";
