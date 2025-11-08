@@ -1,4 +1,4 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { SessionProvider } from "next-auth/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -75,18 +75,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <ErrorBoundary>
-          <ClerkProvider
-            appearance={{
-              elements: {
-                formButtonPrimary:
-                  "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700",
-              },
-            }}
-            signInFallbackRedirectUrl="/app"
-            signUpFallbackRedirectUrl="/app"
-            publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
-            dynamic
-          >
+          <SessionProvider>
             <PostHogProvider>
               <ThemeProvider
                 attribute="class"
@@ -101,7 +90,7 @@ export default function RootLayout({
                 </QueryProvider>
               </ThemeProvider>
             </PostHogProvider>
-          </ClerkProvider>
+          </SessionProvider>
         </ErrorBoundary>
       </body>
     </html>

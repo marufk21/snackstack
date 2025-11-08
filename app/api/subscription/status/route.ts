@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { protectApiRoute } from "@/lib/utils/api-protection";
-import { 
-  getSubscriptionByClerkUserId,
+import { auth } from "@/config/auth";
+import {
+  getSubscriptionByUserId,
   hasActiveSubscription,
-  getUserSubscriptionTier 
+  getUserSubscriptionTier,
 } from "@/lib/database/subscription";
 import { PLAN_LIMITS } from "@/lib/utils/subscription-check";
 
@@ -11,15 +11,18 @@ import { PLAN_LIMITS } from "@/lib/utils/subscription-check";
  * Get current user's subscription status and limits
  */
 export async function GET() {
-  const { error, user } = await protectApiRoute();
-  if (error) return error;
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
-    const isActive = await hasActiveSubscription(user.id);
-    const tier = await getUserSubscriptionTier(user.id);
+    const isActive = await hasActiveSubscription(session.user.id);
+    const tier = await getUserSubscriptionTier(session.user.id);
     const limits = PLAN_LIMITS[tier];
 
-    const subscriptionData = await getSubscriptionByClerkUserId(user.id);
+    const subscriptionData = await getSubscriptionByUserId(session.user.id);
 
     return NextResponse.json({
       hasSubscription: isActive,
@@ -31,7 +34,8 @@ export async function GET() {
             status: subscriptionData.status,
             planType: subscriptionData.planType,
             currentPeriodEnd: subscriptionData.currentPeriodEnd.toISOString(),
-            currentPeriodStart: subscriptionData.currentPeriodStart.toISOString(),
+            currentPeriodStart:
+              subscriptionData.currentPeriodStart.toISOString(),
             cancelAtPeriodEnd: subscriptionData.cancelAtPeriodEnd,
             stripeCustomerId: subscriptionData.stripeCustomerId,
           }
@@ -45,8 +49,3 @@ export async function GET() {
     );
   }
 }
-
-
-
-
-

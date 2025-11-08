@@ -14,6 +14,9 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
+
 // Predefined superuser credentials
 const ADMIN_ID = process.env.NEXT_PUBLIC_ADMIN_ID;
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;

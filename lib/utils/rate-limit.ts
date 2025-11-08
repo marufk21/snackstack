@@ -63,7 +63,7 @@ class InMemoryRateLimit {
 }
 
 // Create a singleton instance for AI suggestions
-export const aiSuggestionRateLimit = new InMemoryRateLimit(5, 60000); // 5 requests per minute
+export const aiSuggestionRateLimit = new InMemoryRateLimit(20, 60000); // 20 requests per minute for development
 
 // Utility function to get user identifier for rate limiting
 export function getUserIdentifier(userId: string, ip?: string): string {

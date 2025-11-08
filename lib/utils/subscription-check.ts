@@ -1,8 +1,8 @@
-import { currentUser } from "@clerk/nextjs/server";
-import { 
-  hasActiveSubscription, 
-  getUserSubscriptionTier, 
-  PlanType 
+import { auth } from "@/config/auth";
+import {
+  hasActiveSubscription,
+  getUserSubscriptionTier,
+  PlanType,
 } from "@/lib/database/subscription";
 
 /**
@@ -43,9 +43,9 @@ export const PLAN_LIMITS = {
  * Check if user has an active subscription
  */
 export async function checkUserSubscription() {
-  const user = await currentUser();
-  
-  if (!user) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
     return {
       hasSubscription: false,
       tier: "free" as const,
@@ -53,8 +53,8 @@ export async function checkUserSubscription() {
     };
   }
 
-  const isActive = await hasActiveSubscription(user.id);
-  const tier = await getUserSubscriptionTier(user.id);
+  const isActive = await hasActiveSubscription(session.user.id);
+  const tier = await getUserSubscriptionTier(session.user.id);
 
   return {
     hasSubscription: isActive,
@@ -67,10 +67,12 @@ export async function checkUserSubscription() {
 /**
  * Check if user can access a specific feature
  */
-export async function canAccessFeature(feature: keyof typeof PLAN_LIMITS.free): Promise<boolean> {
+export async function canAccessFeature(
+  feature: keyof typeof PLAN_LIMITS.free
+): Promise<boolean> {
   const { tier } = await checkUserSubscription();
   const limits = PLAN_LIMITS[tier];
-  
+
   return limits[feature] as boolean;
 }
 
@@ -104,20 +106,20 @@ export async function getUserLimits() {
  * Require active subscription - throws error if no subscription
  */
 export async function requireSubscription(minTier?: PlanType) {
-  const user = await currentUser();
-  
-  if (!user) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
     throw new Error("Authentication required");
   }
 
-  const isActive = await hasActiveSubscription(user.id);
-  
+  const isActive = await hasActiveSubscription(session.user.id);
+
   if (!isActive) {
     throw new Error("Active subscription required");
   }
 
   if (minTier) {
-    const tier = await getUserSubscriptionTier(user.id);
+    const tier = await getUserSubscriptionTier(session.user.id);
     const tierOrder = ["free", "basic", "pro", "enterprise"];
     const userTierIndex = tierOrder.indexOf(tier);
     const minTierIndex = tierOrder.indexOf(minTier);
@@ -140,11 +142,6 @@ export function isTierSufficient(
   const tierOrder = ["free", "basic", "pro", "enterprise"];
   const currentIndex = tierOrder.indexOf(currentTier);
   const requiredIndex = tierOrder.indexOf(requiredTier);
-  
+
   return currentIndex >= requiredIndex;
 }
-
-
-
-
-

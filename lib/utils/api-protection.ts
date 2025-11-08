@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth } from "@/config/auth";
 import { NextResponse } from "next/server";
 import {
   hasActiveSubscription,
@@ -10,9 +10,9 @@ import {
  * Protect API route - requires authentication
  */
 export async function protectApiRoute() {
-  const user = await currentUser();
+  const session = await auth();
 
-  if (!user) {
+  if (!session?.user?.id) {
     return {
       error: NextResponse.json(
         { error: "Authentication required" },
@@ -24,7 +24,7 @@ export async function protectApiRoute() {
 
   return {
     error: null,
-    user,
+    user: session.user,
   };
 }
 
@@ -32,9 +32,9 @@ export async function protectApiRoute() {
  * Protect API route with subscription requirement
  */
 export async function protectSubscriptionRoute(minTier?: PlanType) {
-  const user = await currentUser();
+  const session = await auth();
 
-  if (!user) {
+  if (!session?.user?.id) {
     return {
       error: NextResponse.json(
         { error: "Authentication required" },
@@ -46,7 +46,7 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
   }
 
   try {
-    const isActive = await hasActiveSubscription(user.id);
+    const isActive = await hasActiveSubscription(session.user.id);
 
     if (!isActive) {
       return {
@@ -59,13 +59,14 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
           },
           { status: 403 }
         ),
-        user,
+        user: session.user,
         subscription: null,
       };
     }
 
+    const tier = await getUserSubscriptionTier(session.user.id);
+
     if (minTier) {
-      const tier = await getUserSubscriptionTier(user.id);
       const tierOrder = ["free", "basic", "pro", "enterprise"];
       const userTierIndex = tierOrder.indexOf(tier);
       const minTierIndex = tierOrder.indexOf(minTier);
@@ -82,30 +83,34 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
             },
             { status: 403 }
           ),
-          user,
+          user: session.user,
           subscription: { tier, isActive },
         };
       }
     }
 
-    const tier = await getUserSubscriptionTier(user.id);
-
     return {
       error: null,
-      user,
+      user: session.user,
       subscription: { tier, isActive },
     };
   } catch (error) {
     console.error("Error checking subscription in API route:", error);
 
+    // Provide more detailed error information
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    const errorDetails =
+      process.env.NODE_ENV === "development" ? errorMessage : undefined;
+
     // In development, allow access if there's a database error
     if (process.env.NODE_ENV === "development") {
       console.warn(
-        "⚠️ Database error in protectSubscriptionRoute - allowing access in development mode"
+        `⚠️ Database error in protectSubscriptionRoute - allowing access in development mode: ${errorMessage}`
       );
       return {
         error: null,
-        user,
+        user: session.user,
         subscription: { tier: "free" as const, isActive: true },
       };
     }
@@ -117,10 +122,11 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
           error: "Service unavailable",
           message:
             "Unable to verify subscription status. Please try again later.",
+          ...(errorDetails && { details: errorDetails }),
         },
         { status: 503 }
       ),
-      user,
+      user: session.user,
       subscription: null,
     };
   }
@@ -136,7 +142,3 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
  *   // Your protected route logic here
  * }
  */
-
-
-
-

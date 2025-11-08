@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@/config/auth";
 import { redirect } from "next/navigation";
 import { hasActiveSubscription } from "@/lib/database/subscription";
 
@@ -12,29 +12,31 @@ interface SubscriptionGuardProps {
  * Server component that checks if user has an active subscription
  * Redirects to pricing page if not subscribed
  */
-export async function SubscriptionGuard({ 
-  children, 
+export async function SubscriptionGuard({
+  children,
   redirectTo = "/app/pricing?upgrade=required",
-  optional = false 
+  optional = false,
 }: SubscriptionGuardProps) {
-  const { userId } = await auth();
+  const session = await auth();
 
-  if (!userId) {
+  if (!session?.user?.id) {
     redirect("/sign-in");
   }
 
   try {
-    const hasSubscription = await hasActiveSubscription(userId);
+    const hasSubscription = await hasActiveSubscription(session.user.id);
 
     if (!hasSubscription && !optional) {
       redirect(redirectTo);
     }
   } catch (error) {
     console.error("Error checking subscription:", error);
-    
+
     // In development, allow access if there's a database error
     if (process.env.NODE_ENV === "development") {
-      console.warn("⚠️ Database error in SubscriptionGuard - allowing access in development mode");
+      console.warn(
+        "⚠️ Database error in SubscriptionGuard - allowing access in development mode"
+      );
     } else if (!optional) {
       // In production, redirect to pricing on error unless optional
       redirect(redirectTo);
@@ -43,4 +45,3 @@ export async function SubscriptionGuard({
 
   return <>{children}</>;
 }
-

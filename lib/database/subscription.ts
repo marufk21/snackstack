@@ -13,8 +13,7 @@ export type SubscriptionStatus =
 export type PlanType = "basic" | "pro" | "enterprise";
 
 interface CreateSubscriptionData {
-  userId: number;
-  clerkUserId: string;
+  userId: string;
   stripeCustomerId: string;
   stripeSubscriptionId: string;
   stripePriceId: string;
@@ -50,7 +49,6 @@ export async function createSubscription(data: CreateSubscriptionData) {
     const subscription = await tx.subscription.create({
       data: {
         userId: data.userId,
-        clerkUserId: data.clerkUserId,
         stripeCustomerId: data.stripeCustomerId,
         stripeSubscriptionId: data.stripeSubscriptionId,
         stripePriceId: data.stripePriceId,
@@ -119,21 +117,9 @@ export async function getSubscriptionByStripeId(stripeSubscriptionId: string) {
 }
 
 /**
- * Get subscription by Clerk user ID
- */
-export async function getSubscriptionByClerkUserId(clerkUserId: string) {
-  return await prisma.subscription.findUnique({
-    where: { clerkUserId },
-    include: {
-      user: true,
-    },
-  });
-}
-
-/**
  * Get subscription by database user ID
  */
-export async function getSubscriptionByUserId(userId: number) {
+export async function getSubscriptionByUserId(userId: string) {
   return await prisma.subscription.findUnique({
     where: { userId },
     include: {
@@ -157,9 +143,9 @@ export async function deleteSubscriptionByStripeId(
  * Check if a user has an active subscription
  */
 export async function hasActiveSubscription(
-  clerkUserId: string
+  userId: string
 ): Promise<boolean> {
-  const subscription = await getSubscriptionByClerkUserId(clerkUserId);
+  const subscription = await getSubscriptionByUserId(userId);
 
   if (!subscription) {
     return false;
@@ -178,11 +164,11 @@ export async function hasActiveSubscription(
  * Get user's subscription tier
  */
 export async function getUserSubscriptionTier(
-  clerkUserId: string
+  userId: string
 ): Promise<PlanType | "free"> {
-  const subscription = await getSubscriptionByClerkUserId(clerkUserId);
+  const subscription = await getSubscriptionByUserId(userId);
 
-  if (!subscription || !(await hasActiveSubscription(clerkUserId))) {
+  if (!subscription || !(await hasActiveSubscription(userId))) {
     return "free";
   }
 
@@ -211,8 +197,7 @@ export function getPlanTypeFromPriceId(priceId: string): PlanType {
  */
 export async function upsertSubscriptionFromStripe(
   stripeSubscription: Stripe.Subscription,
-  userId: number,
-  clerkUserId: string
+  userId: string
 ) {
   const priceId = stripeSubscription.items.data[0]?.price.id;
   const productId = stripeSubscription.items.data[0]?.price.product as string;
@@ -220,7 +205,6 @@ export async function upsertSubscriptionFromStripe(
 
   const subscriptionData = {
     userId,
-    clerkUserId,
     stripeCustomerId: stripeSubscription.customer as string,
     stripeSubscriptionId: stripeSubscription.id,
     stripePriceId: priceId,

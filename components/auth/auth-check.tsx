@@ -1,14 +1,16 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 export default function AuthCheck() {
-  const { isSignedIn, isLoaded } = useUser();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const [hasRedirected, setHasRedirected] = useState(false);
+  const isLoaded = status !== "loading";
+  const isSignedIn = !!session;
 
   useEffect(() => {
     // Add a timeout to prevent infinite redirect loops

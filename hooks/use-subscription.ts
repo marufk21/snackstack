@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 
 interface SubscriptionData {
   hasSubscription: boolean;
@@ -24,10 +24,11 @@ interface SubscriptionData {
  * Hook to get user's subscription status and limits
  */
 export function useSubscription() {
-  const { isSignedIn, user } = useUser();
+  const { data: session, status } = useSession();
+  const isSignedIn = status === "authenticated";
 
   const { data, isLoading, error, refetch } = useQuery<SubscriptionData>({
-    queryKey: ["subscription", user?.id],
+    queryKey: ["subscription", session?.user?.id],
     queryFn: async () => {
       const response = await fetch("/api/subscription/status");
       if (!response.ok) {
@@ -68,6 +69,7 @@ export function useCanAccessFeature(feature: keyof SubscriptionData["limits"]) {
     isLoading,
   };
 }
+
 
 
 

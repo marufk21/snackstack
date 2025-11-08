@@ -1,3 +1,4 @@
+import "server-only";
 import { db } from "@/lib/database";
 
 // Helper function to generate slug
@@ -39,23 +40,14 @@ export async function generateUniqueSlug(
 }
 
 // Helper function to create initial welcome note for new users
-export async function createWelcomeNote(clerkUserId: string) {
-  // First, find or create the user in our database
-  let user = await db.user.findFirst({
-    where: { clerkUserId: clerkUserId },
+export async function createWelcomeNote(userId: string) {
+  // Find the user in our database
+  const user = await db.user.findUnique({
+    where: { id: userId },
   });
 
   if (!user) {
-    // Note: This function assumes the user already exists
-    // If not, it will create with a placeholder email
-    // Ideally, this should be called after user creation with proper email
-    user = await db.user.create({
-      data: {
-        clerkUserId: clerkUserId,
-        name: "New User",
-        email: `${clerkUserId}@clerk.local`,
-      },
-    });
+    throw new Error("User not found");
   }
 
   const slug = await generateUniqueSlug("Welcome to Your AI-Powered Notes");

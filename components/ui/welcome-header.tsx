@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { Loader2, Sparkles } from "lucide-react";
 
 interface WelcomeHeaderProps {
@@ -8,7 +8,8 @@ interface WelcomeHeaderProps {
 }
 
 export function WelcomeHeader({ className = "" }: WelcomeHeaderProps) {
-  const { user, isLoaded } = useUser();
+  const { data: session, status } = useSession();
+  const isLoaded = status !== "loading";
 
   if (!isLoaded) {
     return (
@@ -19,11 +20,11 @@ export function WelcomeHeader({ className = "" }: WelcomeHeaderProps) {
     );
   }
 
-  if (!user) {
+  if (!session?.user) {
     return null;
   }
 
-  const firstName = user.firstName || "User";
+  const firstName = session.user.name?.split(" ")[0] || "User";
 
   return (
     <div className={`${className}`}>

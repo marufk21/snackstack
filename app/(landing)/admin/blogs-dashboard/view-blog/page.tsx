@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +16,7 @@ import { getBlogById } from "@/lib/appwrite/services";
 import { Blog } from "@/lib/appwrite/config";
 import BlogContentView from "@/components/landing/blog-content-view";
 
-export default function ViewBlog() {
+function ViewBlogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const blogId = searchParams.get("id");
@@ -104,5 +107,13 @@ export default function ViewBlog() {
         </Card>
       </main>
     </>
+  );
+}
+
+export default function ViewBlog() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <ViewBlogContent />
+    </Suspense>
   );
 }    

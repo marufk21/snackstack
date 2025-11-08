@@ -11,6 +11,9 @@ import { Blog } from "@/lib/appwrite/config";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
+
 export default function BlogDetailsPage({
   params,
 }: {
