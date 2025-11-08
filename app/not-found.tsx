@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Home, Search, FileQuestion } from "lucide-react";
 import { BackButton } from "./back-button";
 
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "404 - Page Not Found | SnackStack",
   description: "The page you're looking for doesn't exist.",

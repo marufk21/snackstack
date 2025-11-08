@@ -5,5 +5,5 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Re-export utilities from other files (excluding cloudinary which is server-side only)
-export * from "./notes";
+// NOTE: Do NOT export from "./notes" here because it contains server-only database code
+// Import directly from "@/lib/utils/notes" in server components/API routes instead

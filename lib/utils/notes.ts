@@ -1,3 +1,4 @@
+import "server-only";
 import { db } from "@/lib/database";
 
 // Helper function to generate slug

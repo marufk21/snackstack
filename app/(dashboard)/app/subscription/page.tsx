@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
+
 // Mock subscription data - in a real app, this would come from your database
 const mockSubscription = {
   id: "sub_1234567890",
