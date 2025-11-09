@@ -10,7 +10,9 @@
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
     "db:fix-email-verified": "ts-node scripts/add-email-verified-column.ts",
     "db:fix-schema": "ts-node scripts/fix-database-schema-complete.ts",
-    "db:quick-fix": "ts-node scripts/quick-fix-schema.ts"
+    "db:quick-fix": "ts-node scripts/quick-fix-schema.ts",
+    "postinstall": "prisma generate"
+
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
