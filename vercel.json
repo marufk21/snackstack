@@ -4,6 +4,6 @@
       "path": "/api/cron/check-subscriptions",
       "schedule": "0 1 * * *"
     }
-  ]
+  ],
+  "buildCommand": "npx prisma generate && next build"
 }
-  

@@ -11,8 +11,7 @@
     "db:fix-email-verified": "ts-node scripts/add-email-verified-column.ts",
     "db:fix-schema": "ts-node scripts/fix-database-schema-complete.ts",
     "db:quick-fix": "ts-node scripts/quick-fix-schema.ts",
-    "postinstall": "prisma generate"
-
+    "postinstall": "prisma generate --schema=server/db/schema.prisma"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -38,6 +37,7 @@
     "appwrite": "^21.3.0",
     "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
+    "client@latest": "link:prisma\\client@latest",
     "cloudinary": "^2.7.0",
     "dotenv": "^17.2.2",
     "gsap": "^3.13.0",
