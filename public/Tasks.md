@@ -1,27 +1,17 @@
-# UI:DB:CODE (MVP)
+# UI:DB:CODE:Readme (MVP) 
 
-# Landing Page 
-- Admin RichText Editor
+# Landing Page + Blog Admin Panel
 - Sitemaps
-- New Blogs Create
-- Update Readme
 - Resend/Nodemailer
-- Overall
+- Overall UI
 
-
-# Authentication
-- Google CLoud - Vercel - Save Cred
-
-# Dashboard
+# Authentication + Dashboard
 - Notes Actually Value + UI
 - Pricing Page Redirection + Pricing Stripe + Card (genuine)
 - Subscription Based (Free) + Pricing + Subscription Ended Popup + (Upgrade)
-
 - Seperate suggestions functionality
 - Add Options of Delete
 - Remove Unused note
 - Flow Cleanup e2e
 - DB Understand and Fix
 - Test: Stripe + Webhook
-
-
