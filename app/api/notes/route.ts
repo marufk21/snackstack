@@ -2,7 +2,7 @@ import { auth } from "@/config/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/database";
-import { createWelcomeNote, generateUniqueSlug } from "@/lib/utils/notes";
+import { generateUniqueSlug } from "@/lib/utils/notes";
 import { getOrCreateUserByEmail } from "@/lib/database/user";
 
 // Explicitly use Node.js runtime for database operations
@@ -135,16 +135,10 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all notes for this user
-    let userNotes = await db.note.findMany({
+    const userNotes = await db.note.findMany({
       where: { userId: user.id },
       orderBy: { updatedAt: "desc" },
     });
-
-    // If user has no notes, create a welcome note
-    if (userNotes.length === 0) {
-      const welcomeNote = await createWelcomeNote(user.id);
-      userNotes = [welcomeNote];
-    }
 
     return NextResponse.json({ notes: userNotes });
   } catch (error: any) {
