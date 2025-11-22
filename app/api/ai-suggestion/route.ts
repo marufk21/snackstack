@@ -1,6 +1,6 @@
+import { z } from "zod";
 import { auth } from "@/config/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {
   aiSuggestionRateLimit,
@@ -72,20 +72,17 @@ export async function POST(request: NextRequest) {
 
     switch (type) {
       case "improve":
-        prompt = `You are an AI-powered note enhancement assistant. Please improve the following markdown note by enhancing clarity, structure, and readability. Keep the same general meaning but make it more engaging and well-formatted. Add insights or connections that might not be immediately obvious. Make suggestions to help the user think more deeply about their ideas:\n\n${content}`;
+        prompt = `You are an AI-powered note enhancement assistant. Please improve the following note by fixing grammar, spelling, and punctuation errors. Keep the same content and meaning, just fix the language mistakes:\n\n${content}`;
         break;
       case "continue":
-        prompt = `You are an AI-powered note continuation assistant. Please continue writing the following markdown note in a natural and coherent way. Maintain the same style and tone. Help the user explore their ideas further by suggesting related concepts or asking thought-provoking questions:\n\n${content}`;
+        prompt = `You are an AI-powered note continuation assistant. Please continue writing the following note with 2-3 related sentences. Keep it concise and relevant to the existing content. Maintain the same style and tone:\n\n${content}`;
         break;
       case "summarize":
-        prompt = `You are an AI-powered note summarization assistant. Please provide a concise summary of the following markdown note in bullet points. Identify the key ideas and main takeaways. Help the user distill their thoughts into actionable insights:\n\n${content}`;
-        break;
-      case "expand":
-        prompt = `You are an AI-powered note expansion assistant. Please expand on the following markdown note by adding more details, examples, and explanations while maintaining the original structure. Help the user think more deeply about their ideas by suggesting related concepts, asking questions, or providing additional context:\n\n${content}`;
+        prompt = `You are an AI-powered note summarization assistant. Please summarize the following note in a crisp, to-the-point manner. Make it shorter and extract only the key points:\n\n${content}`;
         break;
       default:
-        prompt = `You are an AI-powered note enhancement assistant. Please improve the following markdown note:\n\n${content}`;
-    }
+        prompt = `You are an AI-powered note enhancement assistant. Please improve the following note:\n\n${content}`;
+    } 
 
     const genAI = getGemini();
     // Use gemini-pro for free tier compatibility
@@ -93,7 +90,7 @@ export async function POST(request: NextRequest) {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const systemPrompt =
-      "You are a helpful AI note-taking assistant that helps users capture, organize, and enhance their ideas. Always respond with well-formatted markdown. Be concise but helpful. Focus on helping users think more deeply about their ideas and make connections between concepts.";
+      "You are a helpful AI note-taking assistant that helps users capture, organize, and enhance their ideas. Always respond with well-formatted. Be concise but helpful. Focus on helping users think more deeply about their ideas and make connections between concepts.";
     const fullPrompt = `${systemPrompt}\n\n${prompt}`;
 
     const result = await model.generateContent(fullPrompt);

@@ -4,9 +4,12 @@ import { protectSubscriptionRoute } from "@/lib/utils/api-protection";
 
 export async function POST(request: NextRequest) {
   try {
-    // Protect route - require active subscription for uploads
-    const { error, user, subscription } = await protectSubscriptionRoute();
-    if (error) return error;
+    // In development mode, skip subscription check for easier testing
+    if (process.env.NODE_ENV !== "development") {
+      // Protect route - require active subscription for uploads in production
+      const { error, user, subscription } = await protectSubscriptionRoute();
+      if (error) return error;
+    }
 
     // Check if Cloudinary environment variables are set
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
