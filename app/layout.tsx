@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { PostHogProvider } from "@/providers/posthog-provider";
+import { LenisProvider } from "@/providers/lenis-provider";
 import { NotificationContainer } from "@/components/ui/notification";
 import { RedirectHandler } from "@/components/auth/redirect-handler";
 import ErrorBoundary from "@/components/auth/error-boundary";
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
     "Transform your development workflow with SnackStack. Build faster, scale better, and deliver exceptional digital experiences with our cutting-edge platform.",
   keywords: [
     "web development",
-    "full-stack development", 
+    "full-stack development",
     "React",
     "Next.js",
     "TypeScript",
@@ -74,24 +75,26 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <ErrorBoundary>
-          <SessionProvider>
-            <PostHogProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-              >
-                <QueryProvider>
-                  <RedirectHandler>
-                    {children}
-                    <NotificationContainer />
-                  </RedirectHandler>
-                </QueryProvider>
-              </ThemeProvider>
-            </PostHogProvider>
-          </SessionProvider>
-        </ErrorBoundary>
+        <LenisProvider>
+          <ErrorBoundary>
+            <SessionProvider>
+              <PostHogProvider>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                >
+                  <QueryProvider>
+                    <RedirectHandler>
+                      {children}
+                      <NotificationContainer />
+                    </RedirectHandler>
+                  </QueryProvider>
+                </ThemeProvider>
+              </PostHogProvider>
+            </SessionProvider>
+          </ErrorBoundary>
+        </LenisProvider>
       </body>
     </html>
   );

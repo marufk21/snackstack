@@ -107,13 +107,13 @@ export default function Navbar() {
     // Only handle smooth scroll for anchor links
     if (href.startsWith("#")) {
       e.preventDefault();
-      
+
       // If we're not on the home page, navigate to home with the anchor
       if (pathname !== "/") {
         window.location.href = `/${href}`;
         return;
       }
-      
+
       const element = document.querySelector(href);
       if (element) {
         const navbarHeight = 100; // Approximate navbar height
@@ -121,10 +121,20 @@ export default function Navbar() {
         const offsetPosition =
           elementPosition + window.pageYOffset - navbarHeight;
 
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
+        // Use Lenis for smooth scrolling
+        const lenis = (window as any).lenis;
+        if (lenis) {
+          lenis.scrollTo(offsetPosition, {
+            duration: 1.2,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          });
+        } else {
+          // Fallback to native scrollTo if Lenis is not available
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
       }
     }
     setIsOpen(false);
