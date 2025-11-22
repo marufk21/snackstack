@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { WelcomeHeader } from "@/components/ui/welcome-header";
 import { NoteCard } from "@/components/dashboard/note-card";
-import { NoteViewModal } from "@/components/dashboard/note-view-modal";
+import { NoteViewModal } from "@/components/dashboard/note-modal";
 import { Plus, Loader2, FileText, Sparkles } from "lucide-react";
 
 export default function NotesPage() {

@@ -26,7 +26,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [activeAiAction, setActiveAiAction] = useState<"improve" | "continue" | "summarize" | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -83,8 +83,8 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
     mutationFn: async (type: "improve" | "continue" | "summarize") => {
       return generateAiSuggestion({ content, type });
     },
-    onMutate: () => {
-      setIsGeneratingAI(true);
+    onMutate: (variables) => {
+      setActiveAiAction(variables);
     },
     onSuccess: (suggestion, variables) => {
       if (suggestion) {
@@ -104,7 +104,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
       showNotification("Failed to generate AI suggestion", "error");
     },
     onSettled: () => {
-      setIsGeneratingAI(false);
+      setActiveAiAction(null);
     },
   });
 
@@ -283,112 +283,117 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             </div>
 
             {/* Floating Toolbar - Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800">
-                <div className="flex items-center justify-between">
-                  {/* Left Actions */}
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploading}
-                      className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                      title="Add image"
-                    >
-                      {isUploading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <ImageIcon className="w-4 h-4" />
-                      )}
-                      <span className="text-sm font-medium">Image</span>
-                    </button>
-
-                    <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
-
-                    <button
-                      onClick={() => handleAiAction("improve")}
-                      disabled={isGeneratingAI}
-                      className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                      title="Improve with AI"
-                    >
-                      <Wand2 className="w-4 h-4" />
-                      <span className="text-sm font-medium">Improve</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleAiAction("continue")}
-                      disabled={isGeneratingAI}
-                      className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                      title="Continue writing"
-                    >
-                      <Type className="w-4 h-4" />
-                      <span className="text-sm font-medium">Continue</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleAiAction("summarize")}
-                      disabled={isGeneratingAI}
-                      className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                      title="Summarize"
-                    >
-                      <Sparkles className="w-4 h-4" />
-                      <span className="text-sm font-medium">Summarize</span>
-                    </button>
-                  </div>
-
-                  {/* Right Actions */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={handleDelete}
-                      disabled={deleteMutation.isPending}
-                      className="h-9 px-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
-                      title="Delete note"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete
-                    </button>
-                    <button
-                      onClick={onClose}
-                      className="h-9 px-4 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-sm font-medium"
-                    >
-                      Close
-                    </button>
-                    {isDirty && (
-                      <button
-                        onClick={handleSave}
-                        disabled={isSaving}
-                        className="h-9 px-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
-                      >
-                        {isSaving ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>
-                            <svg
-                              className="w-4 h-4"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                            Done
-                          </>
-                        )}
-                      </button>
+            <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center justify-between">
+                {/* Left Actions */}
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    title="Add image"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <ImageIcon className="w-4 h-4" />
                     )}
-                  </div>
+                    <span className="text-sm font-medium">Image</span>
+                  </button>
+
+                  <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
+
+                  <button
+                    onClick={() => handleAiAction("improve")}
+                    disabled={activeAiAction !== null}
+                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    title="Improve with AI"
+                  >
+                    {activeAiAction === "improve" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Wand2 className="w-4 h-4" />
+                    )}
+                    <span className="text-sm font-medium">Improve</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleAiAction("continue")}
+                    disabled={activeAiAction !== null}
+                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    title="Continue writing"
+                  >
+                    {activeAiAction === "continue" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Type className="w-4 h-4" />
+                    )}
+                    <span className="text-sm font-medium">Continue</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleAiAction("summarize")}
+                    disabled={activeAiAction !== null}
+                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    title="Summarize"
+                  >
+                    {activeAiAction === "summarize" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-4 h-4" />
+                    )}
+                    <span className="text-sm font-medium">Summarize</span>
+                  </button>
                 </div>
 
-                {/* AI Loading Indicator */}
-                {isGeneratingAI && (
-                  <div className="mt-2 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-zinc-900 dark:bg-zinc-100 w-3/5 animate-pulse" />
-                  </div>
-                )}
+                {/* Right Actions */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleteMutation.isPending}
+                    className="h-9 px-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
+                    title="Delete note"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="h-9 px-4 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-sm font-medium"
+                  >
+                    Close
+                  </button>
+                  {isDirty && (
+                    <button
+                      onClick={handleSave}
+                      disabled={isSaving}
+                      className="h-9 px-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
+                    >
+                      {isSaving ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          Done
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
               </div>
+            </div>
 
             {/* Hidden File Input */}
             <input

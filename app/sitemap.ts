@@ -1,16 +1,4 @@
 import type { MetadataRoute } from "next";
-import { db } from "@/lib/database";
-
-// Force nodejs runtime for database operations
-export const runtime = "nodejs";
-
-// Cache for sitemap generation (in production, consider using Redis)
-let sitemapCache: {
-  data: MetadataRoute.Sitemap;
-  timestamp: number;
-} | null = null;
-
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl =
@@ -24,16 +12,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ? baseUrl
     : `https://${baseUrl || "localhost:3000"}`;
 
-  // Check cache in production
-  if (process.env.NODE_ENV === "production" && sitemapCache) {
-    const isExpired = Date.now() - sitemapCache.timestamp > CACHE_DURATION;
-    if (!isExpired) {
-      return sitemapCache.data;
-    }
-  }
-
   // Static routes
-  const staticRoutes: MetadataRoute.Sitemap = [
+  return [
     // Landing page
     {
       url: normalizedBaseUrl,
@@ -62,71 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
   ];
-
-  // Dynamic routes from database
-  let dynamicRoutes: MetadataRoute.Sitemap = [];
-
-  try {
-    // Safety check for database availability
-    if (!db) {
-      console.warn("Database client not available, using static routes only");
-      return staticRoutes;
-    }
-
-    // Fetch only PUBLIC notes with better performance considerations
-    // SECURITY: Only include public notes in sitemap to prevent data breach
-    const notes = await db.note.findMany({
-      where: {
-        isPublic: true, // Only include public notes
-      },
-      select: {
-        slug: true,
-        updatedAt: true,
-        createdAt: true,
-        title: true, // for better priority calculation
-      },
-      orderBy: [{ updatedAt: "desc" }, { createdAt: "desc" }],
-      // Limit to prevent sitemap from becoming too large
-      take: 5000, // Google recommends max 50,000 URLs per sitemap
-    });
-
-    // Generate dynamic routes for individual notes
-    dynamicRoutes = notes
-      .filter((note) => note.slug && typeof note.slug === "string") // Ensure slug exists and is valid
-      .map((note, index) => {
-        // Calculate priority based on recency and position
-        const isRecent =
-          new Date(note.updatedAt).getTime() >
-          Date.now() - 30 * 24 * 60 * 60 * 1000; // 30 days
-        const positionFactor = Math.max(0.3, 1 - (index / notes.length) * 0.3);
-        const priority =
-          Math.round((0.6 + (isRecent ? 0.2 : 0) + positionFactor * 0.2) * 10) /
-          10;
-
-        return {
-          url: `${normalizedBaseUrl}/notes/${encodeURIComponent(note.slug)}`,
-          lastModified: note.updatedAt,
-          changeFrequency: "weekly" as const,
-          priority: Math.min(priority, 1.0), // Ensure max priority is 1.0
-        };
-      });
-  } catch (error) {
-    console.error("Error generating dynamic sitemap routes:", error);
-    // Continue with static routes only if database fails
-  }
-
-  // Combine routes
-  const allRoutes = [...staticRoutes, ...dynamicRoutes];
-
-  // Cache in production
-  if (process.env.NODE_ENV === "production") {
-    sitemapCache = {
-      data: allRoutes,
-      timestamp: Date.now(),
-    };
-  }
-
-  return allRoutes;
 }
 
 /**
