@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Home, Search, FileQuestion } from "lucide-react";
-import { BackButton } from "./back-button";
 
 // Disable static generation for this page
 export const dynamic = "force-dynamic";
@@ -23,14 +22,6 @@ export default function NotFound() {
             </span>
           </h1>
         </div>
-
-        {/* Icon */}
-        <div className="flex justify-center mb-6">
-          <div className="p-4 rounded-full bg-muted/50">
-            <FileQuestion className="w-12 h-12 text-muted-foreground" />
-          </div>
-        </div>
-
         {/* Title */}
         <h2 className="text-3xl sm:text-4xl font-bold mb-4">Page Not Found</h2>
 
@@ -44,11 +35,10 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button asChild size="lg" className="min-w-[160px]">
             <Link href="/">
-              <Home className="w-4 h-4 mr-2" />
-              Go Home
+              <Home className="w-4 h-4" />
+              Home
             </Link>
           </Button>
-          <BackButton />
         </div>
       </div>
     </div>
