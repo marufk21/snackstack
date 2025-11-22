@@ -39,27 +39,4 @@ export async function generateUniqueSlug(
   }
 }
 
-// Helper function to create initial welcome note for new users
-export async function createWelcomeNote(userId: string) {
-  // Find the user in our database
-  const user = await db.user.findUnique({
-    where: { id: userId },
-  });
 
-  if (!user) {
-    throw new Error("User not found");
-  }
-
-  const slug = await generateUniqueSlug("Welcome to Your AI-Powered Notes");
-
-  return await db.note.create({
-    data: {
-      title: "Welcome to Your AI-Powered Notes",
-      content:
-        '# Welcome! 🎉\n\nThis is your first note in the AI-powered note editor. Here are some features you can try:\n\n## Features\n- **Markdown Support**: Write in markdown with live preview\n- **Auto-save**: Your changes are saved automatically\n- **AI Assistance**: Get writing help with AI suggestions\n- **Image Upload**: Add images to your notes\n\n## AI Commands\nTry these AI features:\n- **Improve**: Enhance clarity and structure\n- **Continue**: Let AI continue your writing\n- **Summarize**: Get bullet point summaries\n- **Expand**: Add more details and examples\n\n## Getting Started\n1. Click "Edit" to modify this note\n2. Try the AI suggestion buttons\n3. Upload an image\n4. Create a new note\n\nHappy writing! ✨',
-      slug,
-      imageUrl: null,
-      userId: user.id,
-    },
-  });
-}

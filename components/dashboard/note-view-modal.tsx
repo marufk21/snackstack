@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateNote, type Note, generateAiSuggestion } from "@/server/api";
+import { updateNote, deleteNote, type Note, generateAiSuggestion } from "@/server/api";
 import { useAppStore } from "@/stores/use-app-store";
-import { X, Loader2, ImageIcon, Wand2, Type, Sparkles } from "lucide-react";
+import { X, Loader2, ImageIcon, Wand2, Type, Sparkles, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useImageUpload } from "@/hooks/use-image-upload";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,6 +28,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const [notification, setNotification] = useState<Notification | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const { addNotification } = useAppStore();
   const queryClient = useQueryClient();
@@ -107,6 +108,25 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
     },
   });
 
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      if (!note?.id) return;
+      return deleteNote(note.id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+      showNotification("Note deleted successfully!");
+      setTimeout(() => {
+        onClose();
+      }, 500);
+    },
+    onError: (error) => {
+      console.error("Error deleting note:", error);
+      showNotification("Failed to delete note", "error");
+    },
+  });
+
   // Handle save
   const handleSave = async () => {
     if (title.trim() && note?.id) {
@@ -164,6 +184,15 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
       return;
     }
     aiSuggestionMutation.mutate(type);
+  };
+
+  const handleDelete = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    deleteMutation.mutate();
+    setShowDeleteConfirm(false);
   };
 
   const autoResize = (e: React.FormEvent<HTMLTextAreaElement>) => {
@@ -308,6 +337,15 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                   {/* Right Actions */}
                   <div className="flex items-center gap-2">
                     <button
+                      onClick={handleDelete}
+                      disabled={deleteMutation.isPending}
+                      className="h-9 px-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
+                      title="Delete note"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </button>
+                    <button
                       onClick={onClose}
                       className="h-9 px-4 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-sm font-medium"
                     >
@@ -360,6 +398,66 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
               accept="image/*"
               onChange={handleImageUpload}
             />
+
+            {/* Delete Confirmation Dialog */}
+            <AnimatePresence>
+              {showDeleteConfirm && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-black/50 flex items-center justify-center z-[60] rounded-xl"
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    className="bg-white dark:bg-zinc-900 rounded-lg p-6 max-w-sm mx-4 shadow-2xl border border-zinc-200 dark:border-zinc-800"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-950/30 flex items-center justify-center flex-shrink-0">
+                        <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
+                          Delete Note?
+                        </h3>
+                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                          This action cannot be undone. This will permanently delete your note.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={() => setShowDeleteConfirm(false)}
+                        className="h-9 px-4 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors text-sm font-medium"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmDelete}
+                        disabled={deleteMutation.isPending}
+                        className="h-9 px-4 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
+                      >
+                        {deleteMutation.isPending ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Deleting...
+                          </>
+                        ) : (
+                          <>
+                            <Trash2 className="w-4 h-4" />
+                            Delete
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Notification Toast */}
             <AnimatePresence>
