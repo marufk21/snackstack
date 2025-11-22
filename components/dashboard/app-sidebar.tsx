@@ -141,6 +141,7 @@ export function AppSidebar() {
                 onClick={handleSignOut}
                 className="shrink-0"
                 title="Sign Out"
+                aria-label="Sign out of your account"
               >
                 <LogOut className="h-4 w-4" />
               </Button>

@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { getNotes, type Note } from "@/server/api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getNotes, createNote, type Note } from "@/server/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { WelcomeHeader } from "@/components/ui/welcome-header";
@@ -12,9 +11,10 @@ import { NoteViewModal } from "@/components/dashboard/note-view-modal";
 import { Plus, Loader2, FileText, Sparkles } from "lucide-react";
 
 export default function NotesPage() {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreatingNote, setIsCreatingNote] = useState(false);
 
   // Fetch all notes
   const { data, isLoading, error, refetch } = useQuery({
@@ -37,6 +37,34 @@ export default function NotesPage() {
     },
   });
 
+  // Create new note mutation
+  const createNoteMutation = useMutation({
+    mutationFn: createNote,
+    onMutate: () => {
+      setIsCreatingNote(true);
+    },
+    onSuccess: (newNote) => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+      setSelectedNote(newNote);
+      setIsModalOpen(true);
+    },
+    onError: (error) => {
+      console.error("Error creating note:", error);
+      alert("Failed to create note. Please try again.");
+    },
+    onSettled: () => {
+      setIsCreatingNote(false);
+    },
+  });
+
+  // Handle creating a new note
+  const handleCreateNewNote = () => {
+    createNoteMutation.mutate({
+      title: "Untitled",
+      content: "",
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -52,7 +80,7 @@ export default function NotesPage() {
     const errorMessage =
       error && typeof error === "object" && "response" in error
         ? (error as any).response?.data?.error ||
-          "Something went wrong while loading your notes."
+        "Something went wrong while loading your notes."
         : "Something went wrong while loading your notes.";
 
     return (
@@ -76,29 +104,38 @@ export default function NotesPage() {
   const notes = data || [];
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="max-w-6xl mx-auto p-4 md:p-6">
       {/* Welcome Header */}
-      <WelcomeHeader className="mb-8" />
+      <WelcomeHeader className="mb-6 md:mb-8" />
 
       {/* Notes Stats and Actions */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 md:mb-8">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
+          <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
             My Notes
             {notes.length > 0 && (
-              <Sparkles className="w-5 h-5 text-purple-500" />
+              <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-purple-500" />
             )}
           </h2>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
             {notes.length > 0
               ? `${notes.length} note${notes.length === 1 ? "" : "s"} with AI-powered insights`
               : "No notes yet"}
           </p>
         </div>
 
-        <Button onClick={() => router.push("/app/new")} size="lg">
-          <Plus className="w-5 h-5 mr-2" />
-          New Note
+        <Button 
+          onClick={handleCreateNewNote} 
+          size="lg" 
+          className="w-full sm:w-auto"
+          disabled={isCreatingNote}
+        >
+          {isCreatingNote ? (
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+          ) : (
+            <Plus className="w-5 h-5 mr-2" />
+          )}
+          {isCreatingNote ? "Creating..." : "New Note"}
         </Button>
       </div>
 
@@ -111,15 +148,23 @@ export default function NotesPage() {
             Create your first note to get started with your AI-powered
             note-taking experience. Our AI will help you organize and enhance your ideas.
           </p>
-          <Button onClick={() => router.push("/app/new")} size="lg">
-            <Plus className="w-5 h-5 mr-2" />
-            Create First Note
+          <Button 
+            onClick={handleCreateNewNote} 
+            size="lg"
+            disabled={isCreatingNote}
+          >
+            {isCreatingNote ? (
+              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+            ) : (
+              <Plus className="w-5 h-5 mr-2" />
+            )}
+            {isCreatingNote ? "Creating..." : "Create First Note"}
           </Button>
         </Card>
       ) : (
         <>
           {/* Modern Notes Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
             {notes.map((note) => (
               <NoteCard
                 key={note.id}

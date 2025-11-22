@@ -6,12 +6,11 @@
 - Overall UI
 
 # Authentication + Dashboard
-- Notes Actually Value + UI
+- Remove Unused note
+- Add Options of Delete
+- Cleanup 3
+- Flow Cleanup e2e
 - Pricing Page Redirection + Pricing Stripe + Card (genuine)
 - Subscription Based (Free) + Pricing + Subscription Ended Popup + (Upgrade)
-- Seperate suggestions functionality
-- Add Options of Delete
-- Remove Unused note
-- Flow Cleanup e2e
 - DB Understand and Fix
 - Test: Stripe + Webhook

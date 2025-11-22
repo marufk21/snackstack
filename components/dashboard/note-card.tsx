@@ -46,6 +46,15 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
     <Card
       className={`group relative overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:z-10 ${cardBgClass}`}
       onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      aria-label={`Open note: ${note.title}`}
     >
       {/* Subtle gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/5 dark:from-black/0 dark:via-black/0 dark:to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -57,7 +66,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
             <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-foreground transition-colors">
               {note.title}
             </h3>
-            <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70" />
+            <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70" aria-hidden="true" />
           </div>
         </div>
 
@@ -74,7 +83,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
 
         {/* Content preview */}
         <div className="flex-1 mb-4">
-          <p className="text-sm text-muted-foreground truncate leading-relaxed">
+          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
             {preview}
             {preview.length >= 180 ? "..." : ""}
           </p>
@@ -95,15 +104,14 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
 
       {/* Side accent line based on content type */}
       <div
-        className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-300 ${
-          note.imageUrl
-            ? "bg-gradient-to-b from-purple-500 to-purple-600"
-            : note.content.length > 500
+        className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-300 ${note.imageUrl
             ? "bg-gradient-to-b from-purple-500 to-purple-600"
             : note.content.length > 1000
-            ? "bg-gradient-to-b from-green-500 to-green-600"
-            : "bg-gradient-to-b from-blue-500 to-blue-600"
-        } opacity-0 group-hover:opacity-100`}
+              ? "bg-gradient-to-b from-green-500 to-green-600"
+              : note.content.length > 500
+                ? "bg-gradient-to-b from-blue-500 to-blue-600"
+                : "bg-gradient-to-b from-amber-500 to-amber-600"
+          } opacity-0 group-hover:opacity-100`}
       />
     </Card>
   );
