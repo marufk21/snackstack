@@ -8,10 +8,15 @@ export default function robots(): MetadataRoute.Robots {
       ? "http://localhost:3001"
       : "https://localhost:3000");
 
-  // Ensure baseUrl is properly formatted and safe
-  const normalizedBaseUrl = baseUrl?.startsWith("http")
-    ? baseUrl
-    : `https://${baseUrl || "localhost:3000"}`;
+  // SECURITY: Enforce HTTPS in production for SEO best practices
+  const normalizedBaseUrl =
+    process.env.NODE_ENV === "production"
+      ? baseUrl?.startsWith("https://")
+        ? baseUrl
+        : `https://${baseUrl?.replace(/^https?:\/\//, "") || "localhost:3000"}`
+      : baseUrl?.startsWith("http")
+      ? baseUrl
+      : `http://${baseUrl || "localhost:3001"}`;
 
   return {
     rules: [
@@ -35,7 +40,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: `${normalizedBaseUrl}/sitemap.xml`,
+    sitemap: `${normalizedBaseUrl}/sitemap.xml`, // SECURITY: Always HTTPS in production
     host: normalizedBaseUrl,
   };
 }

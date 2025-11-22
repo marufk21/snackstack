@@ -1,12 +1,64 @@
 import { getBlogs } from "@/lib/appwrite/services";
 import { Blog } from "@/lib/appwrite/config";
 import Blogs from "@/components/landing/blog-showcase";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
+// Generate metadata for SEO
+export async function generateMetadata(): Promise<Metadata> {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.NODE_ENV === "development"
+      ? "http://localhost:3001"
+      : "https://localhost:3000");
+
+  // SECURITY: Enforce HTTPS in production
+  const normalizedBaseUrl =
+    process.env.NODE_ENV === "production"
+      ? baseUrl?.startsWith("https://")
+        ? baseUrl
+        : `https://${baseUrl?.replace(/^https?:\/\//, "")}`
+      : baseUrl;
+
+  const canonicalUrl = `${normalizedBaseUrl}/blogs`;
+
+  return {
+    title: "Blog - Latest Insights & Updates | SnackStack",
+    description:
+      "Discover expert insights, innovative strategies, and the latest trends to help you stay ahead in your journey. Read our latest blog posts.",
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: "Blog - Latest Insights & Updates | SnackStack",
+      description:
+        "Discover expert insights, innovative strategies, and the latest trends to help you stay ahead in your journey.",
+      url: canonicalUrl,
+      siteName: "SnackStack",
+      type: "website",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Blog - Latest Insights & Updates | SnackStack",
+      description:
+        "Discover expert insights, innovative strategies, and the latest trends to help you stay ahead in your journey.",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
+  };
+}
+
 export default async function BlogsPage() {
   let blogs: Blog[] = [];
-  
+
   try {
     blogs = await getBlogs();
   } catch (error) {
@@ -14,7 +66,7 @@ export default async function BlogsPage() {
     // Continue with empty array to allow build to succeed
     blogs = [];
   }
-  
+
   return (
     <section className="py-12 md:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

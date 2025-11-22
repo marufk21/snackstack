@@ -1,7 +1,7 @@
 # UI:DB:CODE:Readme
 
 ## Landing Page + Blog Admin Panel
-- CreateBlogs/Sitemaps
+- Sitemaps
 - Resend/Nodemailer
 
 ## Authentication + Dashboard
