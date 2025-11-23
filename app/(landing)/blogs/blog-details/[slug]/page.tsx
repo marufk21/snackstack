@@ -1,5 +1,3 @@
-"use server";
-
 import Link from "next/link";
 import { getBlogs } from "@/lib/appwrite/services";
 import { notFound } from "next/navigation";
