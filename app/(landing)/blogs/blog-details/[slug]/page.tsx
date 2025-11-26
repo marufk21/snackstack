@@ -217,11 +217,16 @@ export default async function BlogDetailsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="relative py-12 md:py-20 min-h-screen overflow-hidden">
-        {/* Background Gradients */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl -z-10 animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl -z-10 animate-pulse delay-1000" />
-
+      <section className="relative py-12 md:py-20 min-h-screen overflow-hidden" style={{
+        background: `
+        radial-gradient(
+          circle at center,
+          rgba(168, 85, 247, 0.12) 0%,
+          rgba(168, 85, 247, 0.06) 20%,
+          rgba(0, 0, 0, 0.0) 60%
+        )
+      `,
+      }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Back Button */}
           <Link
@@ -236,7 +241,7 @@ export default async function BlogDetailsPage({
           <article className="bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden p-8 md:p-12 relative">
             {/* Decorative top gradient */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-50" />
-            
+
             <BlogContentView blog={blog} />
 
             {/* Next/Previous navigation */}

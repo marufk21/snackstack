@@ -14,6 +14,8 @@ export const dynamic = "force-dynamic";
 const ADMIN_ID = process.env.NEXT_PUBLIC_ADMIN_ID;
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 
+import MistBackground from "@/components/ui/mist-background";
+
 export default function AdminLogin() {
   const router = useRouter();
   const [userId, setUserId] = useState("");
@@ -52,14 +54,7 @@ export default function AdminLogin() {
 
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background selection:bg-primary/20">
-      {/* Background Effects */}
-      <div className="absolute inset-0 z-0 h-full w-full bg-background bg-grid-pattern [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
-      
-      <div className="absolute top-0 left-0 z-0 h-full w-full overflow-hidden">
-        <div className="absolute -top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/20 blur-[100px] dark:bg-purple-900/20" />
-        <div className="absolute top-[30%] -right-[10%] h-[400px] w-[400px] rounded-full bg-blue-500/20 blur-[100px] dark:bg-blue-900/20" />
-        <div className="absolute -bottom-[10%] left-[20%] h-[600px] w-[600px] rounded-full bg-pink-500/20 blur-[100px] dark:bg-pink-900/20" />
-      </div>
+      <MistBackground />
 
       <div className="relative z-10 w-full max-w-md px-4">
         <motion.div
@@ -79,7 +74,7 @@ export default function AdminLogin() {
               >
                 <ShieldCheck className="h-8 w-8 text-white" />
               </motion.div>
-              
+
               <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -88,7 +83,7 @@ export default function AdminLogin() {
               >
                 Admin Access
               </motion.h1>
-              
+
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -177,7 +172,7 @@ export default function AdminLogin() {
               </Button>
             </motion.form>
           </div>
-          
+
           {/* Decorative bottom bar */}
           <div className="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
         </motion.div>

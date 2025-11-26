@@ -68,11 +68,16 @@ export default async function BlogsPage() {
   }
 
   return (
-    <section className="relative py-12 md:py-20 min-h-screen overflow-hidden">
-      {/* Background Gradients */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl -z-10 animate-pulse" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl -z-10 animate-pulse delay-1000" />
-
+    <section className="relative py-12 md:py-20 min-h-screen overflow-hidden" style={{
+      background: `
+        radial-gradient(
+          circle at center,
+          rgba(168, 85, 247, 0.12) 0%,
+          rgba(168, 85, 247, 0.06) 20%,
+          rgba(0, 0, 0, 0.0) 60%
+        )
+      `,
+    }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16">
