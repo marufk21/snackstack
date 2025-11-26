@@ -3,7 +3,6 @@
 import { useRef, useEffect } from "react";
 import Link from "next/link";
 // import Dither from "@/components/landing/dither";
-import { useTheme } from "next-themes";
 import MistBackground from "@/components/ui/mist-background";
 import { cn } from "@/lib/utils";
 import { useGSAP } from "@/hooks/use-gsap";
@@ -13,8 +12,6 @@ import { usePostHog } from "@/hooks/use-posthog";
 
 const Hero = () => {
   const { capture } = usePostHog();
-  const { theme, resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark" || theme === "dark";
 
   const heroRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -126,10 +123,7 @@ const Hero = () => {
               </h1>
               <p
                 ref={descriptionRef}
-                className={cn(
-                  "text-lg sm:text-xl md:text-2xl mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light",
-                  isDark ? "text-gray-200" : "text-gray-600"
-                )}
+                className="text-lg sm:text-xl md:text-2xl mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-200"
               >
                 Capture, organize, and enhance your ideas with the power of
                 artificial intelligence. The smart way to take notes for
@@ -176,12 +170,7 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className={cn(
-                      "px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 backdrop-blur-md border",
-                      isDark
-                        ? "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
-                        : "bg-white/80 border-black/5 text-gray-900 hover:bg-white hover:border-black/10 shadow-sm hover:shadow-md"
-                    )}
+                    className="px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 backdrop-blur-md border bg-white/80 border-black/5 text-gray-900 hover:bg-white hover:border-black/10 shadow-sm hover:shadow-md dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/20 dark:shadow-none"
                   >
                     Sign In
                   </button>
@@ -194,12 +183,7 @@ const Hero = () => {
               <div className="relative w-full max-w-lg h-[550px]">
                 {/* Floating Card 1 - Main Note Editor */}
                 <div
-                  className={cn(
-                    "absolute top-0 right-4 w-80 h-[420px] rounded-3xl shadow-2xl backdrop-blur-xl p-6 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-10",
-                    isDark
-                      ? "bg-gray-900/60 border-white/10"
-                      : "bg-white/80 border-black/5 shadow-black/5"
-                  )}
+                  className="absolute top-0 right-4 w-80 h-[420px] rounded-3xl shadow-2xl backdrop-blur-xl p-6 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-10 bg-white/80 border-black/5 shadow-black/5 dark:bg-gray-900/60 dark:border-white/10 dark:shadow-none"
                   style={{ animationDelay: "0s" }}
                 >
                   {/* Window Controls */}
@@ -228,12 +212,7 @@ const Hero = () => {
                         </svg>
                       </div>
                       <div>
-                        <h3
-                          className={cn(
-                            "text-sm font-bold",
-                            isDark ? "text-white" : "text-gray-900"
-                          )}
-                        >
+                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">
                           Project Phoenix
                         </h3>
                         <p className="text-xs text-muted-foreground">
@@ -258,35 +237,13 @@ const Hero = () => {
                     </div>
 
                     <div className="space-y-3">
-                      <div
-                        className={cn(
-                          "h-4 rounded w-3/4",
-                          isDark ? "bg-white/10" : "bg-gray-100"
-                        )}
-                      />
-                      <div
-                        className={cn(
-                          "h-4 rounded w-full",
-                          isDark ? "bg-white/10" : "bg-gray-100"
-                        )}
-                      />
-                      <div
-                        className={cn(
-                          "h-4 rounded w-5/6",
-                          isDark ? "bg-white/10" : "bg-gray-100"
-                        )}
-                      />
+                      <div className="h-4 rounded w-3/4 bg-gray-100 dark:bg-white/10" />
+                      <div className="h-4 rounded w-full bg-gray-100 dark:bg-white/10" />
+                      <div className="h-4 rounded w-5/6 bg-gray-100 dark:bg-white/10" />
                     </div>
 
                     {/* AI Suggestion Block */}
-                    <div
-                      className={cn(
-                        "mt-6 p-4 rounded-xl border backdrop-blur-md",
-                        isDark
-                          ? "bg-violet-500/10 border-violet-500/20"
-                          : "bg-violet-50/50 border-violet-100"
-                      )}
-                    >
+                    <div className="mt-6 p-4 rounded-xl border backdrop-blur-md bg-violet-50/50 border-violet-100 dark:bg-violet-500/10 dark:border-violet-500/20">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-4 h-4 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 flex items-center justify-center">
                           <svg
@@ -307,12 +264,7 @@ const Hero = () => {
                           AI Insight
                         </span>
                       </div>
-                      <p
-                        className={cn(
-                          "text-xs leading-relaxed",
-                          isDark ? "text-violet-200/80" : "text-violet-700/80"
-                        )}
-                      >
+                      <p className="text-xs leading-relaxed text-violet-700/80 dark:text-violet-200/80">
                         Based on your recent notes, consider exploring the
                         market expansion strategy for Q1 2025.
                       </p>
@@ -322,12 +274,7 @@ const Hero = () => {
 
                 {/* Floating Card 2 - AI Chat Assistant */}
                 <div
-                  className={cn(
-                    "absolute top-40 left-0 w-72 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-20",
-                    isDark
-                      ? "bg-gray-900/70 border-white/10"
-                      : "bg-white/90 border-black/5 shadow-black/10"
-                  )}
+                  className="absolute top-40 left-0 w-72 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-20 bg-white/90 border-black/5 shadow-black/10 dark:bg-gray-900/70 dark:border-white/10 dark:shadow-none"
                   style={{ animationDelay: "1.5s" }}
                 >
                   <div className="flex items-center gap-3 mb-4 border-b border-gray-200/10 pb-3">
@@ -350,12 +297,7 @@ const Hero = () => {
                       <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full" />
                     </div>
                     <div>
-                      <h4
-                        className={cn(
-                          "text-sm font-bold",
-                          isDark ? "text-white" : "text-gray-900"
-                        )}
-                      >
+                      <h4 className="text-sm font-bold text-gray-900 dark:text-white">
                         SnackBot
                       </h4>
                       <p className="text-xs text-muted-foreground">
@@ -365,24 +307,10 @@ const Hero = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <div
-                      className={cn(
-                        "self-end p-3 rounded-2xl rounded-tr-sm text-xs ml-8",
-                        isDark
-                          ? "bg-violet-600 text-white"
-                          : "bg-violet-600 text-white"
-                      )}
-                    >
+                    <div className="self-end p-3 rounded-2xl rounded-tr-sm text-xs ml-8 bg-violet-600 text-white">
                       Summarize the meeting notes from yesterday.
                     </div>
-                    <div
-                      className={cn(
-                        "self-start p-3 rounded-2xl rounded-tl-sm text-xs mr-4",
-                        isDark
-                          ? "bg-white/10 text-gray-200"
-                          : "bg-gray-100 text-gray-700"
-                      )}
-                    >
+                    <div className="self-start p-3 rounded-2xl rounded-tl-sm text-xs mr-4 bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-200">
                       <div className="flex gap-1 mb-2">
                         <span
                           className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"
@@ -404,23 +332,13 @@ const Hero = () => {
 
                 {/* Floating Card 3 - Quick Capture */}
                 <div
-                  className={cn(
-                    "absolute bottom-0 right-12 w-64 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-30",
-                    isDark
-                      ? "bg-gray-900/50 border-white/10"
-                      : "bg-white/60 border-black/5 shadow-black/5"
-                  )}
+                  className="absolute bottom-0 right-12 w-64 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-30 bg-white/60 border-black/5 shadow-black/5 dark:bg-gray-900/50 dark:border-white/10 dark:shadow-none"
                   style={{ animationDelay: "2.5s" }}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
-                      <span
-                        className={cn(
-                          "text-xs font-bold uppercase tracking-wider",
-                          isDark ? "text-white/60" : "text-gray-500"
-                        )}
-                      >
+                      <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-white/60">
                         Quick Capture
                       </span>
                     </div>
@@ -438,14 +356,7 @@ const Hero = () => {
                       />
                     </svg>
                   </div>
-                  <div
-                    className={cn(
-                      "h-20 rounded-xl border border-dashed flex items-center justify-center",
-                      isDark
-                        ? "border-white/20 bg-white/5"
-                        : "border-gray-300 bg-gray-50"
-                    )}
-                  >
+                  <div className="h-20 rounded-xl border border-dashed flex items-center justify-center border-gray-300 bg-gray-50 dark:border-white/20 dark:bg-white/5">
                     <span className="text-xs text-muted-foreground">
                       Drop images or text here
                     </span>

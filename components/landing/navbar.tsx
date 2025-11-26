@@ -26,16 +26,16 @@ const navItems: NavItem[] = [
     label: "About",
     href: "#about",
   },
-  {
-    label: "Features",
-    href: "#features",
-  },
+  // {
+  //   label: "Features",
+  //   href: "#features",
+  // },
   {
     label: "Pricing",
     href: "#pricing",
   },
   {
-    label: "Reviews",
+    label: "Testimonials",
     href: "#testimonials",
   },
 
