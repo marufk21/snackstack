@@ -1,8 +1,18 @@
+html {
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";
 @import "tw-animate-css";
 @import "lenis/dist/lenis.css";
+
+
 
 @custom-variant dark (&:is(.dark *));
 
