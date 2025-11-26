@@ -2,19 +2,21 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
-// Disable static generation for this page
-export const dynamic = "force-dynamic";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import { ArrowLeftIcon, PencilIcon } from "lucide-react";
+import { ArrowLeftIcon } from "lucide-react";
 import { getBlogById } from "@/lib/appwrite/services";
 import { Blog } from "@/lib/appwrite/config";
 import BlogContentView from "@/components/landing/blog-content-view";
+import { motion } from "framer-motion";
+import { Loader } from "@/components/ui/loader";
+
+// Disable static generation for this page
+export const dynamic = "force-dynamic";
 
 function ViewBlogContent() {
   const router = useRouter();
@@ -28,7 +30,7 @@ function ViewBlogContent() {
   useEffect(() => {
     const checkAuth = async () => {
       if (typeof window === 'undefined') return;
-      
+
       const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
 
       if (!isLoggedIn) {
@@ -62,58 +64,61 @@ function ViewBlogContent() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!blog) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg text-gray-700">Blog not found</div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-lg text-gray-500 dark:text-gray-400">Blog not found</div>
       </div>
     );
   }
 
   return (
-    <>
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        <div className="mt-2 mb-2">
-          <Button
-            variant="outline"
-            size="sm"
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="mb-8 flex items-center">
+          <div
             onClick={() => router.push("/admin/blogs-dashboard")}
-            className="flex items-center text-gray-600 hover:text-gray-900"
+            className="group flex items-center cursor-pointer text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
           >
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 ring-1 ring-gray-200 transition-all group-hover:bg-indigo-50 group-hover:ring-indigo-200 dark:bg-gray-800/50 dark:ring-gray-700 dark:group-hover:bg-indigo-900/20 dark:group-hover:ring-indigo-500/30 mr-3 backdrop-blur-sm">
+              <ArrowLeftIcon className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+            </div>
+            <span className="text-base font-medium">Back to Dashboard</span>
+          </div>
         </div>
-        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg border-0">
+
+        <Card className="overflow-hidden border-white/20 bg-white/70 backdrop-blur-xl shadow-xl dark:border-white/10 dark:bg-black/40">
           <CardContent className="pt-6">
             <BlogContentView blog={blog} />
           </CardContent>
-          <CardFooter className="flex justify-end">
+          <CardFooter className="flex justify-end border-t border-gray-200/50 dark:border-gray-700/50 p-6">
             <Button
               onClick={handleEdit}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg transition-all duration-200 hover:scale-105 flex items-center"
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-2 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
             >
-              <PencilIcon className="h-4 w-4 mr-2" />
-              Edit Blog
+              <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+              <div className="relative flex items-center gap-2">
+                <span>Edit Blog</span>
+              </div>
             </Button>
           </CardFooter>
         </Card>
-      </main>
-    </>
+      </motion.div>
+    </main>
   );
 }
 
 export default function ViewBlog() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+    <Suspense fallback={<Loader />}>
       <ViewBlogContent />
     </Suspense>
   );
-}    
+}

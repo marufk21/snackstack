@@ -43,12 +43,20 @@ export default function BlogsDashboardLayout({
   }, []);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/70 via-purple-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 -z-10" />
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-indigo-300/20 to-purple-300/20 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-blue-300/20 to-purple-300/20 rounded-full blur-3xl -z-10" />
-      <AdminHeader />
-      {children}
+    <div className="min-h-screen relative overflow-hidden bg-background selection:bg-primary/20">
+      {/* Background Effects */}
+      <div className="absolute inset-0 z-0 h-full w-full bg-background bg-grid-pattern [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+
+      <div className="absolute top-0 left-0 z-0 h-full w-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/10 blur-[100px] dark:bg-purple-900/10" />
+        <div className="absolute top-[30%] -right-[10%] h-[400px] w-[400px] rounded-full bg-blue-500/10 blur-[100px] dark:bg-blue-900/10" />
+        <div className="absolute -bottom-[10%] left-[20%] h-[600px] w-[600px] rounded-full bg-pink-500/10 blur-[100px] dark:bg-pink-900/10" />
+      </div>
+
+      <div className="relative z-10">
+        <AdminHeader />
+        {children}
+      </div>
     </div>
   );
 }

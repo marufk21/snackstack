@@ -4,15 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { EyeIcon, EyeOffIcon, ShieldCheck } from "lucide-react";
 
 // Disable static generation for this page
 export const dynamic = "force-dynamic";
@@ -27,6 +20,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Check if user is already logged in
   useEffect(() => {
@@ -36,8 +30,13 @@ export default function AdminLogin() {
     }
   }, [router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    // Simulate network delay for better UX
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     // Check if credentials match the superuser
     if (userId === ADMIN_ID && password === ADMIN_PASSWORD) {
@@ -47,89 +46,142 @@ export default function AdminLogin() {
       router.push("/admin/blogs-dashboard");
     } else {
       setError("Invalid credentials. Please try again.");
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/70 via-purple-50/30 to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 -z-10" />
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-indigo-300/20 to-purple-300/20 rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-blue-300/20 to-purple-300/20 rounded-full blur-3xl -z-10" />
-      <Card className="w-full max-w-md shadow-lg relative z-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
-            Admin Login
-          </CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access the blogs dashboard
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleLogin} className="space-y-4">
-            {error && (
-              <Alert
-                variant="destructive"
-                className="bg-red-50/80 text-red-600 border border-red-200/50 backdrop-blur-sm"
+    <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background selection:bg-primary/20">
+      {/* Background Effects */}
+      <div className="absolute inset-0 z-0 h-full w-full bg-background bg-grid-pattern [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+      
+      <div className="absolute top-0 left-0 z-0 h-full w-full overflow-hidden">
+        <div className="absolute -top-[20%] -left-[10%] h-[500px] w-[500px] rounded-full bg-purple-500/20 blur-[100px] dark:bg-purple-900/20" />
+        <div className="absolute top-[30%] -right-[10%] h-[400px] w-[400px] rounded-full bg-blue-500/20 blur-[100px] dark:bg-blue-900/20" />
+        <div className="absolute -bottom-[10%] left-[20%] h-[600px] w-[600px] rounded-full bg-pink-500/20 blur-[100px] dark:bg-pink-900/20" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="overflow-hidden rounded-3xl border border-white/20 bg-white/70 backdrop-blur-xl shadow-2xl dark:border-white/10 dark:bg-black/40"
+        >
+          <div className="p-8 sm:p-10">
+            {/* Header */}
+            <div className="flex flex-col items-center text-center">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="relative mb-6 h-16 w-16 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-3 shadow-inner flex items-center justify-center"
               >
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <div className="space-y-2">
-              <label
-                htmlFor="userId"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                <ShieldCheck className="h-8 w-8 text-white" />
+              </motion.div>
+              
+              <motion.h1
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"
               >
-                User ID
-              </label>
-              <Input
-                id="userId"
-                type="text"
-                placeholder="Enter user ID"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-                required
-                className="w-full"
-              />
+                Admin Access
+              </motion.h1>
+              
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="mb-8 text-sm text-gray-500 dark:text-gray-400"
+              >
+                Enter your credentials to access the dashboard
+              </motion.p>
             </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-500"
-                >
-                  {showPassword ? (
-                    <EyeOffIcon className="h-5 w-5" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-            <Button
-              type="submit"
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg transition-all duration-200 hover:scale-105"
+
+            {/* Login Form */}
+            <motion.form
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              onSubmit={handleLogin}
+              className="space-y-4"
             >
-              Login
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  className="rounded-lg bg-red-50 p-3 text-sm text-red-500 dark:bg-red-900/20 dark:text-red-400 border border-red-100 dark:border-red-900/30"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">
+                  User ID
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter admin ID"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  required
+                  className="bg-white/50 dark:bg-black/20 border-gray-200 dark:border-gray-700 focus:ring-purple-500"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-gray-500 dark:text-gray-400 ml-1">
+                  Password
+                </label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="bg-white/50 dark:bg-black/20 border-gray-200 dark:border-gray-700 focus:ring-purple-500 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon className="h-4 w-4" />
+                    ) : (
+                      <EyeIcon className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-5 text-base font-medium text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                <span className="relative flex items-center justify-center gap-2">
+                  {isLoading ? (
+                    <>
+                      <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    "Access Dashboard"
+                  )}
+                </span>
+              </Button>
+            </motion.form>
+          </div>
+          
+          {/* Decorative bottom bar */}
+          <div className="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+        </motion.div>
+      </div>
     </div>
   );
 }

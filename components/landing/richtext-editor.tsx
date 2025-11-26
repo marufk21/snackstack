@@ -1,19 +1,35 @@
-"use client";
-
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+  Bold,
+  Italic,
+  Strikethrough,
+  List,
+  ListOrdered,
+  Quote,
+  Link as LinkIcon,
+  Image as ImageIcon,
+  Undo,
+  Redo,
+  Heading1,
+  Heading2,
+  Heading3
+} from "lucide-react";
 
 interface RichTextEditorProps {
   initialContent?: string;
   onChange: (content: string) => void;
+  className?: string;
 }
 
 export default function RichTextEditor({
   initialContent = "",
   onChange,
+  className,
 }: RichTextEditorProps) {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -45,7 +61,7 @@ export default function RichTextEditor({
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[300px] p-4 dark:prose-invert",
+          "prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none min-h-[300px] p-4 dark:prose-invert max-w-none",
       },
     },
     onUpdate: ({ editor }) => {
@@ -61,160 +77,156 @@ export default function RichTextEditor({
 
   if (!isMounted || !editor) {
     return (
-      <div className="border rounded-md p-4 bg-gray-50 dark:bg-gray-800 min-h-[300px] flex items-center justify-center">
+      <div className={cn("border rounded-md p-4 bg-gray-50 dark:bg-gray-800 min-h-[300px] flex items-center justify-center", className)}>
         <p className="text-gray-500 dark:text-gray-400">Loading editor...</p>
       </div>
     );
   }
 
+  const ToolbarButton = ({
+    onClick,
+    isActive = false,
+    children,
+    title
+  }: {
+    onClick: () => void;
+    isActive?: boolean;
+    children: React.ReactNode;
+    title?: string;
+  }) => (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={cn(
+        "p-2 rounded-md text-sm font-medium transition-all",
+        isActive
+          ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+          : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
+      )}
+    >
+      {children}
+    </button>
+  );
+
   return (
-    <div className="rich-text-editor border rounded-md overflow-hidden bg-white dark:bg-gray-900">
+    <div className={cn("flex flex-col border rounded-md overflow-hidden bg-white dark:bg-gray-900", className)}>
       {/* Toolbar */}
-      <div className="border-b border-gray-200 dark:border-gray-700 p-2 flex flex-wrap gap-1 bg-gray-50 dark:bg-gray-800">
-        <button
-          type="button"
+      <div className="border-b border-gray-200 dark:border-gray-800 p-2 flex flex-wrap gap-1 bg-gray-50/50 dark:bg-gray-900/50 backdrop-blur-sm sticky top-0 z-10">
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("heading", { level: 1 })
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("heading", { level: 1 })}
+          title="Heading 1"
         >
-          H1
-        </button>
-        <button
-          type="button"
+          <Heading1 className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("heading", { level: 2 })
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("heading", { level: 2 })}
+          title="Heading 2"
         >
-          H2
-        </button>
-        <button
-          type="button"
+          <Heading2 className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("heading", { level: 3 })
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("heading", { level: 3 })}
+          title="Heading 3"
         >
-          H3
-        </button>
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-        <button
-          type="button"
+          <Heading3 className="h-4 w-4" />
+        </ToolbarButton>
+
+        <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1 self-center" />
+
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("bold")
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("bold")}
+          title="Bold"
         >
-          <strong>B</strong>
-        </button>
-        <button
-          type="button"
+          <Bold className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("italic")
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("italic")}
+          title="Italic"
         >
-          <em>I</em>
-        </button>
-        <button
-          type="button"
+          <Italic className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("strike")
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("strike")}
+          title="Strikethrough"
         >
-          <span className="line-through">S</span>
-        </button>
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-        <button
-          type="button"
+          <Strikethrough className="h-4 w-4" />
+        </ToolbarButton>
+
+        <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1 self-center" />
+
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("bulletList")
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("bulletList")}
+          title="Bullet List"
         >
-          •
-        </button>
-        <button
-          type="button"
+          <List className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("orderedList")
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("orderedList")}
+          title="Ordered List"
         >
-          1.
-        </button>
-        <button
-          type="button"
+          <ListOrdered className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={`px-3 py-1 rounded text-sm font-medium transition-colors ${
-            editor.isActive("blockquote")
-              ? "bg-blue-500 text-white"
-              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
-          }`}
+          isActive={editor.isActive("blockquote")}
+          title="Quote"
         >
-          "
-        </button>
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-        <button
-          type="button"
+          <Quote className="h-4 w-4" />
+        </ToolbarButton>
+
+        <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1 self-center" />
+
+        <ToolbarButton
           onClick={() => {
             const url = window.prompt("Enter URL:");
             if (url) {
               editor.chain().focus().setLink({ href: url }).run();
             }
           }}
-          className="px-3 py-1 rounded text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+          isActive={editor.isActive("link")}
+          title="Link"
         >
-          🔗
-        </button>
-        <button
-          type="button"
+          <LinkIcon className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => {
             const url = window.prompt("Enter image URL:");
             if (url) {
               editor.chain().focus().setImage({ src: url }).run();
             }
           }}
-          className="px-3 py-1 rounded text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+          title="Image"
         >
-          🖼️
-        </button>
-        <div className="w-px h-6 bg-gray-300 dark:bg-gray-600 mx-1" />
-        <button
-          type="button"
+          <ImageIcon className="h-4 w-4" />
+        </ToolbarButton>
+
+        <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1 self-center" />
+
+        <ToolbarButton
           onClick={() => editor.chain().focus().undo().run()}
-          className="px-3 py-1 rounded text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+          title="Undo"
         >
-          ↶
-        </button>
-        <button
-          type="button"
+          <Undo className="h-4 w-4" />
+        </ToolbarButton>
+        <ToolbarButton
           onClick={() => editor.chain().focus().redo().run()}
-          className="px-3 py-1 rounded text-sm font-medium bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+          title="Redo"
         >
-          ↷
-        </button>
+          <Redo className="h-4 w-4" />
+        </ToolbarButton>
       </div>
+
       {/* Editor Content */}
-      <EditorContent editor={editor} className="min-h-[300px]" />
+      <EditorContent editor={editor} className="flex-grow min-h-[300px] cursor-text" />
     </div>
   );
 }

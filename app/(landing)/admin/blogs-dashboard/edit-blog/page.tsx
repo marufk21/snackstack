@@ -13,14 +13,15 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeftIcon, UploadCloud, ChevronDown } from "lucide-react";
 import { getBlogById, updateBlog } from "@/lib/appwrite/services";
-import { Blog } from "@/lib/appwrite/config";
 import Image from "next/image";
 import { storage } from "@/lib/appwrite/config";
 import { ID } from "appwrite";
 import conf from "@/config/appwrite";
 import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { Loader } from "@/components/ui/loader";
 
 // Dynamically import RichTextEditor with no SSR
 const RichTextEditor = dynamic(
@@ -42,12 +43,13 @@ function EditBlogContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState("draft");
+  const [statusOpen, setStatusOpen] = useState(false);
 
   // Check if user is logged in and load blog data
   useEffect(() => {
     const checkAuth = async () => {
       if (typeof window === 'undefined') return;
-      
+
       const isLoggedIn = localStorage.getItem("adminLoggedIn") === "true";
 
       if (!isLoggedIn) {
@@ -100,7 +102,7 @@ function EditBlogContent() {
 
     try {
       let coverImageUrl = imagePreview;
-      
+
       // Upload new image to Appwrite Storage if one was selected
       if (coverImage) {
         const fileId = ID.unique();
@@ -109,7 +111,7 @@ function EditBlogContent() {
           fileId,
           coverImage
         );
-        
+
         // Get the file URL
         coverImageUrl = storage.getFileView(
           conf.appwriteBucketId,
@@ -127,7 +129,7 @@ function EditBlogContent() {
       };
 
       await updateBlog(blogId, updatedBlog);
-      alert("Blog post updated successfully!");
+      // alert("Blog post updated successfully!");
       router.push("/admin/blogs-dashboard");
     } catch (error) {
       console.error("Error updating blog:", error);
@@ -138,145 +140,194 @@ function EditBlogContent() {
   };
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600"></div>
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
-    <>
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        <div className="mt-2 mb-2">
-          <Button
-            variant="outline"
-            size="sm"
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="mb-8 flex items-center">
+          <div
             onClick={() => router.push("/admin/blogs-dashboard")}
-            className="flex items-center text-gray-600 hover:text-gray-900"
+            className="group flex items-center cursor-pointer text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
           >
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Button>
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 ring-1 ring-gray-200 transition-all group-hover:bg-indigo-50 group-hover:ring-indigo-200 dark:bg-gray-800/50 dark:ring-gray-700 dark:group-hover:bg-indigo-900/20 dark:group-hover:ring-indigo-500/30 mr-3 backdrop-blur-sm">
+              <ArrowLeftIcon className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+            </div>
+            <span className="text-base font-medium">Back to Dashboard</span>
+          </div>
         </div>
 
-        <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg border-0">
-          <CardHeader>
-            <CardTitle className="text-2xl py-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+        <Card className="overflow-hidden border-white/20 bg-white/70 backdrop-blur-xl shadow-xl dark:border-white/10 dark:bg-black/40">
+          <CardHeader className="border-b border-gray-200/50 dark:border-gray-700/50 p-6">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
               Edit Blog Post
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-base">
               Update the details of your blog post
             </CardDescription>
           </CardHeader>
 
           <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  placeholder="Enter blog title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  required
-                />
+            <CardContent className="space-y-6 p-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-sm font-medium">Title</Label>
+                  <Input
+                    id="title"
+                    placeholder="Enter blog title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    className="bg-white/50 dark:bg-black/20"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="author" className="text-sm font-medium">Author</Label>
+                  <Input
+                    id="author"
+                    placeholder="Author name"
+                    value={author}
+                    onChange={(e) => setAuthor(e.target.value)}
+                    required
+                    className="bg-white/50 dark:bg-black/20"
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="excerpt">Excerpt</Label>
+                <Label htmlFor="excerpt" className="text-sm font-medium">Excerpt</Label>
                 <Input
                   id="excerpt"
                   placeholder="Short description of the blog"
                   value={excerpt}
                   onChange={(e) => setExcerpt(e.target.value)}
                   required
+                  className="bg-white/50 dark:bg-black/20"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="author">Author</Label>
-                <Input
-                  id="author"
-                  placeholder="Author name"
-                  value={author}
-                  onChange={(e) => setAuthor(e.target.value)}
-                  required
-                />
-              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="status" className="text-sm font-medium">Status</Label>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setStatusOpen(!statusOpen)}
+                      className="w-full h-9 px-3 py-1 flex items-center justify-between rounded-md border border-input bg-white/50 dark:bg-black/20 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                    >
+                      <span className="capitalize">{status}</span>
+                      <ChevronDown className={`h-4 w-4 opacity-50 transition-transform ${statusOpen ? "rotate-180" : ""}`} />
+                    </button>
 
-              <div className="space-y-2">
-                <Label htmlFor="coverImage">Cover Image</Label>
-                <Input
-                  id="coverImage"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="cursor-pointer"
-                />
-                {imagePreview && (
-                  <div className="relative h-48 w-full mt-2">
-                    <Image
-                      src={imagePreview}
-                      alt="Cover preview"
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover rounded-lg"
-                      unoptimized={!imagePreview.startsWith("http") || imagePreview.includes("cloud.appwrite.io")}
-                    />
+                    {statusOpen && (
+                      <>
+                        <div
+                          className="fixed inset-0 z-40"
+                          onClick={() => setStatusOpen(false)}
+                        />
+                        <div className="absolute top-full left-0 w-full mt-1 rounded-md border border-gray-200 dark:border-gray-800 bg-white dark:bg-black shadow-lg z-50 py-1 animate-in fade-in zoom-in-95 duration-100">
+                          {["draft", "published"].map((option) => (
+                            <div
+                              key={option}
+                              onClick={() => {
+                                setStatus(option);
+                                setStatusOpen(false);
+                              }}
+                              className={`px-3 py-2 text-sm cursor-pointer capitalize hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors ${status === option ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400" : ""
+                                }`}
+                            >
+                              {option}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="coverImage" className="text-sm font-medium">Cover Image</Label>
+                  <div className="relative">
+                    <Input
+                      id="coverImage"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="cursor-pointer bg-white/50 dark:bg-black/20 file:mr-1 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/20 dark:file:text-indigo-400"
+                    />
+                    <UploadCloud className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <select
-                  id="status"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  className="w-full p-2 border rounded-md"
-                  required
+              {imagePreview && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="relative h-64 w-full rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700"
                 >
-                  <option value="draft">Draft</option>
-                  <option value="published">Published</option>
-                </select>
-              </div>
+                  <Image
+                    src={imagePreview}
+                    alt="Cover preview"
+                    fill
+                    className="object-cover"
+                    unoptimized={!imagePreview.startsWith("http") || imagePreview.includes("cloud.appwrite.io")}
+                  />
+                </motion.div>
+              )}
 
               <div className="space-y-2">
-                <Label htmlFor="content">Content</Label>
-                <RichTextEditor
-                  initialContent={content}
-                  onChange={setContent}
-                />
+                <Label htmlFor="content" className="text-sm font-medium">Content</Label>
+                <div className="min-h-[400px]">
+                  <RichTextEditor
+                    initialContent={content}
+                    onChange={setContent}
+                    className="min-h-[400px] rounded-md border border-input bg-white/50 dark:bg-black/20"
+                  />
+                </div>
               </div>
             </CardContent>
 
-            <CardFooter className="flex justify-end gap-2">
+            <CardFooter className="flex justify-end gap-3 border-t border-gray-200/50 dark:border-gray-700/50 p-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => router.push("/admin/blogs-dashboard")}
+                className="bg-white/50 dark:bg-black/20"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg transition-all duration-200 hover:scale-105"
                 disabled={isSubmitting}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg transition-all hover:scale-105"
               >
-                {isSubmitting ? "Updating..." : "Update Blog"}
+                {isSubmitting ? (
+                  <>
+                    <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update Blog Post"
+                )}
               </Button>
             </CardFooter>
           </form>
         </Card>
-      </main>
-    </>
+      </motion.div>
+    </main>
   );
 }
 
 export default function EditBlog() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+    <Suspense fallback={<Loader />}>
       <EditBlogContent />
     </Suspense>
   );

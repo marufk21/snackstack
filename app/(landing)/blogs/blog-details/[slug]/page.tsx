@@ -217,42 +217,59 @@ export default async function BlogDetailsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="py-12 md:py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-12 md:py-20 min-h-screen overflow-hidden">
+        {/* Background Gradients */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl -z-10 animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl -z-10 animate-pulse delay-1000" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Back Button */}
           <Link
             href="/blogs"
-            className="inline-flex items-center mb-6 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="group inline-flex items-center mb-8 px-4 py-2 rounded-full bg-white/50 dark:bg-black/20 backdrop-blur-md border border-white/20 dark:border-white/10 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-black/40 transition-all hover:scale-105 shadow-sm"
           >
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
+            <ArrowLeftIcon className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Blogs
           </Link>
 
           {/* Article Content */}
-          <article className="bg-card border border-border rounded-2xl shadow-lg overflow-hidden p-8 md:p-12">
+          <article className="bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden p-8 md:p-12 relative">
+            {/* Decorative top gradient */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-50" />
+            
             <BlogContentView blog={blog} />
 
             {/* Next/Previous navigation */}
-            <div className="mt-12 border-t border-border pt-8 flex justify-between gap-4">
+            <div className="mt-16 border-t border-gray-200/50 dark:border-gray-800/50 pt-10 flex flex-col sm:flex-row justify-between gap-6">
               {prevBlog ? (
                 <Link
                   href={`/blogs/blog-details/${generateSlug(prevBlog.title)}-${prevBlog.id}`}
-                  className="group inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors max-w-[45%]"
+                  className="group flex flex-col gap-2 p-4 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-all border border-transparent hover:border-white/10 max-w-full sm:max-w-[45%]"
                 >
-                  <ArrowLeftIcon className="h-4 w-4 mr-2 group-hover:-translate-x-1 transition-transform" />
-                  <span className="truncate">Previous: {prevBlog.title}</span>
+                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <ArrowLeftIcon className="h-3 w-3 group-hover:-translate-x-1 transition-transform" />
+                    Previous Article
+                  </span>
+                  <span className="text-sm sm:text-base font-semibold text-foreground line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                    {prevBlog.title}
+                  </span>
                 </Link>
               ) : (
-                <div></div>
+                <div className="hidden sm:block"></div>
               )}
 
               {nextBlog && (
                 <Link
                   href={`/blogs/blog-details/${generateSlug(nextBlog.title)}-${nextBlog.id}`}
-                  className="group inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors max-w-[45%] ml-auto"
+                  className="group flex flex-col gap-2 p-4 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-all border border-transparent hover:border-white/10 max-w-full sm:max-w-[45%] text-right items-end"
                 >
-                  <span className="truncate">Next: {nextBlog.title}</span>
-                  <ArrowRightIcon className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    Next Article
+                    <ArrowRightIcon className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                  <span className="text-sm sm:text-base font-semibold text-foreground line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                    {nextBlog.title}
+                  </span>
                 </Link>
               )}
             </div>
