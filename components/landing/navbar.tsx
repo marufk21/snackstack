@@ -347,7 +347,7 @@ export default function Navbar() {
       </div>
 
       {/* Spacer to prevent content from being hidden behind fixed navbar */}
-      <div className="h-16 md:h-18 lg:h-20" />
+
     </>
   );
 }

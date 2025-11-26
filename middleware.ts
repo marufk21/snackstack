@@ -35,6 +35,7 @@ export default auth((req) => {
   }
 
   // If user is authenticated and on landing page, redirect to app
+  // If user is authenticated and on landing page, redirect to app
   if (isAuthenticated && pathname === "/") {
     const url = req.nextUrl.clone();
     url.pathname = "/app";

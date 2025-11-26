@@ -1,12 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef } from "react";
 import { Mail, Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useGSAP } from "@/hooks/use-gsap";
+import gsap from "gsap";
 
 const Contact = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -54,16 +58,66 @@ const Contact = () => {
     }
   };
 
+  useGSAP(() => {
+    // Header animation
+    if (headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Form animation
+    if (formRef.current) {
+      const formFields = formRef.current.querySelectorAll(".form-field");
+
+      gsap.fromTo(
+        formRef.current,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: "top 80%",
+          },
+        }
+      );
+
+      gsap.fromTo(
+        formFields,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          delay: 0.3,
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: "top 75%",
+          },
+        }
+      );
+    }
+  }, []);
+
   return (
-    <section id="contact" className="py-16">
+    <section ref={sectionRef} id="contact" className="py-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div ref={headerRef} className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
             <Mail className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
@@ -80,17 +134,11 @@ const Contact = () => {
             Have a question or want to collaborate? We'd love to hear from you.
             Send us a message and we'll respond as soon as possible.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-card border border-border rounded-xl p-8"
-        >
+        <div ref={formRef} className="bg-card border border-border rounded-xl p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
+            <div className="form-field">
               <label
                 htmlFor="name"
                 className="block text-sm font-medium text-foreground mb-2"
@@ -148,27 +196,19 @@ const Contact = () => {
             </div>
 
             {submitStatus === "success" && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400"
-              >
+              <div className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400">
                 <CheckCircle2 className="w-5 h-5" />
                 <span>Message sent! We'll get back to you soon.</span>
-              </motion.div>
+              </div>
             )}
 
             {submitStatus === "error" && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400"
-              >
+              <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400">
                 Something went wrong. Please email us directly at{" "}
                 <a href="mailto:hello@snackstack.com" className="underline">
                   hello@snackstack.com
                 </a>
-              </motion.div>
+              </div>
             )}
 
             <Button
@@ -186,7 +226,7 @@ const Contact = () => {
               )}
             </Button>
           </form>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

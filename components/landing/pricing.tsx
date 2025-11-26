@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef } from "react";
 import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { stripePriceIds } from "@/config/stripe-client";
 import { DollarSign } from "lucide-react";
 import Link from "next/link";
+import { useGSAP } from "@/hooks/use-gsap";
+import gsap from "gsap";
 
 const pricingTiers: PricingTier[] = [
   {
@@ -73,22 +74,85 @@ const pricingTiers: PricingTier[] = [
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
   const { redirectToCheckout, loading, error } = useStripeCheckout();
+  
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const faqRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    // Header animation
+    if (headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Pricing cards stagger animation
+    if (cardsRef.current) {
+      const cards = cardsRef.current.querySelectorAll(".pricing-card-wrapper");
+      
+      gsap.fromTo(
+        cards,
+        { opacity: 0, y: 60, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: "back.out(1.2)",
+          scrollTrigger: {
+            trigger: cardsRef.current,
+            start: "top 75%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // FAQ animation
+    if (faqRef.current) {
+      const faqItems = faqRef.current.querySelectorAll(".faq-item");
+      
+      gsap.fromTo(
+        faqItems,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: faqRef.current,
+            start: "top 80%",
+          },
+        }
+      );
+    }
+  }, []);
 
   const handleSelectPlan = async (priceId: string, planName: string) => {
     await redirectToCheckout(priceId);
   };
 
   return (
-    <section id="pricing" className="py-12">
+    <section ref={sectionRef} id="pricing" className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div ref={headerRef} className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
             <DollarSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
@@ -110,60 +174,37 @@ const Pricing = () => {
           <div className="flex justify-center mt-8">
             <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
           </div>
-        </motion.div>
+        </div>
 
         {/* Error Display */}
         {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-center max-w-2xl mx-auto"
-          >
+          <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-center max-w-2xl mx-auto">
             <p>Error: {error}</p>
-          </motion.div>
+          </div>
         )}
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center mb-16">
+        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center mb-16">
           {pricingTiers.map((tier, index) => (
-            <motion.div
-              key={tier.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
-              className="w-full"
-            >
+            <div key={tier.id} className="pricing-card-wrapper w-full">
               <PricingCard
                 tier={tier}
                 isYearly={isYearly}
                 onSelectPlan={handleSelectPlan}
                 loading={loading}
               />
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* FAQ Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-20"
-        >
+        <div ref={faqRef} className="mt-20">
           <h3 className="text-3xl font-bold text-center mb-12">
             Frequently Asked Questions
           </h3>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="space-y-6"
-            >
-              <div className="p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
+            <div className="space-y-6">
+              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
                 <h4 className="font-semibold text-lg mb-2">
                   Can I change my plan later?
                 </h4>
@@ -173,7 +214,7 @@ const Pricing = () => {
                   cycle.
                 </p>
               </div>
-              <div className="p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
+              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
                 <h4 className="font-semibold text-lg mb-2">
                   What payment methods do you accept?
                 </h4>
@@ -182,15 +223,9 @@ const Pricing = () => {
                   Express) and bank transfers for Enterprise plans.
                 </p>
               </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="space-y-6"
-            >
-              <div className="p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
+            </div>
+            <div className="space-y-6">
+              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
                 <h4 className="font-semibold text-lg mb-2">
                   Is there a free trial?
                 </h4>
@@ -199,7 +234,7 @@ const Pricing = () => {
                   card required to start.
                 </p>
               </div>
-              <div className="p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
+              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
                 <h4 className="font-semibold text-lg mb-2">
                   Can I cancel anytime?
                 </h4>
@@ -209,9 +244,9 @@ const Pricing = () => {
                   period.
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

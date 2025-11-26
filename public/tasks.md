@@ -1,6 +1,6 @@
 # UI:DB:CODE:Readme
 
-## Landing Page + Blog Admin Panel
+## Landing Page + Admin Panel (Blog) 
 - Resend/Nodemailer
 
 ## Authentication + Dashboard
@@ -8,3 +8,6 @@
 - Pricing Page Redirection + Pricing Stripe + Card (genuine)
 - Subscription Based (Free) + Pricing + Subscription Ended Popup + (Upgrade)
 - Test: Stripe + Webhook
+
+
+

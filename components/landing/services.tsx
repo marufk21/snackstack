@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
 import {
   Lightbulb,
   Sparkles,
@@ -10,8 +9,13 @@ import {
   ArrowRight,
   Wand2,
 } from "lucide-react";
+import { useGSAP } from "@/hooks/use-gsap";
+import gsap from "gsap";
 
 const Services = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
   const services = [
     {
       icon: <Wand2 className="w-8 h-8" />,
@@ -67,17 +71,108 @@ const Services = () => {
     },
   ];
 
+  useGSAP(() => {
+    // Header animation
+    if (headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Service cards animation
+    if (cardsRef.current) {
+      const cards = cardsRef.current.querySelectorAll(".service-card");
+
+      cards.forEach((card, index) => {
+        // Card entrance
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 60, scale: 0.9 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            delay: index * 0.15,
+            ease: "back.out(1.3)",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        // Icon animation
+        const icon = card.querySelector(".service-icon");
+        if (icon) {
+          gsap.fromTo(
+            icon,
+            { rotation: -15, scale: 0.8 },
+            {
+              rotation: 0,
+              scale: 1,
+              duration: 0.6,
+              delay: index * 0.15 + 0.3,
+              ease: "back.out(1.7)",
+              scrollTrigger: {
+                trigger: card,
+                start: "top 85%",
+              },
+            }
+          );
+        }
+
+        // Feature items stagger
+        const features = card.querySelectorAll(".feature-item");
+        gsap.fromTo(
+          features,
+          { opacity: 0, x: -10 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.4,
+            stagger: 0.08,
+            delay: index * 0.15 + 0.5,
+            scrollTrigger: {
+              trigger: card,
+              start: "top 80%",
+            },
+          }
+        );
+
+        // Parallax effect
+        gsap.to(card, {
+          y: -15 * (index % 2 === 0 ? 1 : -1),
+          ease: "none",
+          scrollTrigger: {
+            trigger: cardsRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+    }
+  }, []);
+
   return (
-    <section id="features" className="py-12">
+    <section ref={sectionRef} id="features" className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
+        <div ref={headerRef} className="text-center mb-20">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 dark:bg-purple-500/10 border border-purple-500/20 dark:border-purple-500/20 rounded-full px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4 text-purple-500 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
@@ -95,24 +190,17 @@ const Services = () => {
             platform helps you capture, organize, and enhance your thoughts like
             never before.
           </p>
-        </motion.div>
+        </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        <div ref={cardsRef} className="grid md:grid-cols-2 gap-8 lg:gap-12">
           {services.map((service, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
-              className="group relative"
-            >
+            <div key={index} className="service-card group relative">
               <div className="bg-card border border-border rounded-2xl p-8 h-full hover:shadow-2xl transition-all duration-500 hover:border-purple-500/30 hover:-translate-y-2">
                 {/* Icon with gradient background */}
                 <div className="relative mb-6">
                   <div
-                    className={`bg-gradient-to-r ${service.gradient} rounded-xl p-4 text-white w-fit group-hover:scale-110 transition-transform duration-300`}
+                    className={`service-icon bg-gradient-to-r ${service.gradient} rounded-xl p-4 text-white w-fit group-hover:scale-110 transition-transform duration-300`}
                   >
                     {service.icon}
                   </div>
@@ -135,7 +223,7 @@ const Services = () => {
                     {service.features.map((feature, featureIndex) => (
                       <div
                         key={featureIndex}
-                        className="flex items-center gap-2 text-sm text-muted-foreground"
+                        className="feature-item flex items-center gap-2 text-sm text-muted-foreground"
                       >
                         <div
                           className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${service.gradient}`}
@@ -157,7 +245,7 @@ const Services = () => {
                 {/* Hover Gradient Effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-blue-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -1,11 +1,15 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
 import { Star, Quote } from "lucide-react";
 import Image from "next/image";
+import { useGSAP } from "@/hooks/use-gsap";
+import gsap from "gsap";
 
 const Testimonials = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
   const testimonials = [
     {
       id: 1,
@@ -45,30 +49,82 @@ const Testimonials = () => {
     },
   ];
 
+  useGSAP(() => {
+    // Header animation
+    if (headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Testimonial cards animation
+    if (cardsRef.current) {
+      const cards = cardsRef.current.querySelectorAll(".testimonial-card");
+
+      cards.forEach((card, index) => {
+        // Card entrance
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 50, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            delay: index * 0.15,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        // Horizontal parallax effect
+        gsap.to(card, {
+          x: (index % 2 === 0 ? -10 : 10),
+          ease: "none",
+          scrollTrigger: {
+            trigger: cardsRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+    }
+  }, []);
+
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
         key={i}
-        className={`w-4 h-4 ${
-          i < rating
-            ? "text-yellow-400 fill-yellow-400 dark:text-yellow-500 dark:fill-yellow-500"
-            : "text-gray-300 dark:text-gray-600"
-        }`}
+        className={`w-4 h-4 ${i < rating
+          ? "text-yellow-400 fill-yellow-400 dark:text-yellow-500 dark:fill-yellow-500"
+          : "text-gray-300 dark:text-gray-600"
+          }`}
       />
     ));
   };
 
   return (
-    <section id="testimonials" className="py-12">
+    <section ref={sectionRef} id="testimonials" className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
+        <div ref={headerRef} className="text-center mb-20">
           <div className="inline-flex items-center gap-2 bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/20 dark:border-blue-500/20 rounded-full px-4 py-2 mb-6">
             <Quote className="w-4 h-4 text-blue-500 dark:text-blue-400" />
             <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
@@ -85,20 +141,15 @@ const Testimonials = () => {
             Don't just take our word for it. See how SnackStack is helping
             individuals and teams capture and enhance their ideas.
           </p>
-        </motion.div>
+        </div>
 
         {/* Testimonials Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div ref={cardsRef} className="grid lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <motion.div
+            <div
               key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
-              className={`group relative ${
-                testimonial.featured ? "lg:col-span-1 lg:row-span-1" : ""
-              }`}
+              className={`testimonial-card group relative ${testimonial.featured ? "lg:col-span-1 lg:row-span-1" : ""
+                }`}
             >
               <div className="bg-card border border-border rounded-2xl p-8 h-full hover:shadow-2xl transition-all duration-500 hover:border-purple-500/30 hover:-translate-y-1 relative overflow-hidden">
                 {/* Background Gradient Effect */}
@@ -153,7 +204,7 @@ const Testimonials = () => {
                   </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

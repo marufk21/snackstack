@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useRef } from "react";
 import {
   CheckCircle2,
   Zap,
@@ -10,8 +9,17 @@ import {
   Brain,
   Sparkles,
 } from "lucide-react";
+import { useGSAP } from "@/hooks/use-gsap";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const About = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const leftContentRef = useRef<HTMLDivElement>(null);
+  const rightContentRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
@@ -37,17 +45,143 @@ const About = () => {
     { number: "50+", label: "Countries" },
   ];
 
+  useGSAP(() => {
+    // Header animation
+    if (headerRef.current) {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: headerRef.current,
+            start: "top 80%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+    }
+
+    // Left content animation
+    if (leftContentRef.current) {
+      const checkItems = leftContentRef.current.querySelectorAll(".check-item");
+
+      gsap.fromTo(
+        leftContentRef.current.querySelector("h3"),
+        { opacity: 0, x: -50 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: leftContentRef.current,
+            start: "top 75%",
+          },
+        }
+      );
+
+      gsap.fromTo(
+        leftContentRef.current.querySelector("p"),
+        { opacity: 0, x: -30 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.8,
+          delay: 0.2,
+          scrollTrigger: {
+            trigger: leftContentRef.current,
+            start: "top 75%",
+          },
+        }
+      );
+
+      gsap.fromTo(
+        checkItems,
+        { opacity: 0, x: -20 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: leftContentRef.current,
+            start: "top 70%",
+          },
+        }
+      );
+    }
+
+    // Right content - feature cards with parallax
+    if (rightContentRef.current) {
+      const cards = rightContentRef.current.querySelectorAll(".feature-card");
+
+      cards.forEach((card, index) => {
+        // Card entrance animation
+        gsap.fromTo(
+          card,
+          { opacity: 0, y: 50, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            delay: index * 0.15,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+
+        // Parallax effect on cards
+        gsap.to(card, {
+          y: -20 * (index + 1),
+          ease: "none",
+          scrollTrigger: {
+            trigger: rightContentRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      });
+    }
+
+    // Stats counter animation
+    if (statsRef.current) {
+      const statNumbers = statsRef.current.querySelectorAll(".stat-number");
+
+      statNumbers.forEach((stat, index) => {
+        gsap.fromTo(
+          stat,
+          { opacity: 0, scale: 0.5 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            delay: index * 0.1,
+            ease: "back.out(1.7)",
+            scrollTrigger: {
+              trigger: statsRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    }
+  }, []);
+
   return (
-    <section id="about" className="py-12">
+    <section ref={sectionRef} id="about" className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
+        <div ref={headerRef} className="text-center mb-20">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
             <Rocket className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
@@ -66,18 +200,12 @@ const About = () => {
             with intuitive design to deliver powerful solutions that enhance
             your thinking.
           </p>
-        </motion.div>
+        </div>
 
         {/* Main Content Grid */}
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
           {/* Left Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-8"
-          >
+          <div ref={leftContentRef} className="space-y-8">
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-foreground">
                 AI-Powered Note-Taking
@@ -98,37 +226,20 @@ const About = () => {
                 "Seamless collaboration with real-time editing",
                 "Powerful search and relationship mapping",
               ].map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: 0.1 * index }}
-                  className="flex items-center gap-3"
-                >
+                <div key={index} className="check-item flex items-center gap-3">
                   <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
                   <span className="text-muted-foreground">{item}</span>
-                </motion.div>
+                </div>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Right Content - Features Grid */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid gap-6"
-          >
+          <div ref={rightContentRef} className="grid gap-6">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                className="group bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-purple-500/30"
+                className="feature-card group bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-purple-500/30"
               >
                 <div className="flex items-start gap-4">
                   <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg p-3 text-white group-hover:scale-110 transition-transform duration-300">
@@ -143,37 +254,27 @@ const About = () => {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Stats Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.6 }}
+        <div
+          ref={statsRef}
           className="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-16 border-t border-border"
         >
           {stats.map((stat, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              className="text-center group"
-            >
-              <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+            <div key={index} className="text-center group">
+              <div className="stat-number text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                 {stat.number}
               </div>
               <div className="text-muted-foreground font-medium">
                 {stat.label}
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

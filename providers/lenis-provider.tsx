@@ -2,6 +2,13 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register ScrollTrigger plugin
+if (typeof window !== "undefined") {
+    gsap.registerPlugin(ScrollTrigger);
+}
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
@@ -20,6 +27,14 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         // Expose Lenis instance globally for programmatic scrolling
         (window as any).lenis = lenis;
 
+        // Integrate Lenis with GSAP ScrollTrigger
+        lenis.on("scroll", () => {
+            ScrollTrigger.update();
+        });
+
+        // Update ScrollTrigger on resize
+        ScrollTrigger.addEventListener("refresh", () => lenis.resize());
+
         // Animation frame loop
         function raf(time: number) {
             lenis.raf(time);
@@ -31,9 +46,11 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         // Cleanup
         return () => {
             lenis.destroy();
+            ScrollTrigger.removeEventListener("refresh", () => lenis.resize());
             delete (window as any).lenis;
         };
     }, []);
 
     return <>{children}</>;
 }
+

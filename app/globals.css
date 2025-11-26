@@ -325,3 +325,29 @@
 .dark .rich-text-editor .ProseMirror a {
   color: #60a5fa;
 }
+
+/* GSAP Animation Performance Optimizations */
+.service-card,
+.feature-card,
+.testimonial-card,
+.pricing-card-wrapper,
+.check-item,
+.feature-item,
+.faq-item,
+.form-field {
+  will-change: transform, opacity;
+}
+
+/* Ensure smooth animations with GPU acceleration */
+.service-icon,
+.stat-number,
+.gradient-text {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimize parallax elements */
+[data-parallax] {
+  will-change: transform;
+  transform: translateZ(0);
+}
