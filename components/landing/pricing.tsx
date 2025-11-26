@@ -75,7 +75,7 @@ const pricingTiers: PricingTier[] = [
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
   const { redirectToCheckout, loading, error } = useStripeCheckout();
-  
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
@@ -104,7 +104,7 @@ const Pricing = () => {
     // Pricing cards stagger animation
     if (cardsRef.current) {
       const cards = cardsRef.current.querySelectorAll(".pricing-card-wrapper");
-      
+
       gsap.fromTo(
         cards,
         { opacity: 0, y: 60, scale: 0.95 },
@@ -127,7 +127,7 @@ const Pricing = () => {
     // FAQ animation
     if (faqRef.current) {
       const faqItems = faqRef.current.querySelectorAll(".faq-item");
-      
+
       gsap.fromTo(
         faqItems,
         { opacity: 0, y: 30 },
@@ -160,9 +160,9 @@ const Pricing = () => {
               Pricing
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
             Choose Your{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
               Perfect Plan
             </span>
           </h2>
@@ -188,7 +188,7 @@ const Pricing = () => {
         <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {pricingTiers.map((tier, index) => (
             <div key={tier.id} className="pricing-card-wrapper w-full">
-              <PricingCard  
+              <PricingCard
                 tier={tier}
                 isYearly={isYearly}
                 onSelectPlan={handleSelectPlan}
@@ -205,41 +205,41 @@ const Pricing = () => {
           </h3>
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="space-y-6">
-              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
-                <h4 className="font-semibold text-lg mb-2">
+              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
+                <h4 className="font-bold text-lg mb-3 text-foreground">
                   Can I change my plan later?
                 </h4>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground leading-relaxed">
                   Yes! You can upgrade or downgrade your plan at any time.
                   Changes will be prorated and reflected in your next billing
                   cycle.
                 </p>
               </div>
-              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
-                <h4 className="font-semibold text-lg mb-2">
+              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
+                <h4 className="font-bold text-lg mb-3 text-foreground">
                   What payment methods do you accept?
                 </h4>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground leading-relaxed">
                   We accept all major credit cards (Visa, MasterCard, American
                   Express) and bank transfers for Enterprise plans.
                 </p>
               </div>
             </div>
             <div className="space-y-6">
-              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
-                <h4 className="font-semibold text-lg mb-2">
+              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
+                <h4 className="font-bold text-lg mb-3 text-foreground">
                   Is there a free trial?
                 </h4>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground leading-relaxed">
                   Yes! All paid plans come with a 14-day free trial. No credit
                   card required to start.
                 </p>
               </div>
-              <div className="faq-item p-6 bg-card border border-border rounded-lg hover:border-purple-500/30 transition-colors">
-                <h4 className="font-semibold text-lg mb-2">
+              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
+                <h4 className="font-bold text-lg mb-3 text-foreground">
                   Can I cancel anytime?
                 </h4>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground leading-relaxed">
                   Absolutely! You can cancel your subscription at any time. Your
                   access will continue until the end of your current billing
                   period.

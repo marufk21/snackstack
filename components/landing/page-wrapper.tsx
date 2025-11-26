@@ -1,4 +1,5 @@
 import React, { forwardRef } from "react";
+import { cn } from "@/lib/utils";
 
 interface PageWrapperProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
@@ -13,20 +14,18 @@ const PageWrapper = forwardRef<HTMLElement, PageWrapperProps>(({
   return (
     <section
       ref={ref}
-      style={{
-        background: `
-        radial-gradient(
-          circle at center,
-          rgba(168, 85, 247, 0.12) 0%,
-          rgba(168, 85, 247, 0.06) 20%,
-          rgba(0, 0, 0, 0.0) 60%
-        )
-      `,
-      }}
-      className={`max-w-screen mx-auto px-4 min-h-screen flex flex-col py-12 pointer-events-none ${className}`}
+      className={cn(
+        "relative w-full max-w-screen mx-auto px-4 min-h-screen flex flex-col justify-center py-20 overflow-hidden",
+        className
+      )}
       {...props}
     >
-      {children}
+      {/* Subtle background gradient for depth */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-500/5 via-transparent to-transparent opacity-50" />
+
+      <div className="relative z-10 w-full">
+        {children}
+      </div>
     </section>
   );
 });
@@ -34,14 +33,3 @@ const PageWrapper = forwardRef<HTMLElement, PageWrapperProps>(({
 PageWrapper.displayName = "PageWrapper";
 
 export default PageWrapper;
-
-
-
-<div className="min-h-screen w-full bg-black relative">
-  {/* Dark Noise Colored Background */}
-  <div
-    className="absolute inset-0 z-0"
-   
-  />
-     {/* Your Content/Components */}
-</div>

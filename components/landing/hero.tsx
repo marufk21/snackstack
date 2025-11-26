@@ -108,25 +108,30 @@ const Hero = () => {
           <div className="text-center lg:text-left flex flex-col justify-center">
             <h1
               ref={headingRef}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 leading-tight"
+              className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 leading-[1.1] tracking-tight"
             >
-              <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent whitespace-nowrap">
-                AI-Powered Notes <br /> for Modern Teams
-
+              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap inline-block">
+                AI-Powered Notes
               </span>
-
+              <br />
+              <span
+                ref={subheadingRef}
+                className="gradient-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap inline-block"
+              >
+                Modern Living
+              </span>
             </h1>
             <p
               ref={descriptionRef}
               className={cn(
-                "text-lg sm:text-xl mb-8 max-w-xl mx-auto lg:mx-0 drop-shadow-md leading-relaxed",
-                isDark ? "text-white/90" : "text-gray-800 dark:text-white/90"
+                "text-lg sm:text-xl md:text-2xl mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light",
+                isDark ? "text-gray-200" : "text-gray-600"
               )}
             >
               Capture, organize, and enhance your ideas with the power of artificial
               intelligence. The smart way to take notes for individuals and teams.
             </p>
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
               <Link href="/sign-in">
                 <button
                   onClick={() =>
@@ -135,9 +140,13 @@ const Hero = () => {
                       location: "landing_page",
                     })
                   }
-                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg"
+                  className="group relative px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                 >
-                  Start for Free
+                  <span className="relative z-10 flex items-center gap-2">
+                    Start for Free
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </button>
               </Link>
               <Link href="/sign-in">
@@ -149,10 +158,10 @@ const Hero = () => {
                     })
                   }
                   className={cn(
-                    "backdrop-blur-sm px-8 py-4 rounded-lg font-medium transition-all duration-200 hover:scale-105 shadow-lg",
+                    "px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 backdrop-blur-md border",
                     isDark
-                      ? "border border-white/30 bg-white/10 text-white hover:text-white hover:border-white/60 hover:bg-white/20"
-                      : "border border-gray-300/80 bg-white/80 text-gray-900 hover:text-gray-900 hover:border-gray-400/80 hover:bg-white/90 dark:border-white/30 dark:bg-white/10 dark:text-white dark:hover:text-white dark:hover:border-white/60 dark:hover:bg-white/20"
+                      ? "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
+                      : "bg-white/60 border-gray-200 text-gray-800 hover:bg-white/80 hover:border-gray-300"
                   )}
                 >
                   Sign In
@@ -162,156 +171,135 @@ const Hero = () => {
           </div>
 
           {/* Right Side - Visual Element */}
-          <div className="relative hidden lg:flex justify-end items-center pt-12">
+          <div className="relative hidden lg:flex justify-end items-center pt-12 perspective-1000">
             <div className="relative w-full max-w-lg h-[550px]">
-              {/* Floating Card 1 - Main Note */}
+              {/* Floating Card 1 - Main Note Editor */}
               <div
                 className={cn(
-                  "absolute top-0 right-0 w-72 h-80 rounded-2xl shadow-2xl backdrop-blur-md p-6 transform hover:scale-105 transition-all duration-300 animate-float",
+                  "absolute top-0 right-4 w-80 h-[420px] rounded-3xl shadow-2xl backdrop-blur-xl p-6 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-10",
                   isDark
-                    ? "bg-gradient-to-br from-purple-500/20 to-blue-500/20 border border-white/20"
-                    : "bg-gradient-to-br from-purple-100/80 to-blue-100/80 border border-purple-200/50"
+                    ? "bg-gray-900/60 border-white/10"
+                    : "bg-white/60 border-white/60"
                 )}
                 style={{ animationDelay: "0s" }}
               >
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" />
-                  <span
-                    className={cn(
-                      "text-sm font-medium",
-                      isDark ? "text-white/80" : "text-gray-700"
-                    )}
-                  >
-                    AI Enhanced
-                  </span>
+                {/* Window Controls */}
+                <div className="flex gap-2 mb-6">
+                  <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
-                <h3
-                  className={cn(
-                    "text-xl font-bold mb-3",
-                    isDark ? "text-white" : "text-gray-900"
-                  )}
-                >
-                  Project Ideas
-                </h3>
-                <div className="space-y-2">
-                  <div
-                    className={cn(
-                      "h-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500",
-                      "w-full"
-                    )}
-                  />
-                  <div
-                    className={cn(
-                      "h-2 rounded-full",
-                      isDark ? "bg-white/20" : "bg-gray-300/50",
-                      "w-4/5"
-                    )}
-                  />
-                  <div
-                    className={cn(
-                      "h-2 rounded-full",
-                      isDark ? "bg-white/20" : "bg-gray-300/50",
-                      "w-3/5"
-                    )}
-                  />
-                </div>
-                <div className="absolute bottom-6 right-6">
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-center shadow-lg">
-                      <span className="text-white text-xl">✨</span>
+
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center text-violet-500">
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
                     </div>
-                    <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-pink-500 animate-ping" />
+                    <div>
+                      <h3 className={cn("text-sm font-bold", isDark ? "text-white" : "text-gray-900")}>Project Phoenix</h3>
+                      <p className="text-xs text-muted-foreground">Last edited just now</p>
+                    </div>
+                  </div>
+                  <div className="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-xs font-medium">
+                    Active
+                  </div>
+                </div>
+
+                {/* Content Area */}
+                <div className="space-y-4">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <span className="px-2 py-1 rounded-md bg-violet-500/10 text-violet-500 text-xs font-medium">#strategy</span>
+                    <span className="px-2 py-1 rounded-md bg-blue-500/10 text-blue-500 text-xs font-medium">#q4-goals</span>
+                  </div>
+
+                  <div className="space-y-3">
+                    <div className={cn("h-4 rounded w-3/4", isDark ? "bg-white/10" : "bg-gray-100")} />
+                    <div className={cn("h-4 rounded w-full", isDark ? "bg-white/10" : "bg-gray-100")} />
+                    <div className={cn("h-4 rounded w-5/6", isDark ? "bg-white/10" : "bg-gray-100")} />
+                  </div>
+
+                  {/* AI Suggestion Block */}
+                  <div className={cn(
+                    "mt-6 p-4 rounded-xl border backdrop-blur-md",
+                    isDark ? "bg-violet-500/10 border-violet-500/20" : "bg-violet-50/50 border-violet-100"
+                  )}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-4 h-4 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 flex items-center justify-center">
+                        <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                      </div>
+                      <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">AI Insight</span>
+                    </div>
+                    <p className={cn("text-xs leading-relaxed", isDark ? "text-violet-200/80" : "text-violet-700/80")}>
+                      Based on your recent notes, consider exploring the market expansion strategy for Q1 2025.
+                    </p>
                   </div>
                 </div>
               </div>
 
-              {/* Floating Card 2 - AI Assistant */}
+              {/* Floating Card 2 - AI Chat Assistant */}
               <div
                 className={cn(
-                  "absolute top-40 left-0 w-64 h-48 rounded-2xl shadow-2xl backdrop-blur-md p-5 transform hover:scale-105 transition-all duration-300 animate-float",
+                  "absolute top-40 left-0 w-72 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-20",
                   isDark
-                    ? "bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/20"
-                    : "bg-gradient-to-br from-blue-100/80 to-purple-100/80 border border-blue-200/50"
+                    ? "bg-gray-900/70 border-white/10"
+                    : "bg-white/70 border-white/60"
                 )}
-                style={{ animationDelay: "0.5s" }}
+                style={{ animationDelay: "1.5s" }}
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                    <span className="text-white text-sm">🤖</span>
+                <div className="flex items-center gap-3 mb-4 border-b border-gray-200/10 pb-3">
+                  <div className="relative">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg">
+                      <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                    </div>
+                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full" />
                   </div>
-                  <span
-                    className={cn(
-                      "text-sm font-medium",
-                      isDark ? "text-white/80" : "text-gray-700"
-                    )}
-                  >
-                    AI Assistant
-                  </span>
+                  <div>
+                    <h4 className={cn("text-sm font-bold", isDark ? "text-white" : "text-gray-900")}>SnackBot</h4>
+                    <p className="text-xs text-muted-foreground">Online • Helping you</p>
+                  </div>
                 </div>
-                <p
-                  className={cn(
-                    "text-sm mb-3",
-                    isDark ? "text-white/70" : "text-gray-600"
-                  )}
-                >
-                  Summarizing your notes...
-                </p>
-                <div className="flex gap-1">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: "0s" }} />
-                  <div className="w-2 h-2 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: "0.2s" }} />
-                  <div className="w-2 h-2 rounded-full bg-pink-500 animate-bounce" style={{ animationDelay: "0.4s" }} />
+
+                <div className="space-y-3">
+                  <div className={cn("self-end p-3 rounded-2xl rounded-tr-sm text-xs ml-8", isDark ? "bg-violet-600 text-white" : "bg-violet-600 text-white")}>
+                    Summarize the meeting notes from yesterday.
+                  </div>
+                  <div className={cn("self-start p-3 rounded-2xl rounded-tl-sm text-xs mr-4", isDark ? "bg-white/10 text-gray-200" : "bg-gray-100 text-gray-700")}>
+                    <div className="flex gap-1 mb-2">
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+                      <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }} />
+                    </div>
+                    Processing your request...
+                  </div>
                 </div>
               </div>
 
-              {/* Floating Card 3 - Quick Note */}
+              {/* Floating Card 3 - Quick Capture */}
               <div
                 className={cn(
-                  "absolute bottom-0 right-16 w-56 h-40 rounded-2xl shadow-2xl backdrop-blur-md p-4 transform hover:scale-105 transition-all duration-300 animate-float",
+                  "absolute bottom-0 right-12 w-64 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-30",
                   isDark
-                    ? "bg-gradient-to-br from-pink-500/20 to-purple-500/20 border border-white/20"
-                    : "bg-gradient-to-br from-pink-100/80 to-purple-100/80 border border-pink-200/50"
+                    ? "bg-gray-900/50 border-white/10"
+                    : "bg-white/50 border-white/60"
                 )}
-                style={{ animationDelay: "1s" }}
+                style={{ animationDelay: "2.5s" }}
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 rounded-full bg-pink-500" />
-                  <span
-                    className={cn(
-                      "text-xs font-medium",
-                      isDark ? "text-white/80" : "text-gray-700"
-                    )}
-                  >
-                    Quick Note
-                  </span>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+                    <span className={cn("text-xs font-bold uppercase tracking-wider", isDark ? "text-white/60" : "text-gray-500")}>Quick Capture</span>
+                  </div>
+                  <svg className="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
                 </div>
-                <div className="space-y-2">
-                  <div
-                    className={cn(
-                      "h-1.5 rounded-full",
-                      isDark ? "bg-white/20" : "bg-gray-300/50",
-                      "w-full"
-                    )}
-                  />
-                  <div
-                    className={cn(
-                      "h-1.5 rounded-full",
-                      isDark ? "bg-white/20" : "bg-gray-300/50",
-                      "w-3/4"
-                    )}
-                  />
-                  <div
-                    className={cn(
-                      "h-1.5 rounded-full",
-                      isDark ? "bg-white/20" : "bg-gray-300/50",
-                      "w-1/2"
-                    )}
-                  />
+                <div className={cn("h-20 rounded-xl border border-dashed flex items-center justify-center", isDark ? "border-white/20 bg-white/5" : "border-gray-300 bg-gray-50")}>
+                  <span className="text-xs text-muted-foreground">Drop images or text here</span>
                 </div>
               </div>
 
               {/* Decorative Elements */}
-              <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-gradient-to-r from-purple-500/30 to-pink-500/30 blur-2xl animate-pulse" />
-              <div className="absolute bottom-32 right-10 w-32 h-32 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+              <div className="absolute top-20 right-20 w-32 h-32 rounded-full bg-violet-500/20 blur-[80px] pointer-events-none" />
+              <div className="absolute bottom-20 left-10 w-40 h-40 rounded-full bg-indigo-500/20 blur-[80px] pointer-events-none" />
             </div>
           </div>
         </div>

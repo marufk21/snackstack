@@ -2,7 +2,6 @@
 
 ## Landing Page + Admin Panel (Blog) 
 - Resend/Nodemailer
-- Upper Landing Page
 
 ## Authentication + Dashboard
 - Flow Cleanup e2e

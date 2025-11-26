@@ -117,27 +117,67 @@ const Contact = () => {
 
   return (
     <PageWrapper ref={sectionRef} id="contact">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={headerRef} className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
-            <Mail className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={headerRef} className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
+            <Mail className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            <span className="text-violet-600 dark:text-violet-400 text-sm font-medium">
               Contact Us
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
             Get in{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
               Touch
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
             Have a question or want to collaborate? We'd love to hear from you.
             Send us a message and we'll respond as soon as possible.
           </p>
         </div>
 
-        <div ref={formRef} className="bg-card border border-border rounded-xl p-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          {/* Contact Info */}
+          <div className="space-y-8 lg:sticky lg:top-24">
+            <div className="bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-3xl p-8 backdrop-blur-sm">
+              <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="bg-violet-100 dark:bg-violet-900/30 p-3 rounded-2xl text-violet-600 dark:text-violet-400">
+                    <Mail className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-1">Email Us</h4>
+                    <p className="text-muted-foreground mb-1">Our friendly team is here to help.</p>
+                    <a href="mailto:hello@snackstack.com" className="text-violet-600 dark:text-violet-400 font-medium hover:underline">hello@snackstack.com</a>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-2xl text-indigo-600 dark:text-indigo-400">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg mb-1">Support</h4>
+                    <p className="text-muted-foreground mb-1">24/7 support for all our users.</p>
+                    <a href="#" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Visit Help Center</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl p-8 text-white shadow-xl">
+              <h3 className="text-2xl font-bold mb-4">Join our Community</h3>
+              <p className="text-white/80 mb-6">Connect with other users, share tips, and get early access to new features.</p>
+              <Button variant="secondary" className="w-full rounded-full bg-white text-violet-600 hover:bg-white/90 border-0">
+                Join Discord
+              </Button>
+            </div>
+          </div>
+
+          {/* Contact Form */}
+          <div ref={formRef} className="bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-3xl p-8 md:p-10 backdrop-blur-sm shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-field">
               <label
@@ -215,19 +255,20 @@ const Contact = () => {
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+              className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-full py-6 text-lg font-semibold shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
             >
               {isSubmitting ? (
                 "Sending..."
               ) : (
                 <>
-                  <Send className="w-4 h-4 mr-2" />
+                  <Send className="w-5 h-5 mr-2" />
                   Send Message
                 </>
               )}
             </Button>
           </form>
         </div>
+      </div>
       </div>
     </PageWrapper>
   );

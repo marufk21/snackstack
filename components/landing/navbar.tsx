@@ -159,7 +159,7 @@ export default function Navbar() {
     return (
       <Link
         href={item.href}
-        className="block px-6 py-4 text-foreground/90 dark:text-white/90 hover:text-foreground dark:hover:text-white hover:bg-foreground/10 dark:hover:bg-white/10 transition-all duration-200 border-b border-border/50 dark:border-white/10 last:border-b-0 text-base font-medium sm:text-lg"
+        className="block px-6 py-4 text-foreground/80 dark:text-white/80 hover:text-foreground dark:hover:text-white hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-200 border-b border-border/40 dark:border-white/5 last:border-b-0 text-base font-medium"
         onClick={(e) => handleNavClick(e, item.href)}
       >
         {item.label}
@@ -185,8 +185,8 @@ export default function Navbar() {
             className={cn(
               "w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-600 ease-in-out",
               scrolled
-                ? "max-w-6xl py-2 bg-white/80 dark:bg-gray-800/40 backdrop-blur-[50px] lg:rounded-full border border-gray-200/60 dark:border-gray-700/80 shadow-lg dark:shadow-2xl"
-                : "max-w-screen rounded-3xl border-none"
+                ? "max-w-5xl py-2 bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl lg:rounded-full border border-gray-200/50 dark:border-white/10 shadow-lg dark:shadow-2xl supports-[backdrop-filter]:bg-white/60"
+                : "max-w-8xl rounded-3xl border-none"
             )}
           >
             <div
@@ -261,8 +261,8 @@ export default function Navbar() {
                   <Link href="/sign-in">
                     <Button
                       className={cn(
-                        "hidden lg:flex bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-500 ease-in-out shadow-lg hover:shadow-xl",
-                        scrolled ? "px-3 py-1.5 text-sm" : "px-4 py-2 text-sm"
+                        "hidden lg:flex bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-full font-medium transition-all duration-500 ease-in-out shadow-md hover:shadow-lg",
+                        scrolled ? "px-5 py-2 text-sm" : "px-6 py-2.5 text-sm"
                       )}
                     >
                       Sign In

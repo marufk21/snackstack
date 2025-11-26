@@ -9,13 +9,15 @@ interface PricingToggleProps {
 
 export function PricingToggle({ isYearly, onToggle }: PricingToggleProps) {
   return (
-    <div className="flex items-center justify-center p-1 bg-muted rounded-lg">
+    <div className="flex items-center justify-center p-1.5 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-full backdrop-blur-sm">
       <Button
         variant="ghost"
         size="sm"
         className={cn(
-          "px-4 py-2 rounded-md transition-all",
-          !isYearly ? "bg-background shadow-sm" : "text-muted-foreground"
+          "px-6 py-2.5 rounded-full transition-all duration-300 font-medium",
+          !isYearly
+            ? "bg-white dark:bg-white/10 shadow-md text-foreground"
+            : "text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-white/5"
         )}
         onClick={() => onToggle(false)}
       >
@@ -25,14 +27,16 @@ export function PricingToggle({ isYearly, onToggle }: PricingToggleProps) {
         variant="ghost"
         size="sm"
         className={cn(
-          "px-4 py-2 rounded-md transition-all",
-          isYearly ? "bg-background shadow-sm" : "text-muted-foreground"
+          "px-6 py-2.5 rounded-full transition-all duration-300 font-medium",
+          isYearly
+            ? "bg-white dark:bg-white/10 shadow-md text-foreground"
+            : "text-muted-foreground hover:text-foreground hover:bg-white/50 dark:hover:bg-white/5"
         )}
         onClick={() => onToggle(true)}
       >
         Yearly
-        <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-          Save 20%
+        <span className="ml-2 text-xs bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-2 py-0.5 rounded-full font-bold">
+          -20%
         </span>
       </Button>
     </div>

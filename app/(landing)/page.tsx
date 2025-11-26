@@ -13,12 +13,14 @@ import {
 const Page = () => {
   return (
     <>
-      <Hero />
-      <About />
-      <Services />
-      <Pricing />
-      <Testimonials />
-      <Contact />
+    <div className="relative z-10 bg-background">
+        <Hero />
+        <About />
+        <Services />
+        <Pricing />
+        <Testimonials />
+        <Contact />
+      </div>
       <Footer />
     </>
   );

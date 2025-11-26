@@ -126,39 +126,38 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 bg-blue-500/10 dark:bg-blue-500/10 border border-blue-500/20 dark:border-blue-500/20 rounded-full px-4 py-2 mb-6">
-            <Quote className="w-4 h-4 text-blue-500 dark:text-blue-400" />
-            <span className="text-blue-600 dark:text-blue-400 text-sm font-medium">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
+            <Quote className="w-4 h-4 text-violet-600 dark:text-violet-400" />
+            <span className="text-violet-600 dark:text-violet-400 text-sm font-medium">
               Testimonials
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
             What Our{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
               Users Say
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
             Don't just take our word for it. See how SnackStack is helping
             individuals and teams capture and enhance their ideas.
           </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div ref={cardsRef} className="grid lg:grid-cols-3 gap-8">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}
-              className={`testimonial-card group relative ${testimonial.featured ? "lg:col-span-1 lg:row-span-1" : ""
-                }`}
+              className="testimonial-card group relative"
             >
-              <div className="bg-card border border-border rounded-2xl p-8 h-full hover:shadow-2xl transition-all duration-500 hover:border-purple-500/30 hover:-translate-y-1 relative overflow-hidden">
+              <div className="bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-3xl p-8 h-full hover:shadow-2xl transition-all duration-500 hover:border-violet-500/30 hover:-translate-y-2 relative overflow-hidden backdrop-blur-sm flex flex-col">
                 {/* Background Gradient Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-transparent to-indigo-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Quote Icon */}
-                <div className="absolute top-6 right-6 text-purple-500/20 group-hover:text-purple-500/30 transition-colors duration-300">
-                  <Quote className="w-8 h-8" />
+                <div className="absolute top-6 right-6 text-violet-500/10 group-hover:text-violet-500/20 transition-colors duration-300">
+                  <Quote className="w-10 h-10" />
                 </div>
 
                 {/* Stars */}
@@ -167,31 +166,31 @@ const Testimonials = () => {
                 </div>
 
                 {/* Testimonial Content */}
-                <div className="relative z-10 space-y-6">
-                  <blockquote className="text-foreground leading-relaxed text-lg font-normal">
+                <div className="relative z-10 flex flex-col flex-grow">
+                  <blockquote className="text-foreground leading-relaxed text-lg font-medium mb-8 flex-grow">
                     "{testimonial.content}"
                   </blockquote>
 
                   {/* Author Info */}
-                  <div className="flex items-center gap-4 pt-4 border-t border-border">
+                  <div className="flex items-center gap-4 pt-6 border-t border-gray-200/50 dark:border-white/10 mt-auto">
                     <div className="relative">
                       <Image
                         src={testimonial.avatar}
                         alt={testimonial.name}
                         width={56}
                         height={56}
-                        className="rounded-full object-cover ring-2 ring-purple-500/20 group-hover:ring-purple-500/40 transition-all duration-300"
+                        className="rounded-full object-cover ring-2 ring-violet-500/20 group-hover:ring-violet-500/40 transition-all duration-300"
                       />
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background" />
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white dark:border-gray-900" />
                     </div>
                     <div>
-                      <div className="font-semibold text-foreground">
+                      <div className="font-bold text-foreground text-lg">
                         {testimonial.name}
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-sm text-muted-foreground font-medium">
                         {testimonial.role}
                       </div>
-                      <div className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                      <div className="text-xs text-violet-600 dark:text-violet-400 font-bold uppercase tracking-wider mt-1">
                         {testimonial.company}
                       </div>
                     </div>
@@ -200,7 +199,7 @@ const Testimonials = () => {
 
                 {/* Featured Badge */}
                 {testimonial.featured && (
-                  <div className="absolute top-4 left-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full">
+                  <div className="absolute top-0 right-0 bg-gradient-to-bl from-violet-600 to-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-bl-2xl rounded-tr-2xl shadow-lg">
                     Featured
                   </div>
                 )}

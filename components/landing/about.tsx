@@ -190,9 +190,9 @@ const About = () => {
               About Us
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
             About{" "}
-            <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
               SnackStack
             </span>
           </h2>
@@ -242,14 +242,14 @@ const About = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="feature-card group bg-card border border-border rounded-xl p-6 hover:shadow-lg transition-all duration-300 hover:border-purple-500/30"
+                className="feature-card group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:border-violet-500/30 backdrop-blur-sm"
               >
                 <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg p-3 text-white group-hover:scale-110 transition-transform duration-300">
+                  <div className="bg-gradient-to-br from-violet-500 to-indigo-500 rounded-xl p-3 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-foreground mb-2">
+                    <h4 className="text-xl font-bold text-foreground mb-2">
                       {feature.title}
                     </h4>
                     <p className="text-muted-foreground leading-relaxed">
@@ -268,11 +268,11 @@ const About = () => {
           className="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-16 border-t border-border"
         >
           {stats.map((stat, index) => (
-            <div key={index} className="text-center group">
-              <div className="stat-number text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+            <div key={index} className="text-center group p-6 rounded-2xl bg-white/50 dark:bg-white/5 border border-transparent hover:border-violet-500/20 transition-all duration-300">
+              <div className="stat-number text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                 {stat.number}
               </div>
-              <div className="text-muted-foreground font-medium">
+              <div className="text-muted-foreground font-medium text-lg">
                 {stat.label}
               </div>
             </div>
