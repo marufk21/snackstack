@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User } from "lucide-react";
@@ -204,32 +205,27 @@ export default function Navbar() {
                   <div className="relative">
                     <div
                       className={cn(
-                        "bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-500 ease-in-out",
-                        scrolled ? "w-8 h-8" : "w-10 h-10"
+                        "relative transition-all duration-500 ease-in-out",
+                        scrolled ? "w-8 h-8" : "w-11 h-11"
                       )}
                     >
-                      <span
-                        className={cn(
-                          "text-white font-bold transition-all duration-500 ease-in-out",
-                          scrolled ? "text-lg" : "text-xl"
-                        )}
-                      >
-                        S
-                      </span>
+                      <Image
+                        src="/logo.svg"
+                        alt="SnackStack Logo"
+                        fill
+                        className="object-contain"
+                      />
                     </div>
                   </div>
                   <div className="block sm:block">
                     <span
                       className={cn(
                         "text-foreground font-bold transition-all duration-500 ease-in-out",
-                        scrolled ? "text-lg" : "text-xl"
+                        scrolled ? "text-lg" : "text-2xl"
                       )}
                     >
                       SnackStack
                     </span>
-                    {/* <div className="text-xs text-muted-foreground hidden sm:block">
-                      Modern Solutions
-                    </div> */}
                   </div>
                 </motion.div>
               </Link>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
+import PageWrapper from "./page-wrapper";
 
 const Contact = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -115,7 +116,7 @@ const Contact = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="contact" className="py-16">
+    <PageWrapper ref={sectionRef} id="contact">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headerRef} className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
@@ -228,7 +229,7 @@ const Contact = () => {
           </form>
         </div>
       </div>
-    </section>
+    </PageWrapper>
   );
 };
 

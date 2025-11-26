@@ -5,6 +5,7 @@ import { Star, Quote } from "lucide-react";
 import Image from "next/image";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
+import PageWrapper from "./page-wrapper";
 
 const Testimonials = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -121,7 +122,7 @@ const Testimonials = () => {
   };
 
   return (
-    <section ref={sectionRef} id="testimonials" className="py-12">
+    <PageWrapper ref={sectionRef} id="testimonials">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-20">
@@ -167,7 +168,7 @@ const Testimonials = () => {
 
                 {/* Testimonial Content */}
                 <div className="relative z-10 space-y-6">
-                  <blockquote className="text-foreground leading-relaxed text-lg font-medium">
+                  <blockquote className="text-foreground leading-relaxed text-lg font-normal">
                     "{testimonial.content}"
                   </blockquote>
 
@@ -208,7 +209,7 @@ const Testimonials = () => {
           ))}
         </div>
       </div>
-    </section>
+    </PageWrapper>
   );
 };
 

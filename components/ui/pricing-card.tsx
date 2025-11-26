@@ -44,9 +44,8 @@ export function PricingCard({
 
   return (
     <Card
-      className={`relative w-full max-w-sm ${
-        tier.popular ? "ring-2 ring-primary shadow-lg" : ""
-      }`}
+      className={`relative w-full ${tier.popular ? "ring-2 ring-primary shadow-lg" : ""
+        }`}
     >
       {tier.popular && (
         <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground">

@@ -12,6 +12,8 @@ import {
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import PageWrapper from "./page-wrapper";
+
 
 const About = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -178,7 +180,7 @@ const About = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="about" className="py-12">
+    <PageWrapper ref={sectionRef} id="about">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-20">
@@ -201,6 +203,7 @@ const About = () => {
             your thinking.
           </p>
         </div>
+
 
         {/* Main Content Grid */}
         <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
@@ -276,7 +279,7 @@ const About = () => {
           ))}
         </div>
       </div>
-    </section>
+    </PageWrapper>
   );
 };
 

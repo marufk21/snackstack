@@ -106,20 +106,15 @@ const Hero = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center w-full max-w-7xl mx-auto px-4">
           {/* Left Side - Text Content */}
           <div className="text-center lg:text-left flex flex-col justify-center">
-            <h1 ref={headingRef} className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight">
+            <h1
+              ref={headingRef}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-2 leading-tight"
+            >
               <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent whitespace-nowrap">
-                AI-Powered Notes
+                AI-Powered Notes <br /> for Modern Teams
+
               </span>
-              <br />
-              <span
-                ref={subheadingRef}
-                className={cn(
-                  "text-2xl sm:text-3xl lg:text-4xl font-light drop-shadow-lg",
-                  isDark ? "text-white" : "text-gray-900 dark:text-white"
-                )}
-              >
-                for Modern Teams
-              </span>
+
             </h1>
             <p
               ref={descriptionRef}

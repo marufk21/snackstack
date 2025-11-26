@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
+import PageWrapper from "./page-wrapper";
 
 const Services = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -169,7 +170,7 @@ const Services = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} id="features" className="py-12">
+    <PageWrapper ref={sectionRef} id="features">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-20">
@@ -249,7 +250,7 @@ const Services = () => {
           ))}
         </div>
       </div>
-    </section>
+    </PageWrapper>
   );
 };
 

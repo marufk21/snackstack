@@ -9,6 +9,7 @@ import { DollarSign } from "lucide-react";
 import Link from "next/link";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
+import PageWrapper from "./page-wrapper";
 
 const pricingTiers: PricingTier[] = [
   {
@@ -149,8 +150,8 @@ const Pricing = () => {
   };
 
   return (
-    <section ref={sectionRef} id="pricing" className="py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <PageWrapper ref={sectionRef} id="pricing">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
@@ -184,10 +185,10 @@ const Pricing = () => {
         )}
 
         {/* Pricing Cards */}
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center mb-16">
+        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
           {pricingTiers.map((tier, index) => (
             <div key={tier.id} className="pricing-card-wrapper w-full">
-              <PricingCard
+              <PricingCard  
                 tier={tier}
                 isYearly={isYearly}
                 onSelectPlan={handleSelectPlan}
@@ -248,7 +249,7 @@ const Pricing = () => {
           </div>
         </div>
       </div>
-    </section>
+    </PageWrapper>
   );
 };
 
