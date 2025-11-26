@@ -96,9 +96,10 @@ const Features = () => {
         scrollTrigger: {
           trigger: container,
           start: "top top",
-          end: () => `+=${track.scrollWidth - window.innerWidth}`,
+          end: () => `+=${track.scrollWidth}`,
           pin: true,
           scrub: 1,
+          anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
@@ -108,63 +109,38 @@ const Features = () => {
   return (
     <section ref={containerRef} className="relative w-full overflow-hidden bg-background z-0">
       <div ref={trackRef} className="flex w-fit h-screen">
-        {/* Slide 1: Header */}
-        <div className="w-screen h-screen flex flex-col items-center justify-center p-8 shrink-0 relative">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-violet-500/10 via-transparent to-transparent opacity-50" />
-
-          <div className="relative z-10 text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
-              <Sparkles className="w-4 h-4 text-violet-600 dark:text-violet-400" />
-              <span className="text-violet-600 dark:text-violet-400 text-sm font-medium">
-                Powerful Features
-              </span>
-            </div>
-            <h2 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-foreground mb-8 tracking-tight">
-              Everything You Need to{" "}
-              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
-                Capture Ideas
-              </span>
-            </h2>
-            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
-              From simple notes to complex knowledge bases, our AI-powered
-              platform helps you capture, organize, and enhance your thoughts like
-              never before.
-            </p>
-          </div>
-        </div>
-
-        {/* Slides 2+: Services */}
+        {/* Feature Slides */}
         {services.map((service, index) => (
           <div
             key={index}
-            className="w-screen h-screen flex items-center justify-center p-4 sm:p-8 shrink-0 relative"
+            className="w-screen h-screen flex items-center justify-center px-6 py-8 sm:p-8 md:p-10 lg:p-12 shrink-0 relative"
           >
-            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
+            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center">
               {/* Left: Content */}
-              <div className="space-y-8 order-2 md:order-1">
+              <div className="space-y-5 md:space-y-6 lg:space-y-8 order-2 md:order-1">
                 <div
-                  className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${service.gradient} p-5 text-white shadow-2xl`}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br ${service.gradient} p-3 sm:p-4 md:p-5 text-white shadow-2xl`}
                 >
                   {React.cloneElement(service.icon as React.ReactElement<any>, {
                     className: "w-full h-full",
                   })}
                 </div>
-                <div className="space-y-4">
-                  <h3 className="text-4xl sm:text-5xl font-bold text-foreground">
+                <div className="space-y-3 md:space-y-4">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
                     {service.title}
                   </h3>
-                  <p className="text-xl text-muted-foreground leading-relaxed max-w-lg">
+                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-lg">
                     {service.description}
                   </p>
                 </div>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {service.features.map((feature, fIndex) => (
                     <li
                       key={fIndex}
-                      className="flex items-center gap-3 text-lg font-medium text-muted-foreground"
+                      className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-medium text-muted-foreground"
                     >
                       <div
-                        className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient}`}
+                        className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient} flex-shrink-0`}
                       />
                       {feature}
                     </li>
@@ -173,11 +149,11 @@ const Features = () => {
               </div>
 
               {/* Right: Visual */}
-              <div className="order-1 md:order-2 flex justify-center relative w-full">
+              <div className="order-1 md:order-2 flex justify-center relative w-full mb-4 md:mb-0">
                 <div
                   className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 blur-[100px] rounded-full`}
                 />
-                <div className="relative w-full max-w-[500px] aspect-[5/4] bg-white/5 border border-white/10 rounded-3xl backdrop-blur-xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                <div className="relative w-full max-w-[450px] md:max-w-[500px] aspect-[5/4] bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl backdrop-blur-xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
                   <Image
                     src={service.image}
                     alt={service.title}

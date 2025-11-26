@@ -125,27 +125,27 @@ const Testimonials = () => {
     <PageWrapper ref={sectionRef} id="testimonials">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-20">
+        <div ref={headerRef} className="text-center mb-8 md:mb-12 lg:mb-16">
           <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-2 mb-6 backdrop-blur-sm">
             <Quote className="w-4 h-4 text-violet-600 dark:text-violet-400" />
             <span className="text-violet-600 dark:text-violet-400 text-sm font-medium">
               Testimonials
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 md:mb-4 lg:mb-6 tracking-tight">
             What Our{" "}
             <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
               Users Say
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
             Don't just take our word for it. See how SnackStack is helping
             individuals and teams capture and enhance their ideas.
           </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
           {testimonials.map((testimonial, index) => (
             <div
               key={testimonial.id}

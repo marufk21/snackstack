@@ -181,22 +181,22 @@ const About = () => {
 
   return (
     <PageWrapper ref={sectionRef} id="about">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
-            <Rocket className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
+        <div ref={headerRef} className="text-center mb-10 md:mb-14 lg:mb-16">
+          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-5 md:mb-6">
+            <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-600 dark:text-purple-400" />
+            <span className="text-purple-600 dark:text-purple-400 text-xs sm:text-sm font-medium">
               About Us
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground mb-4 md:mb-5 lg:mb-6 tracking-tight leading-tight">
             About{" "}
             <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
               SnackStack
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             We're revolutionizing how people capture and organize their ideas.
             Our AI-powered note-taking platform combines cutting-edge technology
             with intuitive design to deliver powerful solutions that enhance
@@ -204,16 +204,15 @@ const About = () => {
           </p>
         </div>
 
-
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center mb-10 md:mb-14 lg:mb-16">
           {/* Left Content */}
-          <div ref={leftContentRef} className="space-y-8">
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-foreground">
+          <div ref={leftContentRef} className="space-y-6 md:space-y-8">
+            <div className="space-y-4 md:space-y-6">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground leading-tight">
                 AI-Powered Note-Taking
               </h3>
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed">
                 SnackStack was built for the modern need to capture and enhance
                 ideas. Our team of experienced engineers and AI specialists have
                 crafted a platform that uses artificial intelligence to help you
@@ -222,37 +221,37 @@ const About = () => {
               </p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {[
                 "AI-powered suggestions and content enhancement",
                 "Intelligent organization and automatic tagging",
                 "Seamless collaboration with real-time editing",
                 "Powerful search and relationship mapping",
               ].map((item, index) => (
-                <div key={index} className="check-item flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-muted-foreground">{item}</span>
+                <div key={index} className="check-item flex items-start gap-2 sm:gap-3">
+                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm sm:text-base text-muted-foreground">{item}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right Content - Features Grid */}
-          <div ref={rightContentRef} className="grid gap-6">
+          <div ref={rightContentRef} className="grid gap-5 md:gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="feature-card group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:border-violet-500/30 backdrop-blur-sm"
+                className="feature-card group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-xl md:rounded-2xl p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:border-violet-500/30 backdrop-blur-sm"
               >
-                <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-br from-violet-500 to-indigo-500 rounded-xl p-3 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div className="bg-gradient-to-br from-violet-500 to-indigo-500 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-xl font-bold text-foreground mb-2">
+                    <h4 className="text-lg sm:text-xl font-bold text-foreground mb-1.5 sm:mb-2">
                       {feature.title}
                     </h4>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
@@ -265,14 +264,14 @@ const About = () => {
         {/* Stats Section */}
         <div
           ref={statsRef}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-8 pt-16 border-t border-border"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 pt-10 md:pt-14 lg:pt-16 border-t border-border"
         >
           {stats.map((stat, index) => (
-            <div key={index} className="text-center group p-6 rounded-2xl bg-white/50 dark:bg-white/5 border border-transparent hover:border-violet-500/20 transition-all duration-300">
-              <div className="stat-number text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
+            <div key={index} className="text-center group p-4 sm:p-5 md:p-6 rounded-xl md:rounded-2xl bg-white/50 dark:bg-white/5 border border-transparent hover:border-violet-500/20 transition-all duration-300">
+              <div className="stat-number text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">
                 {stat.number}
               </div>
-              <div className="text-muted-foreground font-medium text-lg">
+              <div className="text-muted-foreground font-medium text-xs sm:text-sm md:text-base lg:text-lg">
                 {stat.label}
               </div>
             </div>

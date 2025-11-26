@@ -101,14 +101,14 @@ const Hero = () => {
 
         <div
           ref={heroRef}
-          className="relative z-10 min-h-screen flex items-center justify-center py-12 lg:py-20"
+          className="relative z-10 min-h-screen flex items-center justify-center py-12 md:py-16 lg:py-20"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center w-full max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 xl:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Left Side - Text Content */}
             <div className="text-center lg:text-left flex flex-col justify-center">
               <h1
                 ref={headingRef}
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 leading-[1.1] tracking-tight"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-3 md:mb-4 lg:mb-6 leading-[1.1] tracking-tight"
               >
                 <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap inline-block">
                   AI-Powered Notes
@@ -123,7 +123,7 @@ const Hero = () => {
               </h1>
               <p
                 ref={descriptionRef}
-                className="text-lg sm:text-xl md:text-2xl mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-200"
+                className="text-base sm:text-lg md:text-xl mb-4 md:mb-6 lg:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-200"
               >
                 Capture, organize, and enhance your ideas with the power of
                 artificial intelligence. The smart way to take notes for
@@ -131,7 +131,7 @@ const Hero = () => {
               </p>
               <div
                 ref={buttonsRef}
-                className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start"
+                className="flex flex-col sm:flex-row gap-2 md:gap-3 lg:gap-4 justify-center lg:justify-start"
               >
                 <Link href="/sign-in">
                   <button
@@ -141,7 +141,7 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className="group relative px-8 py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-semibold text-lg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                    className="group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-semibold text-base md:text-lg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Start for Free
@@ -170,7 +170,7 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className="px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:-translate-y-1 backdrop-blur-md border bg-white/80 border-black/5 text-gray-900 hover:bg-white hover:border-black/10 shadow-sm hover:shadow-md dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/20 dark:shadow-none"
+                    className="px-6 md:px-8 py-3 md:py-4 rounded-full font-semibold text-base md:text-lg transition-all duration-300 hover:-translate-y-1 backdrop-blur-md border bg-white/80 border-black/5 text-gray-900 hover:bg-white hover:border-black/10 shadow-sm hover:shadow-md dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/20 dark:shadow-none"
                   >
                     Sign In
                   </button>

@@ -33,9 +33,9 @@ const Footer = () => {
   // GSAP Animation for the Big Text
   useEffect(() => {
     if (!spacerRef.current || !textElementRef.current) return;
-    
+
     const ctx = gsap.context(() => {
-      gsap.fromTo(textElementRef.current, 
+      gsap.fromTo(textElementRef.current,
         { y: "50%", opacity: 0.2, scale: 0.8 },
         {
           y: "0%",
@@ -58,7 +58,7 @@ const Footer = () => {
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href.startsWith("#")) {
       e.preventDefault();
-      
+
       if (pathname !== "/") {
         window.location.href = `/${href}`;
         return;
@@ -106,10 +106,10 @@ const Footer = () => {
         bg-background ensures it covers the fixed text behind it.
       */}
       <div className="relative z-10 bg-background border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-            <div className="col-span-1 md:col-span-2">
-              <Link href="/" className="flex items-center gap-2 mb-6 group">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 lg:pt-16 pb-6 md:pb-8 lg:pb-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 lg:gap-10 mb-6 md:mb-12 lg:mb-16">
+            <div className="col-span-2 md:col-span-2 text-center md:text-left">
+              <Link href="/" className="flex items-center gap-2 mb-6 group justify-center md:justify-start">
                 <div className="relative w-8 h-8 transition-transform group-hover:scale-110 duration-300">
                   <Image
                     src="/logo.svg"
@@ -122,18 +122,18 @@ const Footer = () => {
                   SnackStack
                 </span>
               </Link>
-              <p className="text-muted-foreground max-w-sm leading-relaxed text-base">
+              <p className="text-muted-foreground max-w-sm leading-relaxed text-base mx-auto md:mx-0">
                 AI-powered note-taking for modern teams. Capture, organize, and enhance your ideas with the power of artificial intelligence.
               </p>
             </div>
 
-            <div>
+            <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-6">Product</h4>
               <ul className="space-y-4 text-sm text-muted-foreground">
                 {['Features', 'Pricing', 'Testimonials', 'Blog'].map((item) => (
                   <li key={item}>
-                    <Link 
-                      href={item === 'Blog' ? '/blogs' : `#${item.toLowerCase()}`} 
+                    <Link
+                      href={item === 'Blog' ? '/blogs' : `#${item.toLowerCase()}`}
                       onClick={(e) => handleLinkClick(e, item === 'Blog' ? '/blogs' : `#${item.toLowerCase()}`)}
                       className="hover:text-violet-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-violet-600 after:transition-all hover:after:w-full"
                     >
@@ -144,7 +144,7 @@ const Footer = () => {
               </ul>
             </div>
 
-            <div>
+            <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-6">Company</h4>
               <ul className="space-y-4 text-sm text-muted-foreground">
                 {['About Us', 'Contact', 'Privacy Policy', 'Terms of Service'].map((item) => {
@@ -152,8 +152,8 @@ const Footer = () => {
                   const href = item === 'About Us' ? '#about' : item === 'Contact' ? '#contact' : '#';
                   return (
                     <li key={item}>
-                      <Link 
-                        href={href} 
+                      <Link
+                        href={href}
                         onClick={(e) => {
                           if (isPlaceholder) {
                             e.preventDefault();
@@ -180,7 +180,7 @@ const Footer = () => {
                 Sitemap
               </Link>
             </div>
-            
+
             <div className="flex items-center gap-8">
               <div className="flex gap-4">
                 {[
@@ -188,9 +188,9 @@ const Footer = () => {
                   { icon: Github, label: 'GitHub' },
                   { icon: Linkedin, label: 'LinkedIn' }
                 ].map(({ icon: Icon, label }) => (
-                  <a 
+                  <a
                     key={label}
-                    href="#" 
+                    href="#"
                     onClick={(e) => e.preventDefault()}
                     className="text-muted-foreground hover:text-violet-600 transition-all p-2 hover:bg-violet-500/10 rounded-full hover:scale-110"
                   >
@@ -200,7 +200,7 @@ const Footer = () => {
                 ))}
               </div>
 
-              <button 
+              <button
                 onClick={scrollToTop}
                 className="flex items-center gap-2 hover:text-foreground transition-colors group px-4 py-2 rounded-full hover:bg-white/5"
               >
@@ -217,7 +217,7 @@ const Footer = () => {
         This creates the "window" for the fixed text to be revealed.
         It is transparent and sits after the links content.
       */}
-      <div 
+      <div
         ref={spacerRef}
         style={{ height: bigTextHeight }}
         className="relative z-10 w-full pointer-events-none"
@@ -228,20 +228,20 @@ const Footer = () => {
         Fixed at the bottom, z-index -10.
         Revealed when the user scrolls past the opaque Links section into the transparent Spacer.
       */}
-      <div 
+      <div
         ref={bigTextRef}
         className="fixed bottom-0 left-0 w-full -z-10 bg-black/5 dark:bg-white/5 backdrop-blur-lg border-t border-white/5"
       >
         {/* Background Glow for the Big Text area */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl">
-             <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
-             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
           </div>
         </div>
 
-        <div className="w-full h-full flex justify-center items-end pt-20 pb-10 ">
-          <h1 
+        <div className="w-full h-full flex justify-center items-end pt-8 md:pt-12 lg:pt-20 pb-4 md:pb-6 lg:pb-10">
+          <h1
             ref={textElementRef}
             className="text-[16vw] font-black leading-[0.75] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/10 to-foreground/0 select-none pointer-events-none translate-y-2 md:translate-y-4"
           >

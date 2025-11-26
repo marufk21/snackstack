@@ -153,26 +153,26 @@ const Pricing = () => {
     <PageWrapper ref={sectionRef} id="pricing">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-16">
+        <div ref={headerRef} className="text-center mb-8 md:mb-12 lg:mb-14">
           <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
             <DollarSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />
             <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
               Pricing
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 md:mb-4 lg:mb-6 tracking-tight">
             Choose Your{" "}
             <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
               Perfect Plan
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Unlock the full potential of AI-powered note-taking. Choose a plan
             that fits your needs and start creating amazing content today.
           </p>
 
           {/* Billing Toggle */}
-          <div className="flex justify-center mt-8">
+          <div className="flex justify-center mt-6 md:mt-8">
             <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
           </div>
         </div>
@@ -185,7 +185,7 @@ const Pricing = () => {
         )}
 
         {/* Pricing Cards */}
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5 mb-8 md:mb-12 lg:mb-14">
           {pricingTiers.map((tier, index) => (
             <div key={tier.id} className="pricing-card-wrapper w-full">
               <PricingCard
@@ -199,11 +199,11 @@ const Pricing = () => {
         </div>
 
         {/* FAQ Section */}
-        <div ref={faqRef} className="mt-20">
-          <h3 className="text-3xl font-bold text-center mb-12">
+        <div ref={faqRef} className="mt-8 md:mt-12 lg:mt-16">
+          <h3 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 lg:mb-10">
             Frequently Asked Questions
           </h3>
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-3 md:gap-4 lg:gap-5 max-w-4xl mx-auto">
             <div className="space-y-6">
               <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
                 <h4 className="font-bold text-lg mb-3 text-foreground">
