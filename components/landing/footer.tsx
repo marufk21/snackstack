@@ -4,9 +4,24 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Twitter, Github, Linkedin, ArrowUp } from "lucide-react";
+import { Linkedin, ArrowUp, Instagram, Youtube, Facebook } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+
+const TiktokIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+    <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
+  </svg>
+);
+
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
+  </svg>
+);
+
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -125,12 +140,33 @@ const Footer = () => {
               <p className="text-muted-foreground max-w-sm leading-relaxed text-base mx-auto md:mx-0">
                 AI-powered note-taking for modern teams. Capture, organize, and enhance your ideas with the power of artificial intelligence.
               </p>
+
+              <div className="flex flex-wrap gap-3 mt-8 justify-center md:justify-start">
+                {[
+                  { icon: Instagram, label: 'Instagram' },
+                  { icon: TiktokIcon, label: 'TikTok' },
+                  { icon: Youtube, label: 'YouTube' },
+                  { icon: Facebook, label: 'Facebook' },
+                  { icon: XIcon, label: 'X' },
+                  { icon: Linkedin, label: 'LinkedIn' },
+                ].map(({ icon: Icon, label }) => (
+                  <a
+                    key={label}
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/10 text-muted-foreground hover:text-white hover:border-white/20 hover:bg-white/5 transition-all duration-300"
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="sr-only">{label}</span>
+                  </a>
+                ))}
+              </div>
             </div>
 
             <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-6">Product</h4>
               <ul className="space-y-4 text-sm text-muted-foreground">
-                {['Features', 'Pricing', 'Testimonials', 'Blog'].map((item) => (
+                {['About', 'Pricing', 'Testimonials', 'Blog'].map((item) => (
                   <li key={item}>
                     <Link
                       href={item === 'Blog' ? '/blogs' : `#${item.toLowerCase()}`}
@@ -147,9 +183,9 @@ const Footer = () => {
             <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-6">Company</h4>
               <ul className="space-y-4 text-sm text-muted-foreground">
-                {['About Us', 'Contact', 'Privacy Policy', 'Terms of Service'].map((item) => {
+                {['Terms of Service', 'Privacy Policy', 'Contact', 'Sitemap',  ].map((item) => {
                   const isPlaceholder = item === 'Privacy Policy' || item === 'Terms of Service';
-                  const href = item === 'About Us' ? '#about' : item === 'Contact' ? '#contact' : '#';
+                  const href = item === 'Sitemap' ? '/sitemap.xml' : item === 'Contact' ? '#contact' : '#';
                   return (
                     <li key={item}>
                       <Link
@@ -175,31 +211,9 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 text-sm text-muted-foreground pt-8 border-t border-white/10">
             <div className="flex items-center gap-4">
               <p>© {currentYear} SnackStack. All rights reserved.</p>
-              <span className="hidden sm:inline text-muted-foreground/30">|</span>
-              <Link href="/sitemap.xml" className="hover:text-violet-600 transition-colors">
-                Sitemap
-              </Link>
             </div>
 
             <div className="flex items-center gap-8">
-              <div className="flex gap-4">
-                {[
-                  { icon: Twitter, label: 'Twitter' },
-                  { icon: Github, label: 'GitHub' },
-                  { icon: Linkedin, label: 'LinkedIn' }
-                ].map(({ icon: Icon, label }) => (
-                  <a
-                    key={label}
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="text-muted-foreground hover:text-violet-600 transition-all p-2 hover:bg-violet-500/10 rounded-full hover:scale-110"
-                  >
-                    <Icon className="w-5 h-5" />
-                    <span className="sr-only">{label}</span>
-                  </a>
-                ))}
-              </div>
-
               <button
                 onClick={scrollToTop}
                 className="flex items-center gap-2 hover:text-foreground transition-colors group px-4 py-2 rounded-full hover:bg-white/5"
@@ -240,7 +254,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="w-full h-full flex justify-center items-end pt-8 md:pt-12 lg:pt-20 pb-4 md:pb-6 lg:pb-10">
+        <div className="w-full h-full flex justify-center items-end pt-8 md:pt-12 lg:pt-12 pb-2 md:pb-6 lg:pb-10">
           <h1
             ref={textElementRef}
             className="text-[16vw] font-black leading-[0.75] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/10 to-foreground/0 select-none pointer-events-none translate-y-2 md:translate-y-4"

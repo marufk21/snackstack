@@ -137,9 +137,9 @@ const Contact = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
           {/* Contact Info */}
-          <div className="space-y-5 md:space-y-6 lg:sticky lg:top-24">
+          <div className="space-y-5 md:space-y-6">
             <div className="bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-3xl p-8 backdrop-blur-sm">
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
               <div className="space-y-6">
@@ -177,12 +177,12 @@ const Contact = () => {
           </div>
 
           {/* Contact Form */}
-          <div ref={formRef} className="bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-3xl p-5 md:p-6 lg:p-8 backdrop-blur-sm shadow-xl">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div ref={formRef} className="bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-3xl p-5 md:p-6 lg:p-8 pb-5 md:pb-6 lg:pb-6 backdrop-blur-sm shadow-xl flex flex-col">
+            <form onSubmit={handleSubmit} className="space-y-4 flex-1 flex flex-col">
               <div className="form-field">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-medium text-foreground mb-3"
                 >
                   Name
                 </label>
@@ -194,14 +194,14 @@ const Contact = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Your name"
-                  className="w-full"
+                  className="w-full h-12"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-medium text-foreground mb-3"
                 >
                   Email
                 </label>
@@ -213,14 +213,14 @@ const Contact = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="your.email@example.com"
-                  className="w-full"
+                  className="w-full h-12"
                 />
               </div>
 
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="block text-sm font-medium text-foreground mb-3"
                 >
                   Message
                 </label>
@@ -231,8 +231,8 @@ const Contact = () => {
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Tell us what's on your mind..."
-                  rows={5}
-                  className="w-full min-h-[100px] px-3 py-2 text-base md:text-sm bg-background dark:bg-input/30 border border-input rounded-md shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] placeholder:text-muted-foreground resize-none text-foreground"
+                  rows={8}
+                  className="w-full px-3 py-5 text-base md:text-sm bg-background dark:bg-input/30 border border-input rounded-md shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] placeholder:text-muted-foreground resize-none text-foreground"
                 />
               </div>
 
@@ -255,7 +255,7 @@ const Contact = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-full py-6 text-lg font-semibold shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
+                className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-full py-6 text-lg font-semibold shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 mt-auto"
               >
                 {isSubmitting ? (
                   "Sending..."

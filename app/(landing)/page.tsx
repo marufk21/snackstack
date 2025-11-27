@@ -13,7 +13,7 @@ import {
 const Page = () => {
   return (
     <>
-    <div className="relative z-10 bg-background">
+    <div className="relative z-10 bg-background" style={{ backgroundColor: 'var(--background)' }}>
         <Hero />
         <About />
         <Services />

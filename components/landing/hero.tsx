@@ -96,16 +96,39 @@ const Hero = () => {
         />
       </div> */}
 
-      <div className="min-h-screen w-full bg-white dark:bg-black relative overflow-hidden transition-colors duration-500">
+      <div
+        className="min-h-screen w-full bg-white dark:bg-black relative overflow-hidden transition-colors duration-500"
+        style={{
+          backgroundColor: 'var(--background)',
+          minHeight: '100vh',
+        }}
+      >
         <MistBackground />
 
+       
+  
+
+
+  <div
+    className="absolute inset-0 z-0"
+    style={{
+      backgroundImage: `
+        radial-gradient(circle, rgba(139,92,246,0.6) 1px, transparent 1px),
+        radial-gradient(circle, rgba(59,130,246,0.4) 1px, transparent 1px),
+        radial-gradient(circle, rgba(236,72,153,0.5) 1px, transparent 1px)
+      `,
+      backgroundSize: "20px 20px, 40px 40px, 60px 60px",
+      backgroundPosition: "0 0, 10px 10px, 30px 30px",
+    }}
+  />
+     {/* Your Content/Components */}
         <div
           ref={heroRef}
-          className="relative z-10 min-h-screen flex items-center justify-center py-12 md:py-16 lg:py-20"
+          className="relative z-10 min-h-screen flex items-center justify-center pt-12 md:py-16 lg:py-20"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 xl:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Left Side - Text Content */}
-            <div className="text-center lg:text-left flex flex-col justify-center">
+            <div className="text-center lg:text-left flex flex-col justify-center order-2">
               <h1
                 ref={headingRef}
                 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-3 md:mb-4 lg:mb-6 leading-[1.1] tracking-tight"
@@ -123,7 +146,7 @@ const Hero = () => {
               </h1>
               <p
                 ref={descriptionRef}
-                className="text-base sm:text-lg md:text-xl mb-4 md:mb-6 lg:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-200"
+                className="hidden sm:block text-base sm:text-lg md:text-xl mb-4 md:mb-6 lg:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-200"
               >
                 Capture, organize, and enhance your ideas with the power of
                 artificial intelligence. The smart way to take notes for
@@ -141,7 +164,7 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className="group relative px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-semibold text-base md:text-lg shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+                    className="group relative px-5 py-2.5 text-sm md:px-8 md:py-4 md:text-lg bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-semibold shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden mt-3"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Start for Free
@@ -162,25 +185,12 @@ const Hero = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </Link>
-                <Link href="/sign-in">
-                  <button
-                    onClick={() =>
-                      capture("sign_in_clicked", {
-                        button: "sign_in",
-                        location: "landing_page",
-                      })
-                    }
-                    className="px-6 md:px-8 py-3 md:py-4 rounded-full font-semibold text-base md:text-lg transition-all duration-300 hover:-translate-y-1 backdrop-blur-md border bg-white/80 border-black/5 text-gray-900 hover:bg-white hover:border-black/10 shadow-sm hover:shadow-md dark:bg-white/5 dark:border-white/10 dark:text-white dark:hover:bg-white/10 dark:hover:border-white/20 dark:shadow-none"
-                  >
-                    Sign In
-                  </button>
-                </Link>
+
               </div>
             </div>
-
             {/* Right Side - Visual Element */}
-            <div className="relative hidden lg:flex justify-end items-center pt-12 perspective-1000">
-              <div className="relative w-full max-w-lg h-[550px]">
+            <div className="relative flex justify-center lg:justify-end items-center pt-12 perspective-1000 order-2">
+              <div className="relative w-full max-w-lg h-[400px] sm:h-[550px] scale-[0.85] sm:scale-100 origin-center lg:origin-right">
                 {/* Floating Card 1 - Main Note Editor */}
                 <div
                   className="absolute top-0 right-4 w-80 h-[420px] rounded-3xl shadow-2xl backdrop-blur-xl p-6 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-10 bg-white/80 border-black/5 shadow-black/5 dark:bg-gray-900/60 dark:border-white/10 dark:shadow-none"
@@ -332,7 +342,7 @@ const Hero = () => {
 
                 {/* Floating Card 3 - Quick Capture */}
                 <div
-                  className="absolute bottom-0 right-12 w-64 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-30 bg-white/60 border-black/5 shadow-black/5 dark:bg-gray-900/50 dark:border-white/10 dark:shadow-none"
+                  className="hidden sm:block absolute bottom-0 right-12 w-64 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-30 bg-white/60 border-black/5 shadow-black/5 dark:bg-gray-900/50 dark:border-white/10 dark:shadow-none"
                   style={{ animationDelay: "2.5s" }}
                 >
                   <div className="flex items-center justify-between mb-3">
@@ -368,9 +378,14 @@ const Hero = () => {
                 <div className="absolute bottom-20 left-10 w-40 h-40 rounded-full bg-indigo-500/20 blur-[80px] pointer-events-none" />
               </div>
             </div>
+
           </div>
+
         </div>
+
       </div>
+
+
       <style jsx>{`
         @keyframes float {
           0%,

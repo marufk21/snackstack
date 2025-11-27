@@ -34,13 +34,13 @@ const navItems: NavItem[] = [
     label: "Pricing",
     href: "#pricing",
   },
-  {
-    label: "Testimonials",
-    href: "#testimonials",
-  },
+  // {
+  //   label: "Testimonials",
+  //   href: "#testimonials",
+  // },
 
   {
-    label: "Contact Us",
+    label: "Contact",
     href: "#contact",
   },
   {

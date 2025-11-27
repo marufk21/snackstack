@@ -192,7 +192,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable}`}
     >
-      <body className="antialiased" suppressHydrationWarning>
+      <body className="antialiased bg-background" suppressHydrationWarning style={{ backgroundColor: 'var(--background)' }}>
         <LenisProvider>
           <ErrorBoundary>
             <SessionProvider>

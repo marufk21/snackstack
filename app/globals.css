@@ -131,7 +131,24 @@ h1, h2, h3, h4 {
   }
   body {
     @apply bg-background text-foreground;
+    background-color: oklch(1 0 0); /* Explicit fallback for mobile */
   }
+}
+
+/* Ensure html and body cover full viewport on mobile */
+html,
+body {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+/* Dark mode body background */
+.dark body {
+  background-color: oklch(0.145 0 0);
 }
 
 /* Custom Background Patterns */

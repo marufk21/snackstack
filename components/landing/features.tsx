@@ -119,7 +119,7 @@ const Features = () => {
               {/* Left: Content */}
               <div className="space-y-5 md:space-y-6 lg:space-y-8 order-2 md:order-1">
                 <div
-                  className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br ${service.gradient} p-3 sm:p-4 md:p-5 text-white shadow-2xl`}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br ${service.gradient} p-3 sm:p-4 md:p-5 text-white shadow-2xl hidden sm:block`}
                 >
                   {React.cloneElement(service.icon as React.ReactElement<any>, {
                     className: "w-full h-full",
