@@ -214,6 +214,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Check for subscription access
+    const { hasAccess } = await import("@/lib/database/subscription");
+    const hasUserAccess = await hasAccess(userId!);
+
+    if (!hasUserAccess) {
+      return NextResponse.json(
+        {
+          error: "Subscription required",
+          message:
+            "You need an active subscription or free trial to create notes.",
+          requiresSubscription: true,
+        },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
     const validatedData = createNoteSchema.parse(body);
 

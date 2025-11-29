@@ -13,12 +13,31 @@ import PageWrapper from "./page-wrapper";
 
 const pricingTiers: PricingTier[] = [
   {
+    id: "free-trial",
+    name: "Free Trial",
+    description: "Try SnackStack free for 14 days",
+    price: {
+      monthly: 0,
+      yearly: 0,
+    },
+    features: [
+      "14-day free trial",
+      "Up to 10 notes",
+      "Basic AI suggestions",
+      "Image uploads (5MB total)",
+      "Basic markdown support",
+      "Community support",
+    ],
+    stripePriceId: null, // Free trial doesn't use Stripe
+    isTrial: true,
+  },
+  {
     id: "basic",
     name: "Basic",
     description: "Perfect for getting started with SnackStack",
     price: {
-      monthly: 9,
-      yearly: 72, // 20% discount
+      monthly: 749, // ₹749 (approx $9 × 83)
+      yearly: 5988, // ₹5,988 (20% discount)
     },
     features: [
       "Up to 50 notes",
@@ -34,8 +53,8 @@ const pricingTiers: PricingTier[] = [
     name: "Pro",
     description: "Best for power users and professionals",
     price: {
-      monthly: 19,
-      yearly: 152, // 20% discount
+      monthly: 1599, // ₹1,599 (approx $19 × 83)
+      yearly: 12792, // ₹12,792 (20% discount)
     },
     features: [
       "Unlimited notes",
@@ -55,8 +74,8 @@ const pricingTiers: PricingTier[] = [
     name: "Enterprise",
     description: "For teams and organizations",
     price: {
-      monthly: 49,
-      yearly: 392, // 20% discount
+      monthly: 4099, // ₹4,099 (approx $49 × 83)
+      yearly: 32792, // ₹32,792 (20% discount)
     },
     features: [
       "Everything in Pro",
@@ -145,7 +164,19 @@ const Pricing = () => {
     }
   }, []);
 
-  const handleSelectPlan = async (priceId: string, planName: string) => {
+  const handleSelectPlan = async (priceId: string | null, planName: string, isTrial?: boolean) => {
+    if (isTrial) {
+      // For Free Trial, redirect to signup/dashboard without Stripe
+      // TODO: Implement Free Trial signup flow
+      window.location.href = '/sign-in?trial=true';
+      return;
+    }
+    
+    if (!priceId) {
+      console.error('No price ID provided for paid plan');
+      return;
+    }
+    
     await redirectToCheckout(priceId);
   };
 
@@ -185,7 +216,7 @@ const Pricing = () => {
         )}
 
         {/* Pricing Cards */}
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5 mb-8 md:mb-12 lg:mb-14">
+        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5 mb-8 md:mb-12 lg:mb-14">
           {pricingTiers.map((tier, index) => (
             <div key={tier.id} className="pricing-card-wrapper w-full">
               <PricingCard

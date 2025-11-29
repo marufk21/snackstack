@@ -142,9 +142,7 @@ export async function deleteSubscriptionByStripeId(
 /**
  * Check if a user has an active subscription
  */
-export async function hasActiveSubscription(
-  userId: string
-): Promise<boolean> {
+export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const subscription = await getSubscriptionByUserId(userId);
 
   if (!subscription) {
@@ -291,5 +289,152 @@ export async function markExpiredSubscriptionsAsCanceled() {
     successful,
     failed,
     expiredSubscriptions,
+  };
+}
+
+/**
+ * Start a free trial for a user
+ */
+export async function startFreeTrial(userId: string) {
+  try {
+    const trialDays = 14;
+    const freeTrialEndsAt = new Date();
+    freeTrialEndsAt.setDate(freeTrialEndsAt.getDate() + trialDays);
+
+    return await prisma.user.update({
+      where: { id: userId },
+      data: {
+        isFreeTrialUser: true,
+        freeTrialEndsAt,
+      } as any,
+    });
+  } catch (error) {
+    console.error(
+      "Failed to start free trial. Database migration may not be complete:",
+      error
+    );
+    throw new Error(
+      "Free Trial feature not available yet. Please run database migration."
+    );
+  }
+}
+
+/**
+ * Check if a user is on an active free trial
+ */
+export async function isUserOnFreeTrial(userId: string): Promise<boolean> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        isFreeTrialUser: true,
+        freeTrialEndsAt: true,
+      } as any, // Use 'as any' to bypass TypeScript errors until migration
+    });
+
+    if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
+      return false;
+    }
+
+    const now = new Date();
+    return user.freeTrialEndsAt > now;
+  } catch (error) {
+    // If fields don't exist yet (migration not run), return false
+    console.warn(
+      "Free Trial fields not available yet. Run database migration."
+    );
+    return false;
+  }
+}
+
+/**
+ * Get remaining trial days for a user
+ */
+export async function getRemainingTrialDays(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        isFreeTrialUser: true,
+        freeTrialEndsAt: true,
+      } as any,
+    });
+
+    if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
+      return 0;
+    }
+
+    const now = new Date();
+    const diffTime = user.freeTrialEndsAt.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return Math.max(0, diffDays);
+  } catch (error) {
+    console.warn(
+      "Free Trial fields not available yet. Run database migration."
+    );
+    return 0;
+  }
+}
+
+/**
+ * End a user's free trial
+ */
+export async function endFreeTrial(userId: string) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: {
+      isFreeTrialUser: false,
+      freeTrialEndsAt: null,
+    },
+  });
+}
+
+/**
+ * Check if user has access (either subscribed or on free trial)
+ */
+export async function hasAccess(userId: string): Promise<boolean> {
+  const [hasSubscription, onFreeTrial] = await Promise.all([
+    hasActiveSubscription(userId),
+    isUserOnFreeTrial(userId),
+  ]);
+
+  return hasSubscription || onFreeTrial;
+}
+
+/**
+ * Get all expired free trials
+ */
+export async function getExpiredFreeTrials() {
+  const now = new Date();
+
+  return await prisma.user.findMany({
+    where: {
+      isFreeTrialUser: true,
+      freeTrialEndsAt: {
+        lt: now,
+      },
+    },
+  });
+}
+
+/**
+ * Mark expired free trials as ended
+ */
+export async function markExpiredFreeTrialsAsEnded() {
+  const expiredTrials = await getExpiredFreeTrials();
+
+  const results = await Promise.allSettled(
+    expiredTrials.map((user) => endFreeTrial(user.id))
+  );
+
+  const successful = results.filter((r) => r.status === "fulfilled").length;
+  const failed = results.filter((r) => r.status === "rejected").length;
+
+  return {
+    total: expiredTrials.length,
+    successful,
+    failed,
+    expiredTrials,
   };
 }

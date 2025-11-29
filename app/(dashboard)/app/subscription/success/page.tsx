@@ -21,20 +21,36 @@ function SubscriptionSuccessContent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (sessionId) {
-      // You can verify the session with Stripe here
-      // For now, we'll just simulate a successful verification
-      setTimeout(() => {
+    const verifySubscription = async () => {
+      if (!sessionId) {
+        setError("No session ID provided");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        // Attempt to sync subscription status
+        const response = await fetch("/api/subscription/sync", { method: "POST" });
+        const data = await response.json();
+        
+        // Wait a brief moment for UX
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        
         setSessionData({
           id: sessionId,
           status: "complete",
+          synced: data.success
         });
+      } catch (err) {
+        console.error("Sync failed:", err);
+        // We still show success if we have a session ID, but maybe warn?
+        // For now, let's assume success if they got here with a session ID
+      } finally {
         setLoading(false);
-      }, 2000);
-    } else {
-      setError("No session ID provided");
-      setLoading(false);
-    }
+      }
+    };
+
+    verifySubscription();
   }, [sessionId]);
 
   if (loading) {

@@ -2,12 +2,38 @@
 // Only contains data that's safe to expose to the browser
 
 export const stripePriceIds = {
-  basic:
-    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC || "price_basic_fallback",
-  pro: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || "price_pro_fallback",
-  enterprise:
-    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE ||
-    "price_enterprise_fallback",
+  // Free Trial - No Stripe price needed (handled separately)
+  freeTrial: null,
+
+  // Basic Plan
+  basic: {
+    monthly:
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY ||
+      "price_basic_monthly_fallback",
+    yearly:
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY ||
+      "price_basic_yearly_fallback",
+  },
+
+  // Pro Plan
+  pro: {
+    monthly:
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY ||
+      "price_pro_monthly_fallback",
+    yearly:
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_YEARLY ||
+      "price_pro_yearly_fallback",
+  },
+
+  // Enterprise Plan
+  enterprise: {
+    monthly:
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_MONTHLY ||
+      "price_enterprise_monthly_fallback",
+    yearly:
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_YEARLY ||
+      "price_enterprise_yearly_fallback",
+  },
 } as const;
 
 export const getStripePublishableKey = () => {
