@@ -110,9 +110,6 @@ export async function updateSubscriptionByStripeId(
 export async function getSubscriptionByStripeId(stripeSubscriptionId: string) {
   return await prisma.subscription.findUnique({
     where: { stripeSubscriptionId },
-    include: {
-      user: true,
-    },
   });
 }
 
@@ -122,9 +119,6 @@ export async function getSubscriptionByStripeId(stripeSubscriptionId: string) {
 export async function getSubscriptionByUserId(userId: string) {
   return await prisma.subscription.findUnique({
     where: { userId },
-    include: {
-      user: true,
-    },
   });
 }
 
@@ -146,6 +140,9 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const subscription = await getSubscriptionByUserId(userId);
 
   if (!subscription) {
+    console.log(
+      `🔍 hasActiveSubscription: No subscription found for ${userId}`
+    );
     return false;
   }
 
@@ -154,6 +151,16 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const isActive =
     subscription.status === "active" || subscription.status === "trialing";
   const notExpired = subscription.currentPeriodEnd > now;
+
+  console.log("🔍 hasActiveSubscription Debug:", {
+    id: subscription.id,
+    status: subscription.status,
+    isActive,
+    currentPeriodEnd: subscription.currentPeriodEnd,
+    now,
+    notExpired,
+    result: isActive && notExpired,
+  });
 
   return isActive && notExpired;
 }
@@ -512,6 +519,13 @@ export async function canCreateNote(userId: string): Promise<{
     getUserNoteCount(userId),
     getSubscriptionLimits(userId),
   ]);
+
+  console.log("🔍 canCreateNote Debug:", {
+    userId,
+    hasUserAccess,
+    noteCount,
+    limits,
+  });
 
   // Check if user has access (subscription or trial)
   if (!hasUserAccess) {

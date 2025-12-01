@@ -43,7 +43,8 @@ export function useSubscription() {
       return response.json();
     },
     enabled: isSignedIn,
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+    staleTime: 0, // Always fetch fresh data
+    refetchOnMount: true,
   });
 
   return {

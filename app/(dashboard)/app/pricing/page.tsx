@@ -90,17 +90,21 @@ export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
   const { redirectToCheckout, loading, error } = useStripeCheckout();
 
-  const handleSelectPlan = async (priceId: string | null, planName: string, isTrial?: boolean) => {
+  const handleSelectPlan = async (
+    priceId: string | null,
+    planName: string,
+    isTrial?: boolean
+  ) => {
     if (isTrial) {
-      window.location.href = '/app?trial=true';
+      window.location.href = "/app?trial=true";
       return;
     }
-    
+
     if (!priceId) {
-      console.error('No price ID provided for paid plan');
+      console.error("No price ID provided for paid plan");
       return;
     }
-    
+
     await redirectToCheckout(priceId);
   };
 
@@ -116,10 +120,10 @@ export default function PricingPage() {
           that fits your needs and start creating amazing content today.
         </p>
 
-        {/* Billing Toggle */}
-        <div className="flex justify-center mb-8">
+        {/* Billing Toggle - Commented out for now, only monthly available */}
+        {/* <div className="flex justify-center mb-8">
           <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
-        </div>
+        </div> */}
       </div>
 
       {/* Error Display */}

@@ -159,6 +159,15 @@ export default function SubscriptionPage() {
     );
   }
 
+  // Wait for data to load before showing anything
+  if (!subscriptionData) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   const handleSyncSubscription = async () => {
     setActionLoading(true);
     try {
@@ -229,7 +238,9 @@ export default function SubscriptionPage() {
               <div className="space-y-2">
                 <h4 className="font-medium">What's included in your trial:</h4>
                 <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>• Up to {noteLimit} notes ({noteCount} used)</li>
+                  <li>
+                    • Up to {noteLimit} notes ({noteCount} used)
+                  </li>
                   <li>• Basic AI suggestions</li>
                   <li>• Image uploads (5MB total)</li>
                   <li>• Basic markdown support</li>
@@ -260,8 +271,8 @@ export default function SubscriptionPage() {
     );
   }
 
-  // No Subscription (Free Plan)
-  if (!subscriptionData?.hasSubscription) {
+  // No Subscription (Free Plan) - but only show if not loading
+  if (!loading && !subscriptionData?.hasSubscription) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
