@@ -214,17 +214,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Check for subscription access
-    const { hasAccess } = await import("@/lib/database/subscription");
-    const hasUserAccess = await hasAccess(userId!);
+    // Check if user can create a note (subscription + limit check)
+    const { canCreateNote, incrementNoteCount } = await import(
+      "@/lib/database/subscription"
+    );
+    const limitCheck = await canCreateNote(userId!);
 
-    if (!hasUserAccess) {
+    if (!limitCheck.canCreate) {
       return NextResponse.json(
         {
-          error: "Subscription required",
-          message:
-            "You need an active subscription or free trial to create notes.",
-          requiresSubscription: true,
+          error: "Note limit reached",
+          message: limitCheck.reason,
+          requiresUpgrade: true,
+          currentCount: limitCheck.currentCount,
+          maxNotes: limitCheck.maxNotes,
+          tier: limitCheck.tier,
         },
         { status: 403 }
       );
@@ -317,6 +321,9 @@ export async function POST(request: NextRequest) {
         userId: user.id,
       },
     });
+
+    // Increment user's note count
+    await incrementNoteCount(user.id);
 
     return NextResponse.json({ note: newNote }, { status: 201 });
   } catch (error) {

@@ -40,6 +40,11 @@ export async function POST(req: NextRequest) {
             session.subscription as string
           );
 
+          console.log("📊 Subscription details from Stripe:");
+          console.log("   ID:", subscription.id);
+          console.log("   Status:", subscription.status);
+          console.log("   Customer:", subscription.customer);
+
           const userId = session.metadata?.userId;
           const userEmail =
             session.metadata?.userEmail || session.customer_email;
@@ -56,18 +61,33 @@ export async function POST(req: NextRequest) {
           );
 
           // Create or update subscription
-          await upsertSubscriptionFromStripe(subscription, user.id);
+          console.log(
+            `💾 Upserting subscription with status: ${subscription.status}`
+          );
+          const savedSubscription = await upsertSubscriptionFromStripe(
+            subscription,
+            user.id
+          );
+          console.log(
+            `💾 Saved subscription status in DB: ${savedSubscription.status}`
+          );
 
           // Update user's isSubscribed flag
           await prisma.user.update({
             where: { id: user.id },
-            data: { isSubscribed: true },
+            data: {
+              isSubscribed: true,
+              // End free trial if user had one
+              isFreeTrialUser: false,
+              freeTrialEndsAt: null,
+            },
           });
 
           console.log(
             `✅ Subscription created/updated for user ${user.email}: ${subscription.id}`
           );
           console.log(`✅ User ${user.email} marked as subscribed`);
+          console.log(`✅ Free trial ended for user ${user.email}`);
         }
         break;
       }
@@ -75,17 +95,22 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.updated": {
         const updatedSubscription = event.data.object as Stripe.Subscription;
         console.log("🔄 Subscription updated:", updatedSubscription.id);
-        console.log("   Status:", updatedSubscription.status);
+        console.log("   Status from Stripe:", updatedSubscription.status);
 
         const existingSubscription = await getSubscriptionByStripeId(
           updatedSubscription.id
         );
 
         if (existingSubscription) {
-          await upsertSubscriptionFromStripe(
+          console.log("   Current status in DB:", existingSubscription.status);
+          console.log(`💾 Updating subscription with new status: ${updatedSubscription.status}`);
+          
+          const updated = await upsertSubscriptionFromStripe(
             updatedSubscription,
             existingSubscription.userId
           );
+          
+          console.log(`💾 Updated subscription status in DB: ${updated.status}`);
 
           // Update user's isSubscribed flag based on status
           const isActive =
@@ -101,7 +126,9 @@ export async function POST(req: NextRequest) {
             `✅ Subscription ${updatedSubscription.id} updated in database`
           );
           console.log(
-            `✅ User subscription status updated: ${isActive ? "active" : "inactive"}`
+            `✅ User subscription status updated: ${
+              isActive ? "active" : "inactive"
+            }`
           );
         } else {
           console.warn(
@@ -220,7 +247,9 @@ export async function POST(req: NextRequest) {
               `✅ Subscription ${subscription.id} status updated after payment failure: ${subscription.status}`
             );
             console.log(
-              `✅ User subscription status updated: ${isActive ? "active" : "inactive"}`
+              `✅ User subscription status updated: ${
+                isActive ? "active" : "inactive"
+              }`
             );
           }
         }
@@ -235,7 +264,10 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("❌ Webhook handler error:", error);
     console.error("   Event type:", event.type);
-    console.error("   Error details:", error instanceof Error ? error.message : "Unknown error");
+    console.error(
+      "   Error details:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
     return NextResponse.json(
       { error: "Webhook handler failed" },
       { status: 500 }

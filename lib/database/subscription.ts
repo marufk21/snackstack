@@ -201,6 +201,10 @@ export async function upsertSubscriptionFromStripe(
   const productId = stripeSubscription.items.data[0]?.price.product as string;
   const planType = getPlanTypeFromPriceId(priceId);
 
+  console.log(`🔍 upsertSubscriptionFromStripe called`);
+  console.log(`   Stripe subscription status: ${stripeSubscription.status}`);
+  console.log(`   Subscription ID: ${stripeSubscription.id}`);
+
   const subscriptionData = {
     userId,
     stripeCustomerId: stripeSubscription.customer as string,
@@ -227,11 +231,14 @@ export async function upsertSubscriptionFromStripe(
       : null,
   };
 
+  console.log(`   Prepared status for DB: ${subscriptionData.status}`);
+
   // Try to update existing subscription first
   const existing = await getSubscriptionByStripeId(stripeSubscription.id);
 
   if (existing) {
-    return await updateSubscriptionByStripeId(stripeSubscription.id, {
+    console.log(`   Existing subscription found, updating...`);
+    const result = await updateSubscriptionByStripeId(stripeSubscription.id, {
       status: subscriptionData.status,
       stripePriceId: subscriptionData.stripePriceId,
       planType: subscriptionData.planType,
@@ -242,9 +249,14 @@ export async function upsertSubscriptionFromStripe(
       trialStart: subscriptionData.trialStart,
       trialEnd: subscriptionData.trialEnd,
     });
+    console.log(`   ✅ Updated subscription with status: ${result.status}`);
+    return result;
   }
 
-  return await createSubscription(subscriptionData);
+  console.log(`   No existing subscription, creating new...`);
+  const result = await createSubscription(subscriptionData);
+  console.log(`   ✅ Created subscription with status: ${result.status}`);
+  return result;
 }
 
 /**
@@ -437,4 +449,140 @@ export async function markExpiredFreeTrialsAsEnded() {
     failed,
     expiredTrials,
   };
+}
+
+/**
+ * Get user's current note count
+ */
+export async function getUserNoteCount(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { noteCount: true } as any,
+    });
+
+    return user?.noteCount || 0;
+  } catch (error) {
+    // If noteCount field doesn't exist yet, return 0
+    console.warn("noteCount field not available, returning 0");
+    return 0;
+  }
+}
+
+/**
+ * Get subscription limits for a user
+ */
+export async function getSubscriptionLimits(userId: string): Promise<{
+  maxNotes: number;
+  tier: PlanType | "free";
+  onFreeTrial: boolean;
+}> {
+  const [tier, onFreeTrial] = await Promise.all([
+    getUserSubscriptionTier(userId),
+    isUserOnFreeTrial(userId),
+  ]);
+
+  // Define limits based on tier
+  const limits: Record<PlanType | "free", number> = {
+    free: onFreeTrial ? 5 : 0, // Free trial gets 5 notes, otherwise 0
+    basic: 50,
+    pro: 500,
+    enterprise: Infinity,
+  };
+
+  return {
+    maxNotes: limits[tier],
+    tier,
+    onFreeTrial,
+  };
+}
+
+/**
+ * Check if user can create a note
+ */
+export async function canCreateNote(userId: string): Promise<{
+  canCreate: boolean;
+  reason?: string;
+  currentCount: number;
+  maxNotes: number;
+  tier: PlanType | "free";
+}> {
+  const [hasUserAccess, noteCount, limits] = await Promise.all([
+    hasAccess(userId),
+    getUserNoteCount(userId),
+    getSubscriptionLimits(userId),
+  ]);
+
+  // Check if user has access (subscription or trial)
+  if (!hasUserAccess) {
+    return {
+      canCreate: false,
+      reason: "You need an active subscription or free trial to create notes.",
+      currentCount: noteCount,
+      maxNotes: limits.maxNotes,
+      tier: limits.tier,
+    };
+  }
+
+  // Check if user has reached their limit
+  if (noteCount >= limits.maxNotes) {
+    return {
+      canCreate: false,
+      reason: `You've reached your ${limits.tier} plan limit of ${limits.maxNotes} notes. Upgrade to create more.`,
+      currentCount: noteCount,
+      maxNotes: limits.maxNotes,
+      tier: limits.tier,
+    };
+  }
+
+  return {
+    canCreate: true,
+    currentCount: noteCount,
+    maxNotes: limits.maxNotes,
+    tier: limits.tier,
+  };
+}
+
+/**
+ * Increment user's note count
+ */
+export async function incrementNoteCount(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        noteCount: {
+          increment: 1,
+        },
+      } as any,
+      select: { noteCount: true } as any,
+    });
+
+    return user.noteCount || 0;
+  } catch (error) {
+    console.warn("noteCount field not available, returning 0");
+    return 0;
+  }
+}
+
+/**
+ * Decrement user's note count (when deleting a note)
+ */
+export async function decrementNoteCount(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        noteCount: {
+          decrement: 1,
+        },
+      } as any,
+      select: { noteCount: true } as any,
+    });
+
+    return user.noteCount || 0;
+  } catch (error) {
+    console.warn("noteCount field not available, returning 0");
+    return 0;
+  }
 }

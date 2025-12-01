@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -18,59 +18,41 @@ import {
   AlertTriangle,
   Loader2,
   Clock,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { SubscriptionEndedDialog } from "@/components/subscription/subscription-ended-dialog";
+import { useSubscription } from "@/hooks/use-subscription";
+import { NoteLimitIndicator } from "@/components/subscription/note-limit-indicator";
 
 // Disable static generation for this page
 export const dynamic = "force-dynamic";
 
-interface SubscriptionData {
-  hasSubscription: boolean;
-  onFreeTrial: boolean;
-  remainingTrialDays?: number;
-  freeTrialEndsAt?: string;
-  subscription?: {
-    status: string;
-    planType: string;
-    currentPeriodEnd: string;
-    currentPeriodStart: string;
-    cancelAtPeriodEnd: boolean;
-  };
-}
-
 export default function SubscriptionPage() {
-  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const {
+    subscription: subscriptionData,
+    isLoading: loading,
+    onFreeTrial,
+    remainingTrialDays,
+    noteCount,
+    noteLimit,
+    hasSubscription,
+    tier,
+    refetch,
+  } = useSubscription();
+
   const [actionLoading, setActionLoading] = useState(false);
-  const [showEndedDialog, setShowEndedDialog] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchSubscriptionStatus();
-  }, []);
-
-  const fetchSubscriptionStatus = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/subscription/status");
-      if (!response.ok) throw new Error("Failed to fetch subscription");
-      const data = await response.json();
-      setSubscriptionData(data);
-
-      // Show dialog if trial is ending soon or subscription is ending
-      if (data.onFreeTrial && data.remainingTrialDays && data.remainingTrialDays <= 3) {
-        setShowEndedDialog(true);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [showEndedDialog, setShowEndedDialog] = useState(
+    onFreeTrial && remainingTrialDays && remainingTrialDays <= 3
+  );
+  const [error, setError] = useState<string | null>(null); // Keep error state for other potential errors
 
   const handleCancelSubscription = async () => {
-    if (!confirm("Are you sure you want to cancel your subscription? You'll still have access until the end of your billing period.")) {
+    if (
+      !confirm(
+        "Are you sure you want to cancel your subscription? You'll still have access until the end of your billing period."
+      )
+    ) {
       return;
     }
 
@@ -82,10 +64,12 @@ export default function SubscriptionPage() {
 
       if (!response.ok) throw new Error("Failed to cancel subscription");
 
-      await fetchSubscriptionStatus();
+      await refetch();
       alert("Subscription will be canceled at the end of the billing period");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to cancel subscription");
+      alert(
+        err instanceof Error ? err.message : "Failed to cancel subscription"
+      );
     } finally {
       setActionLoading(false);
     }
@@ -100,10 +84,12 @@ export default function SubscriptionPage() {
 
       if (!response.ok) throw new Error("Failed to reactivate subscription");
 
-      await fetchSubscriptionStatus();
+      await refetch();
       alert("Subscription has been reactivated");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to reactivate subscription");
+      alert(
+        err instanceof Error ? err.message : "Failed to reactivate subscription"
+      );
     } finally {
       setActionLoading(false);
     }
@@ -120,15 +106,25 @@ export default function SubscriptionPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "active":
-        return <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">Active</Badge>;
+        return (
+          <Badge className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+            Active
+          </Badge>
+        );
       case "canceled":
         return <Badge variant="destructive">Canceled</Badge>;
       case "past_due":
         return (
-          <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">Past Due</Badge>
+          <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400">
+            Past Due
+          </Badge>
         );
       case "trialing":
-        return <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">Trialing</Badge>;
+        return (
+          <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+            Trialing
+          </Badge>
+        );
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -169,22 +165,24 @@ export default function SubscriptionPage() {
       const response = await fetch("/api/subscription/sync", {
         method: "POST",
       });
-      
+
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData: any = await response.json();
         throw new Error(errorData.details || "Failed to sync subscription");
       }
-      
-      const data = await response.json();
-      await fetchSubscriptionStatus();
-      
+
+      const data: any = await response.json();
+      await refetch();
+
       if (data.active) {
         alert("Subscription found and synced successfully!");
       } else {
         alert("No active subscription found on Stripe.");
       }
     } catch (err) {
-      alert(`Sync failed: ${err instanceof Error ? err.message : "Unknown error"}`);
+      alert(
+        `Sync failed: ${err instanceof Error ? err.message : "Unknown error"}`
+      );
     } finally {
       setActionLoading(false);
     }
@@ -219,16 +217,19 @@ export default function SubscriptionPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground mb-2">Trial ends on:</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  Trial ends on:
+                </p>
                 <p className="text-lg font-semibold">
-                  {subscriptionData.freeTrialEndsAt && formatDate(subscriptionData.freeTrialEndsAt)}
+                  {subscriptionData.freeTrialEndsAt &&
+                    formatDate(subscriptionData.freeTrialEndsAt)}
                 </p>
               </div>
 
               <div className="space-y-2">
                 <h4 className="font-medium">What's included in your trial:</h4>
                 <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>• Up to 10 notes</li>
+                  <li>• Up to {noteLimit} notes ({noteCount} used)</li>
                   <li>• Basic AI suggestions</li>
                   <li>• Image uploads (5MB total)</li>
                   <li>• Basic markdown support</li>
@@ -249,7 +250,11 @@ export default function SubscriptionPage() {
           onOpenChange={setShowEndedDialog}
           isTrial={true}
           remainingDays={subscriptionData.remainingTrialDays || 0}
-          expiryDate={subscriptionData.freeTrialEndsAt ? new Date(subscriptionData.freeTrialEndsAt) : undefined}
+          expiryDate={
+            subscriptionData.freeTrialEndsAt
+              ? new Date(subscriptionData.freeTrialEndsAt)
+              : undefined
+          }
         />
       </div>
     );
@@ -275,9 +280,14 @@ export default function SubscriptionPage() {
                     <CreditCard className="h-5 w-5" />
                     Current Plan
                   </CardTitle>
-                  <CardDescription>Your active subscription details</CardDescription>
+                  <CardDescription>
+                    Your active subscription details
+                  </CardDescription>
                 </div>
-                <Badge variant="secondary" className="bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300">
+                <Badge
+                  variant="secondary"
+                  className="bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                >
                   Free Plan
                 </Badge>
               </div>
@@ -328,10 +338,10 @@ export default function SubscriptionPage() {
                     </Button>
                   </Link>
                 </div>
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={handleSyncSubscription}
                   disabled={actionLoading}
                   className="text-muted-foreground hover:text-primary"
@@ -357,7 +367,10 @@ export default function SubscriptionPage() {
   const subscription = subscriptionData.subscription;
 
   if (!subscription) {
-    console.error("Subscription data missing despite hasSubscription=true", subscriptionData);
+    console.error(
+      "Subscription data missing despite hasSubscription=true",
+      subscriptionData
+    );
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Card className="border-red-200">
@@ -392,7 +405,9 @@ export default function SubscriptionPage() {
                   <CreditCard className="h-5 w-5" />
                   Current Plan
                 </CardTitle>
-                <CardDescription>Your active subscription details</CardDescription>
+                <CardDescription>
+                  Your active subscription details
+                </CardDescription>
               </div>
               {getStatusBadge(subscription.status)}
             </div>
@@ -404,7 +419,7 @@ export default function SubscriptionPage() {
                   {subscription.planType} Plan
                 </h3>
                 <p className="text-2xl font-bold">
-                  ₹{planPrice.monthly.toLocaleString('en-IN')}
+                  ₹{planPrice.monthly.toLocaleString("en-IN")}
                   <span className="text-sm font-normal text-muted-foreground">
                     /month
                   </span>
@@ -414,14 +429,16 @@ export default function SubscriptionPage() {
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4" />
                   <span>
-                    Billing period: {formatDate(subscription.currentPeriodStart)} -{" "}
+                    Billing period:{" "}
+                    {formatDate(subscription.currentPeriodStart)} -{" "}
                     {formatDate(subscription.currentPeriodEnd)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Settings className="h-4 w-4" />
                   <span>
-                    Next billing date: {formatDate(subscription.currentPeriodEnd)}
+                    Next billing date:{" "}
+                    {formatDate(subscription.currentPeriodEnd)}
                   </span>
                 </div>
               </div>
@@ -436,8 +453,9 @@ export default function SubscriptionPage() {
                       Subscription scheduled for cancellation
                     </p>
                     <p className="text-sm text-yellow-700 dark:text-yellow-500 mt-1">
-                      Your subscription will end on {formatDate(subscription.currentPeriodEnd)}.
-                      You'll still have access to premium features until then.
+                      Your subscription will end on{" "}
+                      {formatDate(subscription.currentPeriodEnd)}. You'll still
+                      have access to premium features until then.
                     </p>
                   </div>
                 </div>
@@ -467,7 +485,8 @@ export default function SubscriptionPage() {
                 Download Invoice
               </Button>
 
-              {subscription.status === "active" && !subscription.cancelAtPeriodEnd ? (
+              {subscription.status === "active" &&
+              !subscription.cancelAtPeriodEnd ? (
                 <Button
                   variant="destructive"
                   className="w-full"
