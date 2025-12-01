@@ -181,24 +181,9 @@ export function getPlanTypeFromPriceId(priceId: string): PlanType {
   const enterpriseYearly =
     process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_YEARLY;
 
-  // Also check legacy/simple env vars just in case
-  const basicSimple = process.env.STRIPE_PRICE_ID_BASIC;
-  const proSimple = process.env.STRIPE_PRICE_ID_PRO;
-  const enterpriseSimple = process.env.STRIPE_PRICE_ID_ENTERPRISE;
-
-  if (
-    priceId === basicMonthly ||
-    priceId === basicYearly ||
-    priceId === basicSimple
-  )
-    return "basic";
-  if (priceId === proMonthly || priceId === proYearly || priceId === proSimple)
-    return "pro";
-  if (
-    priceId === enterpriseMonthly ||
-    priceId === enterpriseYearly ||
-    priceId === enterpriseSimple
-  )
+  if (priceId === basicMonthly || priceId === basicYearly) return "basic";
+  if (priceId === proMonthly || priceId === proYearly) return "pro";
+  if (priceId === enterpriseMonthly || priceId === enterpriseYearly)
     return "enterprise";
 
   // Default to basic if unknown
