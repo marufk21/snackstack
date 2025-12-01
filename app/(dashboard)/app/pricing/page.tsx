@@ -5,15 +5,35 @@ import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { stripePriceIds } from "@/config/stripe-client";
+import { useSubscription } from "@/hooks/use-subscription";
 
 const pricingTiers: PricingTier[] = [
+  {
+    id: "free-trial",
+    name: "Free Trial",
+    description: "Try SnackStack free for 14 days",
+    price: {
+      monthly: 0,
+      yearly: 0,
+    },
+    features: [
+      "14-day free trial",
+      "Up to 10 notes",
+      "Basic AI suggestions",
+      "Image uploads (5MB total)",
+      "Basic markdown support",
+      "Community support",
+    ],
+    stripePriceId: null,
+    isTrial: true,
+  },
   {
     id: "basic",
     name: "Basic",
     description: "Perfect for getting started with SnackStack",
     price: {
-      monthly: 9,
-      yearly: 72, // 20% discount
+      monthly: 749,
+      yearly: 5988,
     },
     features: [
       "Up to 50 notes",
@@ -29,8 +49,8 @@ const pricingTiers: PricingTier[] = [
     name: "Pro",
     description: "Best for power users and professionals",
     price: {
-      monthly: 19,
-      yearly: 152, // 20% discount
+      monthly: 1599,
+      yearly: 12792,
     },
     features: [
       "Unlimited notes",
@@ -50,8 +70,8 @@ const pricingTiers: PricingTier[] = [
     name: "Enterprise",
     description: "For teams and organizations",
     price: {
-      monthly: 49,
-      yearly: 392, // 20% discount
+      monthly: 4099,
+      yearly: 32792,
     },
     features: [
       "Everything in Pro",
@@ -70,10 +90,29 @@ const pricingTiers: PricingTier[] = [
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
   const { redirectToCheckout, loading, error } = useStripeCheckout();
+  const { subscription } = useSubscription();
 
-  const handleSelectPlan = async (priceId: string, planName: string) => {
+  const handleSelectPlan = async (
+    priceId: string | null,
+    planName: string,
+    isTrial?: boolean
+  ) => {
+    if (isTrial) {
+      window.location.href = "/app?trial=true";
+      return;
+    }
+
+    if (!priceId) {
+      console.error("No price ID provided for paid plan");
+      return;
+    }
+
     await redirectToCheckout(priceId);
   };
+
+  const currentPlanId =
+    subscription?.subscription?.planType ||
+    (subscription?.onFreeTrial ? "free-trial" : null);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -87,10 +126,10 @@ export default function PricingPage() {
           that fits your needs and start creating amazing content today.
         </p>
 
-        {/* Billing Toggle */}
-        <div className="flex justify-center mb-8">
+        {/* Billing Toggle - Commented out for now, only monthly available */}
+        {/* <div className="flex justify-center mb-8">
           <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
-        </div>
+        </div> */}
       </div>
 
       {/* Error Display */}
@@ -101,7 +140,7 @@ export default function PricingPage() {
       )}
 
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 justify-items-center">
         {pricingTiers.map((tier) => (
           <PricingCard
             key={tier.id}
@@ -109,6 +148,7 @@ export default function PricingPage() {
             isYearly={isYearly}
             onSelectPlan={handleSelectPlan}
             loading={loading}
+            currentPlanId={currentPlanId}
           />
         ))}
       </div>

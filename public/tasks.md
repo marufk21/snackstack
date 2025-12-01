@@ -4,13 +4,9 @@
 - Resend/Nodemailer
 
 ## Authentication + Dashboard
-- Flow Cleanup e2e
-- Pricing Page Redirection + Pricing Stripe + Card (genuine)
-- Subscription Based (Free) + Pricing + Subscription Ended Popup + (Upgrade)
-- Test: Stripe + Webhook
 
 ## F++
-Performance Test Case /*
+- Performance/SEO/Test Case/*
 
 
 

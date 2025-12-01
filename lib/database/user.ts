@@ -6,8 +6,16 @@ import { db as prisma } from "./client";
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({
     where: { email },
-    // Don't include relations initially to avoid potential issues
-    // Relations can be loaded separately if needed
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+      isSubscribed: true,
+      lastActiveAt: true,
+      createdAt: true,
+      updatedAt: true,
+    },
   });
 }
 
@@ -17,7 +25,15 @@ export async function getUserByEmail(email: string) {
 export async function getUserById(id: string) {
   return await prisma.user.findUnique({
     where: { id },
-    include: {
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+      isSubscribed: true,
+      lastActiveAt: true,
+      createdAt: true,
+      updatedAt: true,
       subscription: true,
       notes: true,
     },
@@ -47,25 +63,28 @@ export async function createUser(data: {
 /**
  * Get or create user by email
  */
-export async function getOrCreateUserByEmail(email: string, name?: string | null) {
+export async function getOrCreateUserByEmail(
+  email: string,
+  name?: string | null
+) {
   try {
     // First, try to get existing user
     let user = await getUserByEmail(email);
-    
+
     if (user) {
       console.log(`✅ User found: ${user.id} (${user.email})`);
       return user;
     }
-    
+
     // User doesn't exist, create them
     console.log(`Creating new user for email: ${email}`);
     const userName = name || email.split("@")[0] || "User";
-    
-    user = await createUser({ 
-      email, 
-      name: userName
+
+    user = await createUser({
+      email,
+      name: userName,
     });
-    
+
     console.log(`✅ User created: ${user.id} (${user.email})`);
     return user;
   } catch (error: any) {
@@ -78,7 +97,7 @@ export async function getOrCreateUserByEmail(email: string, name?: string | null
       meta: error?.meta,
       stack: error?.stack?.split("\n").slice(0, 5), // First 5 lines of stack
     });
-    
+
     // Re-throw with more context
     const enhancedError = new Error(
       `Failed to get or create user: ${error?.message || "Unknown error"}`
@@ -105,7 +124,13 @@ export async function updateUser(
   return await prisma.user.update({
     where: { id },
     data,
-    include: {
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+      isSubscribed: true,
+      lastActiveAt: true,
       subscription: true,
       notes: true,
     },
@@ -124,4 +149,3 @@ export async function updateUserSubscriptionStatus(
     data: { isSubscribed },
   });
 }
-

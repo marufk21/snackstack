@@ -34,7 +34,15 @@ export function useStripeCheckout() {
         );
       }
 
-      const { sessionId } = await response.json();
+      const data = await response.json();
+
+      // Handle direct URL redirect (e.g. for Billing Portal)
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+
+      const { sessionId } = data;
 
       // Redirect to Stripe Checkout
       const stripe = await loadStripe(getStripePublishableKey());

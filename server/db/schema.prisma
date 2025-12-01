@@ -23,6 +23,13 @@ model User {
 
   // Subscription tracking (denormalized for performance)
   isSubscribed Boolean @default(false)
+  
+  // Free Trial tracking
+  isFreeTrialUser Boolean   @default(false)
+  freeTrialEndsAt DateTime?
+
+  // Note usage tracking
+  noteCount Int @default(0)
 
   // Timestamps
   createdAt    DateTime @default(now())
@@ -39,6 +46,9 @@ model User {
   @@index([email])
   @@index([isSubscribed])
   @@index([lastActiveAt])
+  @@index([isFreeTrialUser])
+  @@index([freeTrialEndsAt])
+  @@index([noteCount])
 }
 
 model Account {

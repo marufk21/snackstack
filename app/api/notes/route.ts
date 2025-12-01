@@ -35,6 +35,13 @@ export async function GET(request: NextRequest) {
       // userId is a database ID (CUID)
       user = await db.user.findUnique({
         where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          image: true,
+          isSubscribed: true,
+        },
       });
     }
 
@@ -204,6 +211,7 @@ export async function GET(request: NextRequest) {
 }
 
 // POST /api/notes - Create new note
+// POST /api/notes - Create new note
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
@@ -218,7 +226,6 @@ export async function POST(request: NextRequest) {
     const validatedData = createNoteSchema.parse(body);
 
     // Resolve user - try by ID first, then by email
-    // If user doesn't exist, create them (this handles first-time sign-ins)
     let user = null;
     const sessionEmail = userEmail || (userId?.includes("@") ? userId : null);
 
@@ -226,6 +233,13 @@ export async function POST(request: NextRequest) {
       // userId is a database ID (CUID)
       user = await db.user.findUnique({
         where: { id: userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          image: true,
+          isSubscribed: true,
+        },
       });
     }
 
@@ -238,45 +252,8 @@ export async function POST(request: NextRequest) {
         );
       } catch (error: any) {
         console.error("Error getting/creating user:", error);
-        const errorMessage = error?.message || "Unknown error";
-        const errorCode = error?.code || "UNKNOWN";
-
-        // Handle specific Prisma schema errors
-        if (
-          errorCode === "P2022" ||
-          errorMessage.includes("does not exist") ||
-          errorMessage.includes("emailVerified")
-        ) {
-          return NextResponse.json(
-            {
-              error: "Database schema mismatch",
-              message:
-                "The database is missing required columns. Please run the database fix script.",
-              fix: "Run: npm run db:quick-fix (requires DATABASE_URL in .env file)",
-              details:
-                process.env.NODE_ENV === "development"
-                  ? {
-                      message: errorMessage,
-                      code: errorCode,
-                      column: errorMessage.includes("emailVerified")
-                        ? "emailVerified"
-                        : "unknown",
-                    }
-                  : undefined,
-            },
-            { status: 500 }
-          );
-        }
-
         return NextResponse.json(
-          {
-            error: "Failed to get or create user",
-            message: errorMessage,
-            details:
-              process.env.NODE_ENV === "development"
-                ? { code: errorCode, meta: error?.meta }
-                : undefined,
-          },
+          { error: "Failed to get user" },
           { status: 500 }
         );
       }
@@ -286,6 +263,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "User not found and could not be created" },
         { status: 404 }
+      );
+    }
+
+    // Check if user can create a note (subscription + limit check)
+    // NOW we use the correct user.id from the database
+    const { canCreateNote, incrementNoteCount } = await import(
+      "@/lib/database/subscription"
+    );
+    const limitCheck = await canCreateNote(user.id);
+
+    if (!limitCheck.canCreate) {
+      return NextResponse.json(
+        {
+          error: "Note limit reached",
+          message: limitCheck.reason,
+          requiresUpgrade: true,
+          currentCount: limitCheck.currentCount,
+          maxNotes: limitCheck.maxNotes,
+          tier: limitCheck.tier,
+        },
+        { status: 403 }
       );
     }
 
@@ -301,6 +299,9 @@ export async function POST(request: NextRequest) {
         userId: user.id,
       },
     });
+
+    // Increment user's note count
+    await incrementNoteCount(user.id);
 
     return NextResponse.json({ note: newNote }, { status: 201 });
   } catch (error) {

@@ -110,9 +110,6 @@ export async function updateSubscriptionByStripeId(
 export async function getSubscriptionByStripeId(stripeSubscriptionId: string) {
   return await prisma.subscription.findUnique({
     where: { stripeSubscriptionId },
-    include: {
-      user: true,
-    },
   });
 }
 
@@ -122,9 +119,6 @@ export async function getSubscriptionByStripeId(stripeSubscriptionId: string) {
 export async function getSubscriptionByUserId(userId: string) {
   return await prisma.subscription.findUnique({
     where: { userId },
-    include: {
-      user: true,
-    },
   });
 }
 
@@ -142,9 +136,7 @@ export async function deleteSubscriptionByStripeId(
 /**
  * Check if a user has an active subscription
  */
-export async function hasActiveSubscription(
-  userId: string
-): Promise<boolean> {
+export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const subscription = await getSubscriptionByUserId(userId);
 
   if (!subscription) {
@@ -179,13 +171,35 @@ export async function getUserSubscriptionTier(
  * Map Stripe price ID to plan type
  */
 export function getPlanTypeFromPriceId(priceId: string): PlanType {
-  const basicPriceId = process.env.STRIPE_PRICE_ID_BASIC;
-  const proPriceId = process.env.STRIPE_PRICE_ID_PRO;
-  const enterprisePriceId = process.env.STRIPE_PRICE_ID_ENTERPRISE;
+  // Check against all possible price IDs (Monthly and Yearly)
+  const basicMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY;
+  const basicYearly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY;
+  const proMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY;
+  const proYearly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_YEARLY;
+  const enterpriseMonthly =
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_MONTHLY;
+  const enterpriseYearly =
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_YEARLY;
 
-  if (priceId === basicPriceId) return "basic";
-  if (priceId === proPriceId) return "pro";
-  if (priceId === enterprisePriceId) return "enterprise";
+  // Also check legacy/simple env vars just in case
+  const basicSimple = process.env.STRIPE_PRICE_ID_BASIC;
+  const proSimple = process.env.STRIPE_PRICE_ID_PRO;
+  const enterpriseSimple = process.env.STRIPE_PRICE_ID_ENTERPRISE;
+
+  if (
+    priceId === basicMonthly ||
+    priceId === basicYearly ||
+    priceId === basicSimple
+  )
+    return "basic";
+  if (priceId === proMonthly || priceId === proYearly || priceId === proSimple)
+    return "pro";
+  if (
+    priceId === enterpriseMonthly ||
+    priceId === enterpriseYearly ||
+    priceId === enterpriseSimple
+  )
+    return "enterprise";
 
   // Default to basic if unknown
   console.warn(`Unknown price ID: ${priceId}, defaulting to basic`);
@@ -202,6 +216,10 @@ export async function upsertSubscriptionFromStripe(
   const priceId = stripeSubscription.items.data[0]?.price.id;
   const productId = stripeSubscription.items.data[0]?.price.product as string;
   const planType = getPlanTypeFromPriceId(priceId);
+
+  console.log(`🔍 upsertSubscriptionFromStripe called`);
+  console.log(`   Stripe subscription status: ${stripeSubscription.status}`);
+  console.log(`   Subscription ID: ${stripeSubscription.id}`);
 
   const subscriptionData = {
     userId,
@@ -229,11 +247,14 @@ export async function upsertSubscriptionFromStripe(
       : null,
   };
 
+  console.log(`   Prepared status for DB: ${subscriptionData.status}`);
+
   // Try to update existing subscription first
   const existing = await getSubscriptionByStripeId(stripeSubscription.id);
 
   if (existing) {
-    return await updateSubscriptionByStripeId(stripeSubscription.id, {
+    console.log(`   Existing subscription found, updating...`);
+    const result = await updateSubscriptionByStripeId(stripeSubscription.id, {
       status: subscriptionData.status,
       stripePriceId: subscriptionData.stripePriceId,
       planType: subscriptionData.planType,
@@ -244,9 +265,14 @@ export async function upsertSubscriptionFromStripe(
       trialStart: subscriptionData.trialStart,
       trialEnd: subscriptionData.trialEnd,
     });
+    console.log(`   ✅ Updated subscription with status: ${result.status}`);
+    return result;
   }
 
-  return await createSubscription(subscriptionData);
+  console.log(`   No existing subscription, creating new...`);
+  const result = await createSubscription(subscriptionData);
+  console.log(`   ✅ Created subscription with status: ${result.status}`);
+  return result;
 }
 
 /**
@@ -292,4 +318,295 @@ export async function markExpiredSubscriptionsAsCanceled() {
     failed,
     expiredSubscriptions,
   };
+}
+
+/**
+ * Start a free trial for a user
+ */
+export async function startFreeTrial(userId: string) {
+  try {
+    const trialDays = 14;
+    const freeTrialEndsAt = new Date();
+    freeTrialEndsAt.setDate(freeTrialEndsAt.getDate() + trialDays);
+
+    return await prisma.user.update({
+      where: { id: userId },
+      data: {
+        isFreeTrialUser: true,
+        freeTrialEndsAt,
+      } as any,
+    });
+  } catch (error) {
+    console.error(
+      "Failed to start free trial. Database migration may not be complete:",
+      error
+    );
+    throw new Error(
+      "Free Trial feature not available yet. Please run database migration."
+    );
+  }
+}
+
+/**
+ * Check if a user is on an active free trial
+ */
+export async function isUserOnFreeTrial(userId: string): Promise<boolean> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        isFreeTrialUser: true,
+        freeTrialEndsAt: true,
+      },
+    });
+
+    if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
+      return false;
+    }
+
+    const now = new Date();
+    return user.freeTrialEndsAt > now;
+  } catch (error) {
+    // If fields don't exist yet (migration not run), return false
+    console.warn(
+      "Free Trial fields not available yet. Run database migration."
+    );
+    return false;
+  }
+}
+
+/**
+ * Get remaining trial days for a user
+ */
+export async function getRemainingTrialDays(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        isFreeTrialUser: true,
+        freeTrialEndsAt: true,
+      } as any,
+    });
+
+    if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
+      return 0;
+    }
+
+    const now = new Date();
+    const freeTrialEndsAt = (user as any).freeTrialEndsAt;
+    const diffTime = freeTrialEndsAt.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return Math.max(0, diffDays);
+  } catch (error) {
+    console.warn(
+      "Free Trial fields not available yet. Run database migration."
+    );
+    return 0;
+  }
+}
+
+/**
+ * End a user's free trial
+ */
+export async function endFreeTrial(userId: string) {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: {
+      isFreeTrialUser: false,
+      freeTrialEndsAt: null,
+    },
+  });
+}
+
+/**
+ * Check if user has access (either subscribed or on free trial)
+ */
+export async function hasAccess(userId: string): Promise<boolean> {
+  const [hasSubscription, onFreeTrial] = await Promise.all([
+    hasActiveSubscription(userId),
+    isUserOnFreeTrial(userId),
+  ]);
+
+  return hasSubscription || onFreeTrial;
+}
+
+/**
+ * Get all expired free trials
+ */
+export async function getExpiredFreeTrials() {
+  const now = new Date();
+
+  return await prisma.user.findMany({
+    where: {
+      isFreeTrialUser: true,
+      freeTrialEndsAt: {
+        lt: now,
+      },
+    },
+  });
+}
+
+/**
+ * Mark expired free trials as ended
+ */
+export async function markExpiredFreeTrialsAsEnded() {
+  const expiredTrials = await getExpiredFreeTrials();
+
+  const results = await Promise.allSettled(
+    expiredTrials.map((user) => endFreeTrial(user.id))
+  );
+
+  const successful = results.filter((r) => r.status === "fulfilled").length;
+  const failed = results.filter((r) => r.status === "rejected").length;
+
+  return {
+    total: expiredTrials.length,
+    successful,
+    failed,
+    expiredTrials,
+  };
+}
+
+/**
+ * Get user's current note count
+ */
+export async function getUserNoteCount(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { noteCount: true },
+    });
+
+    return (user as any)?.noteCount || 0;
+  } catch (error) {
+    // If noteCount field doesn't exist yet, return 0
+    console.warn("noteCount field not available, returning 0");
+    return 0;
+  }
+}
+
+/**
+ * Get subscription limits for a user
+ */
+export async function getSubscriptionLimits(userId: string): Promise<{
+  maxNotes: number;
+  tier: PlanType | "free";
+  onFreeTrial: boolean;
+}> {
+  const [tier, onFreeTrial] = await Promise.all([
+    getUserSubscriptionTier(userId),
+    isUserOnFreeTrial(userId),
+  ]);
+
+  // Define limits based on tier
+  const limits: Record<PlanType | "free", number> = {
+    free: onFreeTrial ? 5 : 0, // Free trial gets 5 notes, otherwise 0
+    basic: 50,
+    pro: 500,
+    enterprise: Infinity,
+  };
+
+  return {
+    maxNotes: limits[tier],
+    tier,
+    onFreeTrial,
+  };
+}
+
+/**
+ * Check if user can create a note
+ */
+export async function canCreateNote(userId: string): Promise<{
+  canCreate: boolean;
+  reason?: string;
+  currentCount: number;
+  maxNotes: number;
+  tier: PlanType | "free";
+}> {
+  const [hasUserAccess, noteCount, limits] = await Promise.all([
+    hasAccess(userId),
+    getUserNoteCount(userId),
+    getSubscriptionLimits(userId),
+  ]);
+
+  console.log("🔍 canCreateNote Debug:", {
+    userId,
+    hasUserAccess,
+    noteCount,
+    limits,
+  });
+
+  // Check if user has access (subscription or trial)
+  if (!hasUserAccess) {
+    return {
+      canCreate: false,
+      reason: "You need an active subscription or free trial to create notes.",
+      currentCount: noteCount,
+      maxNotes: limits.maxNotes,
+      tier: limits.tier,
+    };
+  }
+
+  // Check if user has reached their limit
+  if (noteCount >= limits.maxNotes) {
+    return {
+      canCreate: false,
+      reason: `You've reached your ${limits.tier} plan limit of ${limits.maxNotes} notes. Upgrade to create more.`,
+      currentCount: noteCount,
+      maxNotes: limits.maxNotes,
+      tier: limits.tier,
+    };
+  }
+
+  return {
+    canCreate: true,
+    currentCount: noteCount,
+    maxNotes: limits.maxNotes,
+    tier: limits.tier,
+  };
+}
+
+/**
+ * Increment user's note count
+ */
+export async function incrementNoteCount(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        noteCount: {
+          increment: 1,
+        },
+      } as any,
+      select: { noteCount: true },
+    });
+
+    return (user as any).noteCount || 0;
+  } catch (error) {
+    console.warn("noteCount field not available, returning 0");
+    return 0;
+  }
+}
+
+/**
+ * Decrement user's note count (when deleting a note)
+ */
+export async function decrementNoteCount(userId: string): Promise<number> {
+  try {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        noteCount: {
+          decrement: 1,
+        },
+      } as any,
+      select: { noteCount: true },
+    });
+
+    return (user as any).noteCount || 0;
+  } catch (error) {
+    console.warn("noteCount field not available, returning 0");
+    return 0;
+  }
 }

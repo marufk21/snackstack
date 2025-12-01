@@ -21,14 +21,16 @@ export interface PricingTier {
   };
   features: string[];
   popular?: boolean;
-  stripePriceId: string;
+  stripePriceId: { monthly: string; yearly: string } | null;
+  isTrial?: boolean;
 }
 
 interface PricingCardProps {
   tier: PricingTier;
   isYearly: boolean;
-  onSelectPlan: (priceId: string, planName: string) => void;
+  onSelectPlan: (priceId: string | null, planName: string, isTrial?: boolean) => void;
   loading?: boolean;
+  currentPlanId?: string | null;
 }
 
 export function PricingCard({
@@ -36,11 +38,29 @@ export function PricingCard({
   isYearly,
   onSelectPlan,
   loading,
+  currentPlanId,
 }: PricingCardProps) {
   const price = isYearly ? tier.price.yearly : tier.price.monthly;
   const yearlyDiscount = isYearly
     ? Math.round((1 - tier.price.yearly / (tier.price.monthly * 12)) * 100)
     : 0;
+
+  const isCurrentPlan = currentPlanId === tier.id;
+  
+  // Simple logic to determine if upgrade or downgrade (assuming order in array is: free-trial, basic, pro, enterprise)
+  // Ideally we'd pass an index or weight, but string comparison works if we know the IDs
+  const planOrder = ["free-trial", "basic", "pro", "enterprise"];
+  const currentPlanIndex = planOrder.indexOf(currentPlanId || "free-trial");
+  const thisPlanIndex = planOrder.indexOf(tier.id);
+  
+  let buttonText = tier.isTrial ? "Start Free Trial" : `Choose ${tier.name}`;
+  if (isCurrentPlan) {
+    buttonText = "Current Plan";
+  } else if (currentPlanId && thisPlanIndex > currentPlanIndex) {
+    buttonText = `Upgrade to ${tier.name}`;
+  } else if (currentPlanId && thisPlanIndex < currentPlanIndex) {
+    buttonText = `Downgrade to ${tier.name}`;
+  }
 
   return (
     <Card
@@ -60,12 +80,18 @@ export function PricingCard({
         </CardDescription>
         <div className="mt-6">
           <div className="flex items-baseline justify-center">
-            <span className="text-5xl font-extrabold tracking-tight text-foreground">${price}</span>
-            <span className="text-muted-foreground ml-2 font-medium">
-              /{isYearly ? "year" : "month"}
-            </span>
+            {tier.isTrial ? (
+              <span className="text-5xl font-extrabold tracking-tight text-foreground">Free</span>
+            ) : (
+              <>
+                <span className="text-5xl font-extrabold tracking-tight text-foreground">₹{price.toLocaleString('en-IN')}</span>
+                <span className="text-muted-foreground ml-2 font-medium">
+                  /{isYearly ? "year" : "month"}
+                </span>
+              </>
+            )}
           </div>
-          {isYearly && yearlyDiscount > 0 && (
+          {!tier.isTrial && isYearly && yearlyDiscount > 0 && (
             <div className="mt-3">
               <Badge variant="secondary" className="text-xs bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
                 Save {yearlyDiscount}% yearly
@@ -95,10 +121,15 @@ export function PricingCard({
             : "bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 hover:border-violet-500/50 hover:bg-violet-50 dark:hover:bg-white/10 text-foreground"
           }`}
           variant={tier.popular ? "default" : "outline"}
-          onClick={() => onSelectPlan(tier.stripePriceId, tier.name)}
-          disabled={loading}
+          onClick={() => {
+            const priceId = tier.stripePriceId 
+              ? (isYearly ? tier.stripePriceId.yearly : tier.stripePriceId.monthly)
+              : null;
+            onSelectPlan(priceId, tier.name, tier.isTrial);
+          }}
+          disabled={loading || isCurrentPlan}
         >
-          {loading ? "Processing..." : `Choose ${tier.name}`}
+          {loading ? "Processing..." : buttonText}
         </Button>
       </CardFooter>
     </Card>
