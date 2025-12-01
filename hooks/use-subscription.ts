@@ -21,6 +21,7 @@ interface SubscriptionData {
   subscription?: {
     status: string;
     planType: string;
+    currentPeriodStart: string;
     currentPeriodEnd: string;
     cancelAtPeriodEnd: boolean;
   };

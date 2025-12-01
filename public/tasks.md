@@ -4,7 +4,6 @@
 - Resend/Nodemailer
 
 ## Authentication + Dashboard
-- Pricing/Subscription + Stripe
 
 ## F++
 - Performance/SEO/Test Case/*

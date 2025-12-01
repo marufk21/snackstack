@@ -18,12 +18,10 @@ import {
   AlertTriangle,
   Loader2,
   Clock,
-  FileText,
 } from "lucide-react";
 import Link from "next/link";
 import { SubscriptionEndedDialog } from "@/components/subscription/subscription-ended-dialog";
 import { useSubscription } from "@/hooks/use-subscription";
-import { NoteLimitIndicator } from "@/components/subscription/note-limit-indicator";
 
 // Disable static generation for this page
 export const dynamic = "force-dynamic";
@@ -43,7 +41,7 @@ export default function SubscriptionPage() {
 
   const [actionLoading, setActionLoading] = useState(false);
   const [showEndedDialog, setShowEndedDialog] = useState(
-    onFreeTrial && remainingTrialDays && remainingTrialDays <= 3
+    !!(onFreeTrial && remainingTrialDays && remainingTrialDays <= 3)
   );
   const [error, setError] = useState<string | null>(null); // Keep error state for other potential errors
 

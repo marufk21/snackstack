@@ -5,17 +5,17 @@ import { db as prisma } from "@/lib/database/client";
 
 export async function POST(req: NextRequest) {
   console.log("🔄 Direct SQL Sync API called");
-  
+
   try {
     // 1. Check authentication
     const session = await auth();
-    
+
     if (!session?.user?.email) {
       return NextResponse.json(
-        { 
+        {
           error: "Unauthorized",
-          details: "Please log in to sync your subscription"
-        }, 
+          details: "Please log in to sync your subscription",
+        },
         { status: 401 }
       );
     }
@@ -30,9 +30,9 @@ export async function POST(req: NextRequest) {
 
     if (!userResult || userResult.length === 0) {
       return NextResponse.json(
-        { 
+        {
           error: "User not found",
-          details: "Your account was not found in the database"
+          details: "Your account was not found in the database",
         },
         { status: 404 }
       );
@@ -49,9 +49,9 @@ export async function POST(req: NextRequest) {
 
     if (customers.data.length === 0) {
       return NextResponse.json(
-        { 
+        {
           error: "No Stripe customer found",
-          details: "You don't have a Stripe account yet."
+          details: "You don't have a Stripe account yet.",
         },
         { status: 404 }
       );
@@ -69,56 +69,70 @@ export async function POST(req: NextRequest) {
 
     if (subscriptions.data.length === 0) {
       return NextResponse.json(
-        { 
+        {
           error: "No subscriptions found",
-          details: "You don't have any subscriptions yet."
+          details: "You don't have any subscriptions yet.",
         },
         { status: 404 }
       );
     }
 
     // 5. Get active subscription
-    const activeSubId = subscriptions.data.find(
-      sub => sub.status === "active" || sub.status === "trialing"
-    )?.id || subscriptions.data[0].id;
+    const activeSubId =
+      subscriptions.data.find(
+        (sub) => sub.status === "active" || sub.status === "trialing"
+      )?.id || subscriptions.data[0].id;
 
     const activeSubscription = await stripe.subscriptions.retrieve(activeSubId);
-    console.log(`📊 Subscription: ${activeSubscription.id} - ${activeSubscription.status}`);
+    console.log(
+      `📊 Subscription: ${activeSubscription.id} - ${activeSubscription.status}`
+    );
 
     // 6. Extract data
     const sub = activeSubscription as any;
     const firstItem = sub.items?.data?.[0];
-    
+
     if (!firstItem) {
       throw new Error("No subscription items found");
     }
 
     const priceId = firstItem.price.id;
     const productId = firstItem.price.product;
-    
-    let planType = "basic";
-    if (priceId === process.env.STRIPE_PRICE_ID_PRO) {
-      planType = "pro";
-    } else if (priceId === process.env.STRIPE_PRICE_ID_ENTERPRISE) {
-      planType = "enterprise";
-    }
 
-    const periodStart = firstItem.current_period_start;
-    const periodEnd = firstItem.current_period_end;
-    
-    if (!periodStart || !periodEnd) {
-      throw new Error("Missing period timestamps");
+    const { getPlanTypeFromPriceId } = await import(
+      "@/lib/database/subscription"
+    );
+    const planType = getPlanTypeFromPriceId(priceId);
+
+    console.log("🔍 Subscription Object Keys:", Object.keys(sub));
+    console.log("🔍 Period Start:", sub.current_period_start);
+    console.log("🔍 Period End:", sub.current_period_end);
+
+    const periodStart =
+      sub.current_period_start || Math.floor(Date.now() / 1000);
+    const periodEnd =
+      sub.current_period_end ||
+      Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
+
+    if (!sub.current_period_start || !sub.current_period_end) {
+      console.warn("⚠️ Missing period timestamps, using fallbacks");
     }
 
     const currentPeriodStart = new Date(periodStart * 1000);
     const currentPeriodEnd = new Date(periodEnd * 1000);
     const cancelAtPeriodEnd = sub.cancel_at_period_end ?? false;
-    const canceledAt = sub.canceled_at ? new Date(sub.canceled_at * 1000) : null;
-    const trialStart = sub.trial_start ? new Date(sub.trial_start * 1000) : null;
+    const canceledAt = sub.canceled_at
+      ? new Date(sub.canceled_at * 1000)
+      : null;
+    const trialStart = sub.trial_start
+      ? new Date(sub.trial_start * 1000)
+      : null;
     const trialEnd = sub.trial_end ? new Date(sub.trial_end * 1000) : null;
 
     console.log(`✅ Plan: ${planType}, Status: ${activeSubscription.status}`);
-    console.log(`✅ Period: ${currentPeriodStart.toISOString()} to ${currentPeriodEnd.toISOString()}`);
+    console.log(
+      `✅ Period: ${currentPeriodStart.toISOString()} to ${currentPeriodEnd.toISOString()}`
+    );
 
     // 7. Update or create subscription using raw SQL
     const existingCheck = await prisma.$queryRaw<Array<{ id: string }>>`
@@ -169,8 +183,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 8. Update user's isSubscribed flag using raw SQL
-    const isActive = 
-      activeSubscription.status === "active" || 
+    const isActive =
+      activeSubscription.status === "active" ||
       activeSubscription.status === "trialing";
 
     await prisma.$executeRaw`
@@ -179,7 +193,9 @@ export async function POST(req: NextRequest) {
       WHERE id = ${userId}
     `;
 
-    console.log(`✅ User status updated: ${isActive ? "subscribed" : "not subscribed"}`);
+    console.log(
+      `✅ User status updated: ${isActive ? "subscribed" : "not subscribed"}`
+    );
 
     return NextResponse.json({
       success: true,
@@ -193,7 +209,7 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("\n❌ Error syncing subscription:", error);
-    
+
     return NextResponse.json(
       {
         error: "Failed to sync subscription",

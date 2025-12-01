@@ -8,9 +8,6 @@
     "start": "next start",
     "db:seed": "ts-node server/db/seed.ts",
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
-    "db:fix-email-verified": "ts-node scripts/add-email-verified-column.ts",
-    "db:fix-schema": "ts-node scripts/fix-database-schema-complete.ts",
-    "db:quick-fix": "ts-node scripts/quick-fix-schema.ts",
     "postinstall": "prisma generate --schema=server/db/schema.prisma"
   },
   "dependencies": {
@@ -74,6 +71,8 @@
     "@types/react-dom": "^19",
     "@types/three": "^0.180.0",
     "clsx": "^2.1.1",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "16.0.6",
     "framer-motion": "^12.23.12",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.12",

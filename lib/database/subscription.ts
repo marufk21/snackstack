@@ -140,9 +140,6 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const subscription = await getSubscriptionByUserId(userId);
 
   if (!subscription) {
-    console.log(
-      `🔍 hasActiveSubscription: No subscription found for ${userId}`
-    );
     return false;
   }
 
@@ -151,16 +148,6 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const isActive =
     subscription.status === "active" || subscription.status === "trialing";
   const notExpired = subscription.currentPeriodEnd > now;
-
-  console.log("🔍 hasActiveSubscription Debug:", {
-    id: subscription.id,
-    status: subscription.status,
-    isActive,
-    currentPeriodEnd: subscription.currentPeriodEnd,
-    now,
-    notExpired,
-    result: isActive && notExpired,
-  });
 
   return isActive && notExpired;
 }
@@ -184,13 +171,35 @@ export async function getUserSubscriptionTier(
  * Map Stripe price ID to plan type
  */
 export function getPlanTypeFromPriceId(priceId: string): PlanType {
-  const basicPriceId = process.env.STRIPE_PRICE_ID_BASIC;
-  const proPriceId = process.env.STRIPE_PRICE_ID_PRO;
-  const enterprisePriceId = process.env.STRIPE_PRICE_ID_ENTERPRISE;
+  // Check against all possible price IDs (Monthly and Yearly)
+  const basicMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY;
+  const basicYearly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY;
+  const proMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY;
+  const proYearly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_YEARLY;
+  const enterpriseMonthly =
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_MONTHLY;
+  const enterpriseYearly =
+    process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_YEARLY;
 
-  if (priceId === basicPriceId) return "basic";
-  if (priceId === proPriceId) return "pro";
-  if (priceId === enterprisePriceId) return "enterprise";
+  // Also check legacy/simple env vars just in case
+  const basicSimple = process.env.STRIPE_PRICE_ID_BASIC;
+  const proSimple = process.env.STRIPE_PRICE_ID_PRO;
+  const enterpriseSimple = process.env.STRIPE_PRICE_ID_ENTERPRISE;
+
+  if (
+    priceId === basicMonthly ||
+    priceId === basicYearly ||
+    priceId === basicSimple
+  )
+    return "basic";
+  if (priceId === proMonthly || priceId === proYearly || priceId === proSimple)
+    return "pro";
+  if (
+    priceId === enterpriseMonthly ||
+    priceId === enterpriseYearly ||
+    priceId === enterpriseSimple
+  )
+    return "enterprise";
 
   // Default to basic if unknown
   console.warn(`Unknown price ID: ${priceId}, defaulting to basic`);
@@ -348,7 +357,7 @@ export async function isUserOnFreeTrial(userId: string): Promise<boolean> {
       select: {
         isFreeTrialUser: true,
         freeTrialEndsAt: true,
-      } as any, // Use 'as any' to bypass TypeScript errors until migration
+      },
     });
 
     if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
@@ -384,7 +393,8 @@ export async function getRemainingTrialDays(userId: string): Promise<number> {
     }
 
     const now = new Date();
-    const diffTime = user.freeTrialEndsAt.getTime() - now.getTime();
+    const freeTrialEndsAt = (user as any).freeTrialEndsAt;
+    const diffTime = freeTrialEndsAt.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     return Math.max(0, diffDays);
@@ -465,10 +475,10 @@ export async function getUserNoteCount(userId: string): Promise<number> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { noteCount: true } as any,
+      select: { noteCount: true },
     });
 
-    return user?.noteCount || 0;
+    return (user as any)?.noteCount || 0;
   } catch (error) {
     // If noteCount field doesn't exist yet, return 0
     console.warn("noteCount field not available, returning 0");
@@ -569,10 +579,10 @@ export async function incrementNoteCount(userId: string): Promise<number> {
           increment: 1,
         },
       } as any,
-      select: { noteCount: true } as any,
+      select: { noteCount: true },
     });
 
-    return user.noteCount || 0;
+    return (user as any).noteCount || 0;
   } catch (error) {
     console.warn("noteCount field not available, returning 0");
     return 0;
@@ -591,10 +601,10 @@ export async function decrementNoteCount(userId: string): Promise<number> {
           decrement: 1,
         },
       } as any,
-      select: { noteCount: true } as any,
+      select: { noteCount: true },
     });
 
-    return user.noteCount || 0;
+    return (user as any).noteCount || 0;
   } catch (error) {
     console.warn("noteCount field not available, returning 0");
     return 0;

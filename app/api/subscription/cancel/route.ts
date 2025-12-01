@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         id: updatedSubscription.id,
         cancelAtPeriodEnd: updatedSubscription.cancel_at_period_end,
         currentPeriodEnd: new Date(
-          updatedSubscription.current_period_end * 1000
+          (updatedSubscription as any).current_period_end * 1000
         ).toISOString(),
       },
     });

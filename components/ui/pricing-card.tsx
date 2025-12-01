@@ -30,6 +30,7 @@ interface PricingCardProps {
   isYearly: boolean;
   onSelectPlan: (priceId: string | null, planName: string, isTrial?: boolean) => void;
   loading?: boolean;
+  currentPlanId?: string | null;
 }
 
 export function PricingCard({
@@ -37,11 +38,29 @@ export function PricingCard({
   isYearly,
   onSelectPlan,
   loading,
+  currentPlanId,
 }: PricingCardProps) {
   const price = isYearly ? tier.price.yearly : tier.price.monthly;
   const yearlyDiscount = isYearly
     ? Math.round((1 - tier.price.yearly / (tier.price.monthly * 12)) * 100)
     : 0;
+
+  const isCurrentPlan = currentPlanId === tier.id;
+  
+  // Simple logic to determine if upgrade or downgrade (assuming order in array is: free-trial, basic, pro, enterprise)
+  // Ideally we'd pass an index or weight, but string comparison works if we know the IDs
+  const planOrder = ["free-trial", "basic", "pro", "enterprise"];
+  const currentPlanIndex = planOrder.indexOf(currentPlanId || "free-trial");
+  const thisPlanIndex = planOrder.indexOf(tier.id);
+  
+  let buttonText = tier.isTrial ? "Start Free Trial" : `Choose ${tier.name}`;
+  if (isCurrentPlan) {
+    buttonText = "Current Plan";
+  } else if (currentPlanId && thisPlanIndex > currentPlanIndex) {
+    buttonText = `Upgrade to ${tier.name}`;
+  } else if (currentPlanId && thisPlanIndex < currentPlanIndex) {
+    buttonText = `Downgrade to ${tier.name}`;
+  }
 
   return (
     <Card
@@ -108,9 +127,9 @@ export function PricingCard({
               : null;
             onSelectPlan(priceId, tier.name, tier.isTrial);
           }}
-          disabled={loading}
+          disabled={loading || isCurrentPlan}
         >
-          {loading ? "Processing..." : tier.isTrial ? "Start Free Trial" : `Choose ${tier.name}`}
+          {loading ? "Processing..." : buttonText}
         </Button>
       </CardFooter>
     </Card>

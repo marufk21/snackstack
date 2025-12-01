@@ -14,13 +14,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { priceId } = await req.json();
+    const { priceId } = (await req.json()) as { priceId: string };
 
     if (!priceId) {
       return NextResponse.json(
         { error: "Price ID is required" },
         { status: 400 }
       );
+    }
+
+    // Check if user already has an active subscription
+    const { hasActiveSubscription, getSubscriptionByUserId } = await import(
+      "@/lib/database/subscription"
+    );
+    const isSubscribed = await hasActiveSubscription(user.id);
+
+    if (isSubscribed) {
+      const subscription = await getSubscriptionByUserId(user.id);
+
+      if (subscription?.stripeCustomerId) {
+        // Create a billing portal session for managing subscription
+        const portalSession = await stripe.billingPortal.sessions.create({
+          customer: subscription.stripeCustomerId,
+          return_url: `${
+            process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+          }/app/pricing`,
+        });
+
+        return NextResponse.json({ url: portalSession.url });
+      }
     }
 
     // Create Stripe checkout session

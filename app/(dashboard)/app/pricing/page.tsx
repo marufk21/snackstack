@@ -5,6 +5,7 @@ import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { stripePriceIds } from "@/config/stripe-client";
+import { useSubscription } from "@/hooks/use-subscription";
 
 const pricingTiers: PricingTier[] = [
   {
@@ -89,6 +90,7 @@ const pricingTiers: PricingTier[] = [
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
   const { redirectToCheckout, loading, error } = useStripeCheckout();
+  const { subscription } = useSubscription();
 
   const handleSelectPlan = async (
     priceId: string | null,
@@ -107,6 +109,10 @@ export default function PricingPage() {
 
     await redirectToCheckout(priceId);
   };
+
+  const currentPlanId =
+    subscription?.subscription?.planType ||
+    (subscription?.onFreeTrial ? "free-trial" : null);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -142,6 +148,7 @@ export default function PricingPage() {
             isYearly={isYearly}
             onSelectPlan={handleSelectPlan}
             loading={loading}
+            currentPlanId={currentPlanId}
           />
         ))}
       </div>
