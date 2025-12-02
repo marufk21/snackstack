@@ -289,6 +289,7 @@ export default function Navbar() {
                   <button
                     className="text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg p-2 mb-0.5"
                     onClick={() => setIsOpen(!isOpen)}
+                    aria-label="Toggle menu"
                   >
                     {isOpen ? <X size={22} /> : <Menu size={22} />}
                   </button>

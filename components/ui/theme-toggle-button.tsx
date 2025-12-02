@@ -26,7 +26,7 @@ export default function ThemeToggleButton({
       variant="ghost"
       size="icon"
       className="w-9 p-0 h-9 relative group text-muted-foreground hover:text-foreground hover:bg-accent"
-      name="Theme Toggle Button"
+      aria-label="Toggle theme"
     >
       <SunIcon className="size-[1rem] sm:size-[1.3rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
       <MoonIcon className="absolute size-[1rem] sm:size-[1.3rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />

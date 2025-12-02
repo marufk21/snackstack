@@ -1,3 +1,5 @@
+
+import "lenis/dist/lenis.css";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 

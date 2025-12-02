@@ -52,6 +52,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
             debug: false,
             disable_session_recording: true,
             disable_persistence: false,
+            opt_in_site_apps: false, // Disable site apps (surveys, etc) by default
             loaded: (posthog) => {
               posthog.debug(false);
             },

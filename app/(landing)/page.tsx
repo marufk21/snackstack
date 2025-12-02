@@ -4,11 +4,13 @@ import {
   Hero,
   About,
   Services,
-  Testimonials,
-  Pricing,
-  Contact,
   Footer,
 } from "@/components/landing";
+import dynamic from "next/dynamic";
+
+const Pricing = dynamic(() => import("@/components/landing/pricing"));
+const Testimonials = dynamic(() => import("@/components/landing/testimonials"));
+const Contact = dynamic(() => import("@/components/landing/contact"));
 
 const Page = () => {
   return (

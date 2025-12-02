@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js"; // Removed for dynamic import
 import { getStripePublishableKey } from "@/config/stripe-client";
 
 export function useStripeCheckout() {
@@ -45,6 +45,7 @@ export function useStripeCheckout() {
       const { sessionId } = data;
 
       // Redirect to Stripe Checkout
+      const { loadStripe } = await import("@stripe/stripe-js");
       const stripe = await loadStripe(getStripePublishableKey());
 
       if (!stripe) {

@@ -8,20 +8,27 @@ import { Linkedin, ArrowUp, Instagram, Youtube, Facebook } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-
 const TiktokIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
-    <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z"/>
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
   </svg>
 );
 
 const XIcon = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
-    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/>
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    className={className}
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
   </svg>
 );
-
-
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,7 +57,8 @@ const Footer = () => {
     if (!spacerRef.current || !textElementRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(textElementRef.current,
+      gsap.fromTo(
+        textElementRef.current,
         { y: "50%", opacity: 0.2, scale: 0.8 },
         {
           y: "0%",
@@ -62,7 +70,7 @@ const Footer = () => {
             start: "top bottom", // When top of spacer hits bottom of viewport
             end: "bottom bottom", // When bottom of spacer hits bottom of viewport
             scrub: 1,
-          }
+          },
         }
       );
     });
@@ -70,7 +78,10 @@ const Footer = () => {
     return () => ctx.revert();
   }, []);
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLinkClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
     if (href.startsWith("#")) {
       e.preventDefault();
 
@@ -83,7 +94,8 @@ const Footer = () => {
       if (element) {
         const navbarHeight = 100;
         const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - navbarHeight;
 
         const lenis = (window as any).lenis;
         if (lenis) {
@@ -124,7 +136,10 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 lg:pt-16 pb-6 md:pb-8 lg:pb-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 lg:gap-10 mb-6 md:mb-12 lg:mb-16">
             <div className="col-span-2 md:col-span-2 text-center md:text-left">
-              <Link href="/" className="flex items-center gap-2 mb-6 group justify-center md:justify-start">
+              <Link
+                href="/"
+                className="flex items-center gap-2 mb-6 group justify-center md:justify-start"
+              >
                 <div className="relative w-8 h-8 transition-transform group-hover:scale-110 duration-300">
                   <Image
                     src="/logo.svg"
@@ -138,17 +153,18 @@ const Footer = () => {
                 </span>
               </Link>
               <p className="text-muted-foreground max-w-sm leading-relaxed text-base mx-auto md:mx-0">
-                AI-powered note-taking for modern teams. Capture, organize, and enhance your ideas with the power of artificial intelligence.
+                AI-powered note-taking for modern teams. Capture, organize, and
+                enhance your ideas with the power of artificial intelligence.
               </p>
 
               <div className="flex flex-wrap gap-3 mt-8 justify-center md:justify-start">
                 {[
-                  { icon: Instagram, label: 'Instagram' },
-                  { icon: TiktokIcon, label: 'TikTok' },
-                  { icon: Youtube, label: 'YouTube' },
-                  { icon: Facebook, label: 'Facebook' },
-                  { icon: XIcon, label: 'X' },
-                  { icon: Linkedin, label: 'LinkedIn' },
+                  { icon: Instagram, label: "Instagram" },
+                  { icon: TiktokIcon, label: "TikTok" },
+                  { icon: Youtube, label: "YouTube" },
+                  { icon: Facebook, label: "Facebook" },
+                  { icon: XIcon, label: "X" },
+                  { icon: Linkedin, label: "LinkedIn" },
                 ].map(({ icon: Icon, label }) => (
                   <a
                     key={label}
@@ -166,11 +182,18 @@ const Footer = () => {
             <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-6">Product</h4>
               <ul className="space-y-4 text-sm text-muted-foreground">
-                {['About', 'Pricing', 'Testimonials', 'Blog'].map((item) => (
+                {["About", "Pricing", "Testimonials", "Blog"].map((item) => (
                   <li key={item}>
                     <Link
-                      href={item === 'Blog' ? '/blogs' : `#${item.toLowerCase()}`}
-                      onClick={(e) => handleLinkClick(e, item === 'Blog' ? '/blogs' : `#${item.toLowerCase()}`)}
+                      href={
+                        item === "Blog" ? "/blogs" : `#${item.toLowerCase()}`
+                      }
+                      onClick={(e) =>
+                        handleLinkClick(
+                          e,
+                          item === "Blog" ? "/blogs" : `#${item.toLowerCase()}`
+                        )
+                      }
                       className="hover:text-violet-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-violet-600 after:transition-all hover:after:w-full"
                     >
                       {item}
@@ -183,9 +206,20 @@ const Footer = () => {
             <div className="text-center md:text-left">
               <h4 className="font-semibold text-foreground mb-6">Company</h4>
               <ul className="space-y-4 text-sm text-muted-foreground">
-                {['Terms of Service', 'Privacy Policy', 'Contact', 'Sitemap',  ].map((item) => {
-                  const isPlaceholder = item === 'Privacy Policy' || item === 'Terms of Service';
-                  const href = item === 'Sitemap' ? '/sitemap.xml' : item === 'Contact' ? '#contact' : '#';
+                {[
+                  "Terms of Service",
+                  "Privacy Policy",
+                  "Contact",
+                  "Sitemap",
+                ].map((item) => {
+                  const isPlaceholder =
+                    item === "Privacy Policy" || item === "Terms of Service";
+                  const href =
+                    item === "Sitemap"
+                      ? "/sitemap.xml"
+                      : item === "Contact"
+                      ? "#contact"
+                      : "#";
                   return (
                     <li key={item}>
                       <Link
@@ -255,12 +289,12 @@ const Footer = () => {
         </div>
 
         <div className="w-full h-full flex justify-center items-end pt-8 md:pt-12 lg:pt-12 pb-2 md:pb-6 lg:pb-10">
-          <h1
+          <div
             ref={textElementRef}
             className="text-[16vw] font-black leading-[0.75] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/10 to-foreground/0 select-none pointer-events-none translate-y-2 md:translate-y-4"
           >
             SNACKSTACK
-          </h1>
+          </div>
         </div>
       </div>
     </>

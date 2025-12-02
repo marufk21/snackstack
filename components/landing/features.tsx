@@ -2,13 +2,7 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import {
-  Sparkles,
-  Brain,
-  FileText,
-  ArrowRight,
-  Wand2,
-} from "lucide-react";
+import { Sparkles, Brain, FileText, ArrowRight, Wand2 } from "lucide-react";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -107,8 +101,12 @@ const Features = () => {
   }, []);
 
   return (
-    <section ref={containerRef} className="relative w-full overflow-hidden bg-background z-0">
+    <section
+      ref={containerRef}
+      className="relative w-full overflow-hidden bg-background z-0"
+    >
       <div ref={trackRef} className="flex w-fit h-screen">
+        <h2 className="sr-only">Features</h2>
         {/* Feature Slides */}
         {services.map((service, index) => (
           <div
@@ -160,7 +158,9 @@ const Features = () => {
                     fill
                     className="object-cover"
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-10 mix-blend-overlay`} />
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-10 mix-blend-overlay`}
+                  />
                 </div>
               </div>
             </div>
@@ -172,4 +172,3 @@ const Features = () => {
 };
 
 export default Features;
-

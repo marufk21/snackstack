@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
       "@radix-ui/react-tabs",
       "@radix-ui/react-tooltip",
       "@tanstack/react-query",
+      "gsap",
+      "@stripe/stripe-js",
+      "posthog-js",
+      "framer-motion",
     ],
   },
 
@@ -48,6 +52,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
   async headers() {
     return [
       {
@@ -73,6 +78,16 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      {
+        // Cache PostHog static assets for 1 year
+        source: "/ingest/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
