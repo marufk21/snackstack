@@ -67,8 +67,78 @@ export default async function BlogsPage() {
     blogs = [];
   }
 
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.NODE_ENV === "development"
+      ? "http://localhost:3001"
+      : "https://localhost:3000");
+
+  const normalizedBaseUrl =
+    process.env.NODE_ENV === "production"
+      ? baseUrl?.startsWith("https://")
+        ? baseUrl
+        : `https://${baseUrl?.replace(/^https?:\/\//, "")}`
+      : baseUrl;
+
+  // Helper function to generate slug
+  const generateSlug = (title: string): string => {
+    return (
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .substring(0, 50) || "untitled"
+    );
+  };
+
+  // BreadcrumbList structured data
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: normalizedBaseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${normalizedBaseUrl}/blogs`,
+      },
+    ],
+  };
+
+  // ItemList structured data for blog listing
+  const publishedBlogs = blogs.filter((blog) => blog.status === "published");
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: publishedBlogs.map((blog, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      url: `${normalizedBaseUrl}/blogs/blog-details/${generateSlug(blog.title)}-${blog.id}`,
+      name: blog.title,
+    })),
+  };
+
   return (
-    <section className="relative pt-24 pb-12 md:py-20 min-h-screen overflow-hidden" style={{
+    <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+
+      <section className="relative pt-24 pb-12 md:py-20 min-h-screen overflow-hidden" style={{
       background: `
         radial-gradient(
           circle at center,
@@ -104,5 +174,6 @@ export default async function BlogsPage() {
         </div>
       </div>
     </section>
+    </>
   );
 }

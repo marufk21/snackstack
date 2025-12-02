@@ -12,6 +12,15 @@ import { DashboardHeaderTitle } from "@/components/dashboard/dashboard-header-ti
 export const metadata: Metadata = {
   title: "Notes - SnackStack",
   description: "AI-powered note editor with markdown support",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
 };
 
 export default function NotesLayout({

@@ -214,6 +214,33 @@ export default async function BlogDetailsPage({
   const blogSlug = generateSlug(blog.title);
   const canonicalUrl = `${normalizedBaseUrl}/blogs/blog-details/${blogSlug}-${blog.id}`;
 
+  // BreadcrumbList structured data
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: normalizedBaseUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: `${normalizedBaseUrl}/blogs`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: blog.title,
+        item: canonicalUrl,
+      },
+    ],
+  };
+
+  // Article structured data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -221,6 +248,7 @@ export default async function BlogDetailsPage({
     description: blog.excerpt,
     image: blog.coverImage,
     datePublished: blog.date,
+    dateModified: blog.date,
     author: {
       "@type": "Person",
       name: blog.author,
@@ -230,7 +258,7 @@ export default async function BlogDetailsPage({
       name: "SnackStack",
       logo: {
         "@type": "ImageObject",
-        url: `${normalizedBaseUrl}/logo.png`,
+        url: `${normalizedBaseUrl}/logo.svg`,
       },
     },
     mainEntityOfPage: {
@@ -239,11 +267,13 @@ export default async function BlogDetailsPage({
     },
   };
 
-
-
   return (
     <>
       {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

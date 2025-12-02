@@ -1,5 +1,13 @@
 import React from "react";
 import { Navbar } from "@/components/landing";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
 export default function LandingLayout({
   children,
@@ -13,4 +21,3 @@ export default function LandingLayout({
     </>
   );
 }
-
