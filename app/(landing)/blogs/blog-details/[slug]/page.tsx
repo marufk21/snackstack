@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 
 // Disable static generation for this page
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 // Generate metadata for SEO with canonical URLs and structured data
 export async function generateMetadata({
@@ -107,6 +107,30 @@ export async function generateMetadata({
       title: "Blog | SnackStack",
       description: "Read our latest blog posts and insights.",
     };
+  }
+}
+
+// Generate static params for all blogs
+export async function generateStaticParams() {
+  try {
+    const blogs = await getBlogs();
+    return blogs.map((blog) => {
+      const generateSlug = (title: string): string => {
+        return title
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, "")
+          .replace(/\s+/g, "-")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "")
+          .substring(0, 50) || "untitled";
+      };
+      return {
+        slug: `${generateSlug(blog.title)}-${blog.id}`,
+      };
+    });
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
   }
 }
 

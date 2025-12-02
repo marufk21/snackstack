@@ -58,7 +58,10 @@ export default function Navbar() {
   const { data: session } = useSession();
 
   // Show navbar only on landing pages (home and /blogs)
-  const shouldShowNavbar = pathname === "/" || pathname === "/blogs" || pathname?.startsWith("/blogs/");
+  const shouldShowNavbar =
+    pathname === "/" ||
+    pathname === "/blogs" ||
+    pathname?.startsWith("/blogs/");
   const isInAppRoutes = !shouldShowNavbar;
 
   // Handle scroll effect
@@ -178,14 +181,14 @@ export default function Navbar() {
         <div
           className={cn(
             "navbar fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out lg:mt-2.5",
-            scrolled ? "lg:mx-6 lg:my-3" : "my-3 lg:my-0"
+            scrolled ? "mx-2 my-2 lg:mx-6 lg:my-3" : "my-3 lg:my-0"
           )}
         >
           <div
             className={cn(
               "w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-600 ease-in-out",
               scrolled
-                ? "max-w-5xl py-2 bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl lg:rounded-full border border-gray-200/50 dark:border-white/10 shadow-lg dark:shadow-2xl supports-[backdrop-filter]:bg-white/60"
+                ? "max-w-5xl py-2 bg-white/70 dark:bg-gray-900/60 backdrop-blur-xl rounded-full border border-gray-200/50 dark:border-white/10 shadow-lg dark:shadow-2xl supports-[backdrop-filter]:bg-white/60"
                 : "max-w-8xl rounded-3xl border-none"
             )}
           >
@@ -200,13 +203,13 @@ export default function Navbar() {
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="flex items-center gap-3"
+                  className="flex items-center gap-1 sm:gap-3"
                 >
                   <div className="relative">
                     <div
                       className={cn(
                         "relative transition-all duration-500 ease-in-out",
-                        scrolled ? "w-8 h-8" : "w-11 h-11"
+                        scrolled ? "w-8 h-8" : "w-8 h-8 sm:w-10 sm:h-10"
                       )}
                     >
                       <Image
@@ -221,7 +224,7 @@ export default function Navbar() {
                     <span
                       className={cn(
                         "text-foreground font-bold transition-all duration-500 ease-in-out",
-                        scrolled ? "text-lg" : "text-2xl"
+                        scrolled ? "text-lg" : "text-xl sm:text-2xl"
                       )}
                     >
                       SnackStack
@@ -273,7 +276,9 @@ export default function Navbar() {
                     <Avatar className="w-8 h-8 cursor-pointer">
                       <AvatarImage src={session.user?.image || undefined} />
                       <AvatarFallback>
-                        {session.user?.name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
+                        {session.user?.name?.charAt(0)?.toUpperCase() || (
+                          <User className="w-4 h-4" />
+                        )}
                       </AvatarFallback>
                     </Avatar>
                   </Link>
@@ -303,7 +308,7 @@ export default function Navbar() {
                 className={cn(
                   "lg:hidden overflow-hidden backdrop-blur-sm border-t transition-all duration-500 ease-in-out",
                   scrolled
-                    ? "bg-white/90 dark:bg-gray-800/40 backdrop-blur-[50px] border-gray-200/60 dark:border-gray-700/30 mx-0.5 lg:mx-8 rounded-b-lg shadow-lg dark:shadow-2xl"
+                    ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border border-gray-200/50 dark:border-white/10 mt-2 rounded-2xl shadow-lg dark:shadow-2xl"
                     : "bg-gradient-to-r from-background/98 via-background/95 to-background/98 border-border"
                 )}
               >
@@ -343,7 +348,6 @@ export default function Navbar() {
       </div>
 
       {/* Spacer to prevent content from being hidden behind fixed navbar */}
-
     </>
   );
 }

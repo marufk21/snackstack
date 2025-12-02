@@ -36,6 +36,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import { QueryProvider } from "@/providers/query-provider";
 import { PostHogProvider } from "@/providers/posthog-provider";
 import { LenisProvider } from "@/providers/lenis-provider";
+import { FramerProvider } from "@/providers/framer-provider";
 import { NotificationContainer } from "@/components/ui/notification";
 import { RedirectHandler } from "@/components/auth/redirect-handler";
 import ErrorBoundary from "@/components/auth/error-boundary";
@@ -197,18 +198,20 @@ export default function RootLayout({
           <ErrorBoundary>
             <SessionProvider>
               <PostHogProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                >
-                  <QueryProvider>
-                    <RedirectHandler>
-                      {children}
-                      <NotificationContainer />
-                    </RedirectHandler>
-                  </QueryProvider>
-                </ThemeProvider>
+                <FramerProvider>
+                  <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                  >
+                    <QueryProvider>
+                      <RedirectHandler>
+                        {children}
+                        <NotificationContainer />
+                      </RedirectHandler>
+                    </QueryProvider>
+                  </ThemeProvider>
+                </FramerProvider>
               </PostHogProvider>
             </SessionProvider>
           </ErrorBoundary>

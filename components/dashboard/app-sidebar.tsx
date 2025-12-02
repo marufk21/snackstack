@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Home,
@@ -75,11 +76,14 @@ export function AppSidebar() {
     >
       <SidebarHeader className="border-b border-purple-300/40 dark:border-white/5 h-14 md:h-16 flex items-center">
         <div className="flex items-center gap-4 px-2 overflow-hidden w-full group-data-[collapsible=icon]:justify-center">
-          <div className="flex items-center justify-center w-8 h-8 shrink-0 mt-2">
-            <img
+          <div className="relative flex items-center justify-center w-8 h-8 shrink-0 mt-2">
+            <Image
               src="/logo.svg"
               alt="SnackStack Logo"
+              width={32}
+              height={32}
               className="w-full h-full"
+              priority
             />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden transition-all duration-300 ease-in-out opacity-100 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0">

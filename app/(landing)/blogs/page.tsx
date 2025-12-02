@@ -3,7 +3,7 @@ import { Blog } from "@/lib/appwrite/config";
 import Blogs from "@/components/landing/blog-showcase";
 import { Metadata } from "next";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600; // Revalidate every hour
 
 // Generate metadata for SEO
 export async function generateMetadata(): Promise<Metadata> {

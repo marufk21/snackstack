@@ -6,7 +6,6 @@ import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { stripePriceIds } from "@/config/stripe-client";
 import { DollarSign } from "lucide-react";
-import Link from "next/link";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import PageWrapper from "./page-wrapper";
@@ -229,56 +228,7 @@ const Pricing = () => {
           ))}
         </div>
 
-        {/* FAQ Section */}
-        <div ref={faqRef} className="mt-8 md:mt-12 lg:mt-16">
-          <h3 className="text-2xl md:text-3xl font-bold text-center mb-6 md:mb-8 lg:mb-10">
-            Frequently Asked Questions
-          </h3>
-          <div className="grid md:grid-cols-2 gap-3 md:gap-4 lg:gap-5 max-w-4xl mx-auto">
-            <div className="space-y-6">
-              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
-                <h4 className="font-bold text-lg mb-3 text-foreground">
-                  Can I change my plan later?
-                </h4>
-                <p className="text-muted-foreground leading-relaxed">
-                  Yes! You can upgrade or downgrade your plan at any time.
-                  Changes will be prorated and reflected in your next billing
-                  cycle.
-                </p>
-              </div>
-              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
-                <h4 className="font-bold text-lg mb-3 text-foreground">
-                  What payment methods do you accept?
-                </h4>
-                <p className="text-muted-foreground leading-relaxed">
-                  We accept all major credit cards (Visa, MasterCard, American
-                  Express) and bank transfers for Enterprise plans.
-                </p>
-              </div>
-            </div>
-            <div className="space-y-6">
-              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
-                <h4 className="font-bold text-lg mb-3 text-foreground">
-                  Is there a free trial?
-                </h4>
-                <p className="text-muted-foreground leading-relaxed">
-                  Yes! All paid plans come with a 14-day free trial. No credit
-                  card required to start.
-                </p>
-              </div>
-              <div className="faq-item p-8 bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl hover:border-violet-500/30 transition-all duration-300 backdrop-blur-sm">
-                <h4 className="font-bold text-lg mb-3 text-foreground">
-                  Can I cancel anytime?
-                </h4>
-                <p className="text-muted-foreground leading-relaxed">
-                  Absolutely! You can cancel your subscription at any time. Your
-                  access will continue until the end of your current billing
-                  period.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+     
       </div>
     </PageWrapper>
   );

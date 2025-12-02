@@ -2,7 +2,14 @@
 
 import { useRef, useEffect } from "react";
 import Link from "next/link";
-// import Dither from "@/components/landing/dither";
+import dynamic from "next/dynamic";
+
+const Dither = dynamic(() => import("@/components/landing/dither"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-gradient-to-b from-violet-50 to-white dark:from-zinc-900 dark:to-black" />
+  ),
+});
 import MistBackground from "@/components/ui/mist-background";
 import { cn } from "@/lib/utils";
 import { useGSAP } from "@/hooks/use-gsap";
@@ -99,29 +106,25 @@ const Hero = () => {
       <div
         className="min-h-screen w-full bg-white dark:bg-black relative overflow-hidden transition-colors duration-500"
         style={{
-          backgroundColor: 'var(--background)',
-          minHeight: '100vh',
+          backgroundColor: "var(--background)",
+          minHeight: "100vh",
         }}
       >
         <MistBackground />
 
-       
-  
-
-
-  <div
-    className="absolute inset-0 z-0"
-    style={{
-      backgroundImage: `
+        <div
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `
         radial-gradient(circle, rgba(139,92,246,0.6) 1px, transparent 1px),
         radial-gradient(circle, rgba(59,130,246,0.4) 1px, transparent 1px),
         radial-gradient(circle, rgba(236,72,153,0.5) 1px, transparent 1px)
       `,
-      backgroundSize: "20px 20px, 40px 40px, 60px 60px",
-      backgroundPosition: "0 0, 10px 10px, 30px 30px",
-    }}
-  />
-     {/* Your Content/Components */}
+            backgroundSize: "20px 20px, 40px 40px, 60px 60px",
+            backgroundPosition: "0 0, 10px 10px, 30px 30px",
+          }}
+        />
+        {/* Your Content/Components */}
         <div
           ref={heroRef}
           className="relative z-10 min-h-screen flex items-center justify-center pt-12 md:py-16 lg:py-20"
@@ -185,7 +188,6 @@ const Hero = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </Link>
-
               </div>
             </div>
             {/* Right Side - Visual Element */}
@@ -378,13 +380,9 @@ const Hero = () => {
                 <div className="absolute bottom-20 left-10 w-40 h-40 rounded-full bg-indigo-500/20 blur-[80px] pointer-events-none" />
               </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
 
       <style jsx>{`
         @keyframes float {

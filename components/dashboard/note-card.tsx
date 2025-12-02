@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { type Note } from "@/server/api";
 import {
@@ -49,7 +50,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
           onClick();
         }
@@ -69,17 +70,22 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
             <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-1">
               {note.title}
             </h3>
-            <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
+            <Sparkles
+              className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110"
+              aria-hidden="true"
+            />
           </div>
         </div>
 
         {/* Image preview */}
         {note.imageUrl && (
-          <div className="mb-4 rounded-lg overflow-hidden border border-border/50 group-hover:border-border transition-all duration-300">
-            <img
+          <div className="relative mb-4 rounded-lg overflow-hidden border border-border/50 group-hover:border-border transition-all duration-300 h-32">
+            <Image
               src={note.imageUrl}
               alt="Note preview"
-              className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110"
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              unoptimized={note.imageUrl.includes("cloudinary")}
             />
           </div>
         )}
@@ -102,7 +108,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
         <div className="flex items-center gap-3 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
           <div className="flex items-center gap-1">
             <Clock className="w-3 h-3" />
-            <span>{isUpdated ? 'Updated' : 'Created'}</span>
+            <span>{isUpdated ? "Updated" : "Created"}</span>
           </div>
           <div className="flex items-center gap-1">
             <FileText className="w-3 h-3" />
@@ -116,14 +122,15 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
 
       {/* Side accent line based on content type */}
       <div
-        className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-500 ${note.imageUrl
+        className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-500 ${
+          note.imageUrl
             ? "bg-gradient-to-b from-purple-500 to-purple-600"
             : note.content.length > 1000
-              ? "bg-gradient-to-b from-green-500 to-green-600"
-              : note.content.length > 500
-                ? "bg-gradient-to-b from-blue-500 to-blue-600"
-                : "bg-gradient-to-b from-amber-500 to-amber-600"
-          } opacity-0 group-hover:opacity-100 group-hover:w-1.5`}
+            ? "bg-gradient-to-b from-green-500 to-green-600"
+            : note.content.length > 500
+            ? "bg-gradient-to-b from-blue-500 to-blue-600"
+            : "bg-gradient-to-b from-amber-500 to-amber-600"
+        } opacity-0 group-hover:opacity-100 group-hover:w-1.5`}
       />
     </Card>
   );

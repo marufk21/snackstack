@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +24,7 @@ import {
 import { Blog } from "@/lib/appwrite/config";
 import { getBlogs, deleteBlog } from "@/lib/appwrite/services";
 import { DeleteModal } from "@/components/landing/modal-delete";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Loader } from "@/components/ui/loader";
 
 export default function BlogsDashboard() {
@@ -87,7 +88,7 @@ export default function BlogsDashboard() {
   return (
     <>
       <main className="container mx-auto px-4 py-8 relative z-10">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -128,16 +129,22 @@ export default function BlogsDashboard() {
                         <tr>
                           <th className="px-6 py-4 font-medium">#</th>
                           <th className="px-6 py-4 font-medium">Title</th>
-                          <th className="px-6 py-4 font-medium hidden sm:table-cell">Author</th>
-                          <th className="px-6 py-4 font-medium hidden sm:table-cell">Date</th>
+                          <th className="px-6 py-4 font-medium hidden sm:table-cell">
+                            Author
+                          </th>
+                          <th className="px-6 py-4 font-medium hidden sm:table-cell">
+                            Date
+                          </th>
                           <th className="px-6 py-4 font-medium">Status</th>
-                          <th className="px-6 py-4 font-medium text-center">Actions</th>
+                          <th className="px-6 py-4 font-medium text-center">
+                            Actions
+                          </th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-gray-200/50 dark:divide-gray-700/50">
                         <AnimatePresence>
                           {blogs.length === 0 ? (
-                            <motion.tr
+                            <m.tr
                               initial={{ opacity: 0 }}
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}
@@ -150,13 +157,15 @@ export default function BlogsDashboard() {
                                   <div className="rounded-full bg-gray-100 p-3 dark:bg-gray-800">
                                     <FileText className="h-6 w-6 text-gray-400" />
                                   </div>
-                                  <p>No blogs found. Create your first blog post!</p>
+                                  <p>
+                                    No blogs found. Create your first blog post!
+                                  </p>
                                 </div>
                               </td>
-                            </motion.tr>
+                            </m.tr>
                           ) : (
                             blogs.map((blog, index) => (
-                              <motion.tr
+                              <m.tr
                                 key={blog.id}
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -169,9 +178,17 @@ export default function BlogsDashboard() {
                                 </td>
                                 <td className="px-6 py-4">
                                   <div className="flex items-center gap-3">
-                                    <div className="h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                    <div className="relative h-10 w-10 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0">
                                       {blog.coverImage ? (
-                                        <img src={blog.coverImage} alt="" className="h-full w-full object-cover" />
+                                        <Image
+                                          src={blog.coverImage}
+                                          alt=""
+                                          fill
+                                          className="object-cover"
+                                          unoptimized={blog.coverImage.includes(
+                                            "appwrite"
+                                          )}
+                                        />
                                       ) : (
                                         <FileText className="h-5 w-5 text-gray-400" />
                                       )}
@@ -195,15 +212,23 @@ export default function BlogsDashboard() {
                                 </td>
                                 <td className="px-6 py-4">
                                   <span
-                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize border ${blog.status === "published"
-                                      ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-900/30"
-                                      : blog.status === "draft"
+                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize border ${
+                                      blog.status === "published"
+                                        ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-900/30"
+                                        : blog.status === "draft"
                                         ? "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-400 dark:border-yellow-900/30"
                                         : "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700"
-                                      }`}
+                                    }`}
                                   >
-                                    <span className={`mr-1.5 h-1.5 w-1.5 rounded-full ${blog.status === "published" ? "bg-green-500" : blog.status === "draft" ? "bg-yellow-500" : "bg-gray-500"
-                                      }`} />
+                                    <span
+                                      className={`mr-1.5 h-1.5 w-1.5 rounded-full ${
+                                        blog.status === "published"
+                                          ? "bg-green-500"
+                                          : blog.status === "draft"
+                                          ? "bg-yellow-500"
+                                          : "bg-gray-500"
+                                      }`}
+                                    />
                                     {blog.status}
                                   </span>
                                 </td>
@@ -246,7 +271,7 @@ export default function BlogsDashboard() {
                                     </Button>
                                   </div>
                                 </td>
-                              </motion.tr>
+                              </m.tr>
                             ))
                           )}
                         </AnimatePresence>
@@ -257,7 +282,7 @@ export default function BlogsDashboard() {
               </Card>
             </TabsContent>
           </Tabs>
-        </motion.div>
+        </m.div>
       </main>
 
       <DeleteModal

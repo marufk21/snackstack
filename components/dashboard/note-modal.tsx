@@ -1,13 +1,27 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateNote, deleteNote, type Note, generateAiSuggestion } from "@/server/api";
+import {
+  updateNote,
+  deleteNote,
+  type Note,
+  generateAiSuggestion,
+} from "@/server/api";
 import { useAppStore } from "@/stores/use-app-store";
-import { X, Loader2, ImageIcon, Wand2, Type, Sparkles, Trash2 } from "lucide-react";
+import {
+  X,
+  Loader2,
+  ImageIcon,
+  Wand2,
+  Type,
+  Sparkles,
+  Trash2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useImageUpload } from "@/hooks/use-image-upload";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 interface NoteViewModalProps {
   note: Note | null;
@@ -26,7 +40,9 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeAiAction, setActiveAiAction] = useState<"improve" | "continue" | "summarize" | null>(null);
+  const [activeAiAction, setActiveAiAction] = useState<
+    "improve" | "continue" | "summarize" | null
+  >(null);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -46,7 +62,10 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
     }
   }, [note]);
 
-  const showNotification = (message: string, type: Notification["type"] = "success") => {
+  const showNotification = (
+    message: string,
+    type: Notification["type"] = "success"
+  ) => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 3000);
   };
@@ -206,7 +225,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -215,7 +234,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             if (e.target === e.currentTarget) onClose();
           }}
         >
-          <motion.div
+          <m.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -226,11 +245,13 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             <div className="flex-1 overflow-y-auto overflow-x-hidden">
               {/* Cover Image */}
               {imageUrl && (
-                <div className="relative w-full group">
-                  <img
+                <div className="relative w-full h-48 group">
+                  <Image
                     src={imageUrl}
                     alt="Cover"
-                    className="w-full h-48 object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized={imageUrl.includes("cloudinary")}
                   />
                   <button
                     className="absolute top-2 right-2 h-8 w-8 rounded-full bg-black/20 hover:bg-black/40 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
@@ -407,14 +428,14 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             {/* Delete Confirmation Dialog */}
             <AnimatePresence>
               {showDeleteConfirm && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="absolute inset-0 bg-black/50 flex items-center justify-center z-[60] rounded-xl"
                   onClick={() => setShowDeleteConfirm(false)}
                 >
-                  <motion.div
+                  <m.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.9, opacity: 0 }}
@@ -430,7 +451,8 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                           Delete Note?
                         </h3>
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                          This action cannot be undone. This will permanently delete your note.
+                          This action cannot be undone. This will permanently
+                          delete your note.
                         </p>
                       </div>
                     </div>
@@ -459,26 +481,26 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                         )}
                       </button>
                     </div>
-                  </motion.div>
-                </motion.div>
+                  </m.div>
+                </m.div>
               )}
             </AnimatePresence>
 
             {/* Notification Toast */}
             <AnimatePresence>
               {notification && (
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   className="fixed top-4 right-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-4 py-2 rounded-lg shadow-lg text-sm font-medium z-[60]"
                 >
                   {notification.message}
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
       )}
     </AnimatePresence>
   );
