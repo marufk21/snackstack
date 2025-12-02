@@ -162,16 +162,17 @@ export default function PricingPage() {
         ))}
       </div>
 
-
       {/* Contact Section with enhanced styling */}
       <div className="mt-16 md:mt-20 text-center animate-fade-in-up animate-delay-400">
-        <div className="max-w-2xl mx-auto bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 dark:from-purple-500/20 dark:via-blue-500/20 dark:to-pink-500/20 rounded-2xl p-8 md:p-12 border border-purple-500/20">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Need a custom solution?</h2>
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">
+            Need a custom solution?
+          </h2>
           <p className="text-muted-foreground mb-6 md:mb-8 text-sm md:text-base leading-relaxed">
             Our Enterprise plan can be customized to fit your organization's
             specific needs.
           </p>
-          <button className="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl font-medium">
+          <button className="px-6 md:px-8 py-3 md:py-4 bg-primary text-primary-foreground hover:bg-primary/90 rounded-full transition-all duration-300 hover:scale-105 font-medium">
             Contact Sales
           </button>
         </div>

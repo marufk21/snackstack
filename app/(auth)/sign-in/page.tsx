@@ -48,7 +48,7 @@ export default function SignInPage() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="relative mb-6 h-16 w-16 overflow-hidden rounded-2xl bg-gradient-to-br from-purple-100 to-blue-100 p-3 shadow-inner dark:from-gray-800 dark:to-gray-900"
+                className="relative mb-6 h-16 w-16"
               >
                 <Image
                   src="/logo.svg"

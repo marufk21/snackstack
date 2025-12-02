@@ -33,19 +33,21 @@ export async function generateMetadata({
 
   // Helper function to generate slug
   const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "")
-      .substring(0, 50) || "untitled";
+    return (
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .substring(0, 50) || "untitled"
+    );
   };
 
   // Extract blog ID from slug parameter
   const slugParam = resolvedParams.slug;
-  const blogId = slugParam.includes('-')
-    ? slugParam.split('-').pop() || slugParam
+  const blogId = slugParam.includes("-")
+    ? slugParam.split("-").pop() || slugParam
     : slugParam;
 
   try {
@@ -78,11 +80,11 @@ export async function generateMetadata({
         authors: [blog.author],
         images: blog.coverImage
           ? [
-            {
-              url: blog.coverImage,
-              alt: blog.title,
-            },
-          ]
+              {
+                url: blog.coverImage,
+                alt: blog.title,
+              },
+            ]
           : undefined,
         locale: "en_US",
       },
@@ -116,13 +118,15 @@ export async function generateStaticParams() {
     const blogs = await getBlogs();
     return blogs.map((blog) => {
       const generateSlug = (title: string): string => {
-        return title
-          .toLowerCase()
-          .replace(/[^a-z0-9\s]/g, "")
-          .replace(/\s+/g, "-")
-          .replace(/-+/g, "-")
-          .replace(/^-|-$/g, "")
-          .substring(0, 50) || "untitled";
+        return (
+          title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "")
+            .substring(0, 50) || "untitled"
+        );
       };
       return {
         slug: `${generateSlug(blog.title)}-${blog.id}`,
@@ -144,9 +148,9 @@ export default async function BlogDetailsPage({
   // Extract blog ID from slug parameter
   // Slug format: "blog-title-slug-{id}" or just "{id}" for backward compatibility
   const slugParam = resolvedParams.slug;
-  const blogId = slugParam.includes('-')
-    ? slugParam.split('-').pop() || slugParam  // Get last part after last dash (the ID)
-    : slugParam;  // Use as-is if no dashes (backward compatibility)
+  const blogId = slugParam.includes("-")
+    ? slugParam.split("-").pop() || slugParam // Get last part after last dash (the ID)
+    : slugParam; // Use as-is if no dashes (backward compatibility)
 
   let blog: Blog | null = null;
   let nextBlog: Blog | null = null;
@@ -196,13 +200,15 @@ export default async function BlogDetailsPage({
 
   // Helper function to generate slug
   const generateSlug = (title: string): string => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "")
-      .substring(0, 50) || "untitled";
+    return (
+      title
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "")
+        .substring(0, 50) || "untitled"
+    );
   };
 
   const blogSlug = generateSlug(blog.title);
@@ -233,6 +239,8 @@ export default async function BlogDetailsPage({
     },
   };
 
+
+
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -241,8 +249,10 @@ export default async function BlogDetailsPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <section className="relative py-12 md:py-20 min-h-screen overflow-hidden" style={{
-        background: `
+      <section
+        className="relative pt-24 pb-12 md:py-20 min-h-screen overflow-hidden"
+        style={{
+          background: `
         radial-gradient(
           circle at center,
           rgba(168, 85, 247, 0.12) 0%,
@@ -250,7 +260,8 @@ export default async function BlogDetailsPage({
           rgba(0, 0, 0, 0.0) 60%
         )
       `,
-      }}>
+        }}
+      >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Back Button */}
           <Link
@@ -272,14 +283,16 @@ export default async function BlogDetailsPage({
             <div className="mt-16 border-t border-gray-200/50 dark:border-gray-800/50 pt-10 flex flex-col sm:flex-row justify-between gap-6">
               {prevBlog ? (
                 <Link
-                  href={`/blogs/blog-details/${generateSlug(prevBlog.title)}-${prevBlog.id}`}
-                  className="group flex flex-col gap-2 p-4 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-all border border-transparent hover:border-white/10 max-w-full sm:max-w-[45%]"
+                  href={`/blogs/blog-details/${generateSlug(prevBlog.title)}-${
+                    prevBlog.id
+                  }`}
+                  className="group flex flex-col gap-2 p-4 rounded-xl transition-all border border-transparent max-w-full sm:max-w-[45%]"
                 >
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     <ArrowLeftIcon className="h-3 w-3 group-hover:-translate-x-1 transition-transform" />
                     Previous Article
                   </span>
-                  <span className="text-sm sm:text-base font-semibold text-foreground line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  <span className="text-sm sm:text-base font-semibold text-foreground truncate w-full group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                     {prevBlog.title}
                   </span>
                 </Link>
@@ -289,14 +302,16 @@ export default async function BlogDetailsPage({
 
               {nextBlog && (
                 <Link
-                  href={`/blogs/blog-details/${generateSlug(nextBlog.title)}-${nextBlog.id}`}
-                  className="group flex flex-col gap-2 p-4 rounded-xl hover:bg-white/50 dark:hover:bg-white/5 transition-all border border-transparent hover:border-white/10 max-w-full sm:max-w-[45%] text-right items-end"
+                  href={`/blogs/blog-details/${generateSlug(nextBlog.title)}-${
+                    nextBlog.id
+                  }`}
+                  className="group flex flex-col gap-2 p-4 rounded-xl transition-all border border-transparent max-w-full sm:max-w-[45%] text-right items-end"
                 >
                   <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-2">
                     Next Article
                     <ArrowRightIcon className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                   </span>
-                  <span className="text-sm sm:text-base font-semibold text-foreground line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  <span className="text-sm sm:text-base font-semibold text-foreground truncate w-full group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                     {nextBlog.title}
                   </span>
                 </Link>

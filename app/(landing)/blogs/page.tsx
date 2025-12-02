@@ -68,7 +68,7 @@ export default async function BlogsPage() {
   }
 
   return (
-    <section className="relative py-12 md:py-20 min-h-screen overflow-hidden" style={{
+    <section className="relative pt-24 pb-12 md:py-20 min-h-screen overflow-hidden" style={{
       background: `
         radial-gradient(
           circle at center,

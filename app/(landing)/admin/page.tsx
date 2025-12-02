@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { EyeIcon, EyeOffIcon, ShieldCheck } from "lucide-react";
 
@@ -70,9 +71,15 @@ export default function AdminLogin() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="relative mb-6 h-16 w-16 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 p-3 shadow-inner flex items-center justify-center"
+                className="relative mb-6 h-16 w-16"
               >
-                <ShieldCheck className="h-8 w-8 text-white" />
+                <Image
+                  src="/logo.svg"
+                  alt="SnackStack Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
               </motion.div>
 
               <motion.h1

@@ -72,9 +72,9 @@ export function AppSidebar() {
           "--sidebar-width-icon": "3rem",
         } as React.CSSProperties
       }
-      className="border-r border-purple-300/40 dark:border-white/5 bg-white/90 dark:bg-black/40 backdrop-blur-2xl text-foreground shadow-xl shadow-purple-500/10"
+      className="border-r border-sidebar-border bg-sidebar/95 dark:bg-sidebar/90 backdrop-blur-2xl text-sidebar-foreground shadow-xl shadow-purple-500/5"
     >
-      <SidebarHeader className="border-b border-purple-300/40 dark:border-white/5 h-14 md:h-16 flex items-center">
+      <SidebarHeader className="border-b border-sidebar-border h-14 md:h-16 flex items-center">
         <div className="flex items-center gap-4 px-2 overflow-hidden w-full group-data-[collapsible=icon]:justify-center">
           <div className="relative flex items-center justify-center w-8 h-8 shrink-0 mt-2">
             <Image
@@ -87,10 +87,10 @@ export function AppSidebar() {
             />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden transition-all duration-300 ease-in-out opacity-100 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0">
-            <span className="text-white font-bold text-lg whitespace-nowrap">
+            <span className="text-zinc-900 dark:text-white font-bold text-lg whitespace-nowrap">
               SnackStack
             </span>
-            <span className="text-xs text-zinc-500 whitespace-nowrap">
+            <span className="text-xs text-zinc-600 dark:text-zinc-400 whitespace-nowrap">
               AI Notes
             </span>
           </div>
@@ -159,7 +159,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <div className="flex items-center justify-between px-2 py-2 group-data-[collapsible=icon]:justify-center hover:bg-purple-50 dark:hover:bg-white/5 rounded-md transition-colors cursor-pointer text-zinc-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white">
+                <div className="flex items-center justify-between px-2 py-2 group-data-[collapsible=icon]:justify-center rounded-md transition-colors text-zinc-600 dark:text-zinc-400">
                   <span className="text-sm group-data-[collapsible=icon]:hidden">
                     Theme
                   </span>
@@ -171,7 +171,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-purple-300/40 dark:border-white/5 mt-auto">
+      <SidebarFooter className="border-t border-sidebar-border mt-auto">
         <div className="p-2 space-y-2">
           {!session ? (
             <Link
@@ -194,10 +194,10 @@ export function AppSidebar() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-sm font-medium truncate text-zinc-200">
+                  <span className="text-sm font-medium truncate text-zinc-900 dark:text-zinc-200">
                     {session.user?.name || "Account"}
                   </span>
-                  <span className="text-xs text-zinc-500 truncate">
+                  <span className="text-xs text-zinc-600 dark:text-zinc-400 truncate">
                     {session.user?.email}
                   </span>
                 </div>
@@ -219,7 +219,7 @@ export function AppSidebar() {
                 variant="ghost"
                 size="icon"
                 onClick={handleSignOut}
-                className="shrink-0 group-data-[collapsible=icon]:hidden text-zinc-400 hover:text-white hover:bg-white/5"
+                className="shrink-0 group-data-[collapsible=icon]:hidden text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-white/5"
                 title="Sign Out"
                 aria-label="Sign out of your account"
               >

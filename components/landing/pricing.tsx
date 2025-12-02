@@ -9,6 +9,7 @@ import { DollarSign } from "lucide-react";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import PageWrapper from "./page-wrapper";
+import { useSession } from "next-auth/react";
 
 const pricingTiers: PricingTier[] = [
   {
@@ -163,7 +164,19 @@ const Pricing = () => {
     }
   }, []);
 
+  const { data: session } = useSession();
+
   const handleSelectPlan = async (priceId: string | null, planName: string, isTrial?: boolean) => {
+    if (!session) {
+      const params = new URLSearchParams();
+      if (priceId) params.append("priceId", priceId);
+      if (planName) params.append("planName", planName);
+      if (isTrial) params.append("trial", "true");
+      
+      window.location.href = `/sign-in?${params.toString()}`;
+      return;
+    }
+
     if (isTrial) {
       // For Free Trial, redirect to signup/dashboard without Stripe
       // TODO: Implement Free Trial signup flow
