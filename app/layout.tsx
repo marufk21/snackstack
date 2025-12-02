@@ -64,9 +64,7 @@ const siteConfig = {
     "blog management",
     "note-taking app",
   ],
-  authors: [
-    { name: "SnackStack Team", url: "https://github.com/marufk21" },
-  ],
+  authors: [{ name: "SnackStack Team", url: "https://github.com/marufk21" }],
   creator: "SnackStack",
   publisher: "SnackStack",
   twitter: {
@@ -104,16 +102,14 @@ export const metadata: Metadata = {
   authors: siteConfig.authors,
   creator: siteConfig.creator,
   publisher: siteConfig.publisher,
-  
+
   // Favicon and Icons
   icons: {
     icon: [
       { url: "/icon.svg", type: "image/svg+xml" },
       { url: "/favicon.ico", sizes: "any" },
     ],
-    apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
-    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
 
   // Manifest
@@ -192,12 +188,20 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable} ${geistMono.variable}`}
     >
-      <body className="antialiased bg-background" suppressHydrationWarning style={{ backgroundColor: 'var(--background)' }}>
+      <body
+        className="antialiased bg-background"
+        suppressHydrationWarning
+        style={{ backgroundColor: "var(--background)" }}
+      >
         <LenisProvider>
           <ErrorBoundary>
             <SessionProvider>
               <PostHogProvider>
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+                <ThemeProvider
+                  attribute="class"
+                  defaultTheme="system"
+                  enableSystem
+                >
                   <QueryProvider>
                     <RedirectHandler>
                       {children}

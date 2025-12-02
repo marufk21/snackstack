@@ -1,14 +1,23 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getNotes, createNote, type Note } from "@/server/api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { WelcomeHeader } from "@/components/ui/welcome-header";
 import { NoteCard } from "@/components/dashboard/note-card";
-import { NoteViewModal } from "@/components/dashboard/note-modal";
 import { Plus, Loader2, FileText, Sparkles } from "lucide-react";
+
+// Lazy load NoteViewModal (contains TipTap editor - heavy)
+const NoteViewModal = dynamic(
+  () =>
+    import("@/components/dashboard/note-modal").then((mod) => ({
+      default: mod.NoteViewModal,
+    })),
+  { ssr: false }
+);
 
 export default function NotesPage() {
   const queryClient = useQueryClient();
@@ -80,7 +89,7 @@ export default function NotesPage() {
     const errorMessage =
       error && typeof error === "object" && "response" in error
         ? (error as any).response?.data?.error ||
-        "Something went wrong while loading your notes."
+          "Something went wrong while loading your notes."
         : "Something went wrong while loading your notes.";
 
     return (
@@ -105,100 +114,105 @@ export default function NotesPage() {
 
   return (
     <div className="relative max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
-        {/* Welcome Header */}
-        <WelcomeHeader className="mb-8 md:mb-10" />
+      {/* Welcome Header */}
+      <WelcomeHeader className="mb-8 md:mb-10" />
 
-        {/* Notes Stats and Actions */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 md:mb-10 animate-fade-in-up animate-delay-100">
-          <div>
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-              My Notes
-              {notes.length > 0 && (
-                <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-purple-500" />
-              )}
-            </h2>
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
-              {notes.length > 0
-                ? `${notes.length} note${notes.length === 1 ? "" : "s"} with AI-powered insights`
-                : "No notes yet"}
-            </p>
-          </div>
-
-          <Button 
-            onClick={handleCreateNewNote} 
-            size="lg" 
-            className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            disabled={isCreatingNote}
-          >
-            {isCreatingNote ? (
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-            ) : (
-              <Plus className="w-5 h-5 mr-2" />
+      {/* Notes Stats and Actions */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 md:mb-10 animate-fade-in-up animate-delay-100">
+        <div>
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2">
+            My Notes
+            {notes.length > 0 && (
+              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-purple-500" />
             )}
-            {isCreatingNote ? "Creating..." : "New Note"}
-          </Button>
+          </h2>
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
+            {notes.length > 0
+              ? `${notes.length} note${
+                  notes.length === 1 ? "" : "s"
+                } with AI-powered insights`
+              : "No notes yet"}
+          </p>
         </div>
 
-        {/* Notes Grid */}
-        {notes.length === 0 ? (
-          <Card className="p-12 md:p-16 text-center animate-fade-in-up animate-delay-200 bg-gradient-to-br from-background to-muted/20 border-dashed border-2 hover:border-purple-500/50 transition-all duration-300">
-            <div className="max-w-md mx-auto">
-              <div className="relative inline-block mb-6">
-                <FileText className="w-20 h-20 md:w-24 md:h-24 text-muted-foreground/50" />
-                <Sparkles className="w-8 h-8 text-purple-500 absolute -top-2 -right-2 animate-pulse-glow" />
-              </div>
-              <h2 className="text-xl md:text-2xl font-semibold mb-3">No notes yet</h2>
-              <p className="text-muted-foreground mb-8 text-sm md:text-base leading-relaxed">
-                Create your first note to get started with your AI-powered
-                note-taking experience. Our AI will help you organize and enhance your ideas.
-              </p>
-              <Button 
-                onClick={handleCreateNewNote} 
-                size="lg"
-                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-                disabled={isCreatingNote}
-              >
-                {isCreatingNote ? (
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                ) : (
-                  <Plus className="w-5 h-5 mr-2" />
-                )}
-                {isCreatingNote ? "Creating..." : "Create First Note"}
-              </Button>
-            </div>
-          </Card>
-        ) : (
-          <>
-            {/* Modern Notes Grid with staggered animation */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-              {notes.map((note, index) => (
-                <div 
-                  key={note.id}
-                  className="animate-fade-in-up"
-                  style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
-                >
-                  <NoteCard
-                    note={note}
-                    onClick={() => {
-                      setSelectedNote(note);
-                      setIsModalOpen(true);
-                    }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Note View/Edit Modal */}
-            <NoteViewModal
-              note={selectedNote}
-              isOpen={isModalOpen}
-              onClose={() => {
-                setIsModalOpen(false);
-                setSelectedNote(null);
-              }}
-            />
-          </>
-        )}
+        <Button
+          onClick={handleCreateNewNote}
+          size="lg"
+          className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          disabled={isCreatingNote}
+        >
+          {isCreatingNote ? (
+            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+          ) : (
+            <Plus className="w-5 h-5 mr-2" />
+          )}
+          {isCreatingNote ? "Creating..." : "New Note"}
+        </Button>
       </div>
+
+      {/* Notes Grid */}
+      {notes.length === 0 ? (
+        <Card className="p-12 md:p-16 text-center animate-fade-in-up animate-delay-200 bg-gradient-to-br from-background to-muted/20 border-dashed border-2 hover:border-purple-500/50 transition-all duration-300">
+          <div className="max-w-md mx-auto">
+            <div className="relative inline-block mb-6">
+              <FileText className="w-20 h-20 md:w-24 md:h-24 text-muted-foreground/50" />
+              <Sparkles className="w-8 h-8 text-purple-500 absolute -top-2 -right-2 animate-pulse-glow" />
+            </div>
+            <h2 className="text-xl md:text-2xl font-semibold mb-3">
+              No notes yet
+            </h2>
+            <p className="text-muted-foreground mb-8 text-sm md:text-base leading-relaxed">
+              Create your first note to get started with your AI-powered
+              note-taking experience. Our AI will help you organize and enhance
+              your ideas.
+            </p>
+            <Button
+              onClick={handleCreateNewNote}
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              disabled={isCreatingNote}
+            >
+              {isCreatingNote ? (
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+              ) : (
+                <Plus className="w-5 h-5 mr-2" />
+              )}
+              {isCreatingNote ? "Creating..." : "Create First Note"}
+            </Button>
+          </div>
+        </Card>
+      ) : (
+        <>
+          {/* Modern Notes Grid with staggered animation */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            {notes.map((note, index) => (
+              <div
+                key={note.id}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${Math.min(index * 50, 400)}ms` }}
+              >
+                <NoteCard
+                  note={note}
+                  onClick={() => {
+                    setSelectedNote(note);
+                    setIsModalOpen(true);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Note View/Edit Modal */}
+          <NoteViewModal
+            note={selectedNote}
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setSelectedNote(null);
+            }}
+          />
+        </>
+      )}
+    </div>
   );
 }

@@ -2,12 +2,20 @@
 
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { IconBrandGoogle } from "@tabler/icons-react";
+import { Chrome } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 
-import MistBackground from "@/components/ui/mist-background";
+// Lazy load MistBackground component
+const MistBackground = dynamic(
+  () => import("@/components/ui/mist-background"),
+  {
+    ssr: false,
+    loading: () => <div className="fixed inset-0 bg-background" />,
+  }
+);
 
 export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +33,7 @@ export default function SignInPage() {
   return (
     <div className="relative flex min-h-screen w-full items-center justify-center overflow-hidden bg-background selection:bg-primary/20">
       <MistBackground />
-     
+
       <div className="relative z-10 w-full max-w-md px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -50,7 +58,7 @@ export default function SignInPage() {
                   priority
                 />
               </motion.div>
-              
+
               <motion.h1
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -59,7 +67,7 @@ export default function SignInPage() {
               >
                 Welcome back
               </motion.h1>
-              
+
               <motion.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -87,9 +95,11 @@ export default function SignInPage() {
                   {isLoading ? (
                     <div className="h-5 w-5 animate-spin rounded-full border-2 border-gray-900 border-t-transparent dark:border-white" />
                   ) : (
-                    <IconBrandGoogle className="h-5 w-5 text-gray-900 dark:text-white" />
+                    <Chrome className="h-5 w-5 text-gray-900 dark:text-white" />
                   )}
-                  <span>{isLoading ? "Signing in..." : "Continue with Google"}</span>
+                  <span>
+                    {isLoading ? "Signing in..." : "Continue with Google"}
+                  </span>
                 </div>
               </Button>
             </motion.div>
@@ -103,21 +113,27 @@ export default function SignInPage() {
             >
               <p className="text-center text-xs text-gray-500 dark:text-gray-400">
                 By clicking continue, you agree to our{" "}
-                <a href="#" className=" font-medium text-purple-500 hover:text-purple-500 dark:hover:text-purple-500 transition-colors">
+                <a
+                  href="#"
+                  className=" font-medium text-purple-500 hover:text-purple-500 dark:hover:text-purple-500 transition-colors"
+                >
                   Terms of Service
                 </a>{" "}
                 and{" "}
-                <a href="#" className=" font-medium text-purple-500 hover:text-purple-500 dark:hover:text-purple-500 transition-colors">
+                <a
+                  href="#"
+                  className=" font-medium text-purple-500 hover:text-purple-500 dark:hover:text-purple-500 transition-colors"
+                >
                   Privacy Policy
                 </a>
               </p>
             </motion.div>
           </div>
-          
+
           {/* Decorative bottom bar */}
           <div className="h-1.5 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500" />
         </motion.div>
-        
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

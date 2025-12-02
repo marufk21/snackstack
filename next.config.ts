@@ -1,7 +1,25 @@
 import type { NextConfig } from "next";
+// import withBundleAnalyzer from "@next/bundle-analyzer";
+
+// const bundleAnalyzer = withBundleAnalyzer({
+//   enabled: process.env.ANALYZE === "true",
+// });
 
 const nextConfig: NextConfig = {
   /* config options here */
+
+  // Enable package optimization for heavy dependencies
+  experimental: {
+    optimizePackageImports: [
+      "lucide-react",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-avatar",
+      "@radix-ui/react-tabs",
+      "@radix-ui/react-tooltip",
+      "@tanstack/react-query",
+    ],
+  },
+
   images: {
     remotePatterns: [
       {
@@ -77,3 +95,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+// export default bundleAnalyzer(nextConfig);

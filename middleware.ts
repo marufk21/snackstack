@@ -35,7 +35,6 @@ export default auth((req) => {
   }
 
   // If user is authenticated and on landing page, redirect to app
-  // If user is authenticated and on landing page, redirect to app
   if (isAuthenticated && pathname === "/") {
     const url = req.nextUrl.clone();
     url.pathname = "/app";
@@ -52,11 +51,7 @@ export default auth((req) => {
   return NextResponse.next();
 });
 
+// Reduce matcher scope to only necessary routes
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
-    "/(api|trpc)(.*)",
-  ],
+  matcher: ["/", "/app/:path*", "/sign-in", "/sign-up", "/admin"],
 };
