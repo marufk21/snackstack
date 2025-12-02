@@ -44,7 +44,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
 
   return (
     <Card
-      className={`group relative overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:z-10 ${cardBgClass}`}
+      className={`group relative overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10 dark:hover:shadow-purple-500/20 hover:scale-[1.03] hover:-translate-y-1 hover:z-10 ripple-effect ${cardBgClass}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -56,62 +56,74 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       }}
       aria-label={`Open note: ${note.title}`}
     >
-      {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/5 dark:from-black/0 dark:via-black/0 dark:to-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Animated gradient overlay on hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/10 dark:from-black/0 dark:via-black/0 dark:to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      {/* Glowing border effect on hover */}
+      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 blur-sm -z-10" />
 
       <div className="relative p-6 h-full flex flex-col">
         {/* Header */}
         <div className="mb-4">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-foreground transition-colors">
+            <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-foreground transition-all duration-300 group-hover:translate-x-1">
               {note.title}
             </h3>
-            <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70" aria-hidden="true" />
+            <Sparkles className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" aria-hidden="true" />
           </div>
         </div>
 
         {/* Image preview */}
         {note.imageUrl && (
-          <div className="mb-4 rounded-lg overflow-hidden border border-border/50">
+          <div className="mb-4 rounded-lg overflow-hidden border border-border/50 group-hover:border-border transition-all duration-300">
             <img
               src={note.imageUrl}
               alt="Note preview"
-              className="w-full h-32 object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110"
             />
           </div>
         )}
 
         {/* Content preview */}
         <div className="flex-1 mb-4">
-          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+          <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed transition-colors duration-300 group-hover:text-foreground/80">
             {preview}
             {preview.length >= 180 ? "..." : ""}
           </p>
         </div>
 
-        {/* AI Badge */}
-        <div className="inline-flex items-center gap-1 bg-purple-500/10 text-purple-700 dark:text-purple-300 text-xs px-2 py-1 rounded-full w-fit mb-3">
-          <Brain className="w-3 h-3" />
-          <span>AI-Powered</span>
+        {/* AI Badge with pulse animation */}
+        <div className="inline-flex items-center gap-1.5 bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-xs px-2.5 py-1.5 rounded-full w-fit mb-3 transition-all duration-300 group-hover:bg-purple-500/20 dark:group-hover:bg-purple-500/30 group-hover:scale-105">
+          <Brain className="w-3 h-3 group-hover:animate-pulse-glow" />
+          <span className="font-medium">AI-Powered</span>
         </div>
 
-        {/* Quick action buttons - show on hover */}
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0"></div>
+        {/* Metadata footer - show on hover */}
+        <div className="flex items-center gap-3 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+          <div className="flex items-center gap-1">
+            <Clock className="w-3 h-3" />
+            <span>{isUpdated ? 'Updated' : 'Created'}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <FileText className="w-3 h-3" />
+            <span>{note.content.length} chars</span>
+          </div>
+        </div>
 
         {/* Subtle corner decoration */}
-        <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-white/20 to-transparent dark:from-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-bl from-white/30 to-transparent dark:from-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* Side accent line based on content type */}
       <div
-        className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-300 ${note.imageUrl
+        className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-500 ${note.imageUrl
             ? "bg-gradient-to-b from-purple-500 to-purple-600"
             : note.content.length > 1000
               ? "bg-gradient-to-b from-green-500 to-green-600"
               : note.content.length > 500
                 ? "bg-gradient-to-b from-blue-500 to-blue-600"
                 : "bg-gradient-to-b from-amber-500 to-amber-600"
-          } opacity-0 group-hover:opacity-100`}
+          } opacity-0 group-hover:opacity-100 group-hover:w-1.5`}
       />
     </Card>
   );

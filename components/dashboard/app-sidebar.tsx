@@ -3,7 +3,16 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, FilePlus, CreditCard, CheckCircle, LogOut, User } from "lucide-react";
+import {
+  Home,
+  FilePlus,
+  CreditCard,
+  CheckCircle,
+  LogOut,
+  User,
+  Menu,
+  PanelLeft,
+} from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -19,6 +28,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
@@ -46,30 +56,48 @@ const navigationItems = [
 export function AppSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { toggleSidebar } = useSidebar();
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
   };
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border">
-        <div className="flex items-center gap-3 px-2 py-4">
-          <div className="bg-gradient-to-br from-purple-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg w-10 h-10">
-            <span className="text-white font-bold text-xl">S</span>
+    <Sidebar
+      collapsible="icon"
+      style={
+        {
+          "--sidebar-width": "14rem",
+          "--sidebar-width-icon": "3rem",
+        } as React.CSSProperties
+      }
+      className="border-r border-purple-300/40 dark:border-white/5 bg-white/90 dark:bg-black/40 backdrop-blur-2xl text-foreground shadow-xl shadow-purple-500/10"
+    >
+      <SidebarHeader className="border-b border-purple-300/40 dark:border-white/5 h-14 md:h-16 flex items-center">
+        <div className="flex items-center gap-4 px-2 overflow-hidden w-full group-data-[collapsible=icon]:justify-center">
+          <div className="flex items-center justify-center w-8 h-8 shrink-0 mt-2">
+            <img
+              src="/logo.svg"
+              alt="SnackStack Logo"
+              className="w-full h-full"
+            />
           </div>
-          <div className="flex flex-col">
-            <span className="text-foreground font-bold text-lg">
+          <div className="flex flex-col group-data-[collapsible=icon]:hidden transition-all duration-300 ease-in-out opacity-100 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:w-0">
+            <span className="text-white font-bold text-lg whitespace-nowrap">
               SnackStack
             </span>
-            <span className="text-xs text-muted-foreground">AI Notes</span>
+            <span className="text-xs text-zinc-500 whitespace-nowrap">
+              AI Notes
+            </span>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-zinc-500 dark:text-zinc-600">
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => {
@@ -79,10 +107,36 @@ export function AppSidebar() {
 
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive}>
-                      <Link href={item.url}>
-                        <item.icon />
-                        <span>{item.title}</span>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      className={`relative overflow-hidden transition-all duration-200 group-data-[collapsible=icon]:!p-2 ${
+                        isActive
+                          ? "bg-purple-100 dark:bg-white/5 text-purple-700 dark:text-white hover:bg-purple-100 dark:hover:bg-white/5 hover:text-purple-700 dark:hover:text-white"
+                          : "hover:bg-purple-50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-white"
+                      }`}
+                    >
+                      <Link
+                        href={item.url}
+                        className="flex items-center gap-3 w-full"
+                      >
+                        {isActive && (
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-gradient-to-b from-purple-600 to-blue-600 rounded-r-full shadow-[0_0_8px_rgba(124,58,237,0.4)]" />
+                        )}
+                        <item.icon
+                          className={`w-5 h-5 transition-colors ${
+                            isActive
+                              ? "text-purple-600 dark:text-white"
+                              : "text-zinc-500 dark:text-zinc-400 group-hover:text-purple-600 dark:group-hover:text-white"
+                          }`}
+                        />
+                        <span
+                          className={`transition-colors ${
+                            isActive ? "font-medium" : ""
+                          }`}
+                        >
+                          {item.title}
+                        </span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -92,15 +146,19 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator />
+        <SidebarSeparator className="bg-purple-300/40 dark:bg-white/5" />
 
         <SidebarGroup>
-          <SidebarGroupLabel>Settings</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-zinc-500 dark:text-zinc-600">
+            Settings
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <div className="flex items-center justify-between px-2 py-2">
-                  <span className="text-sm">Theme</span>
+                <div className="flex items-center justify-between px-2 py-2 group-data-[collapsible=icon]:justify-center hover:bg-purple-50 dark:hover:bg-white/5 rounded-md transition-colors cursor-pointer text-zinc-600 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-white">
+                  <span className="text-sm group-data-[collapsible=icon]:hidden">
+                    Theme
+                  </span>
                   <ThemeToggleButton />
                 </div>
               </SidebarMenuItem>
@@ -109,37 +167,55 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border mt-auto">
+      <SidebarFooter className="border-t border-purple-300/40 dark:border-white/5 mt-auto">
         <div className="p-2 space-y-2">
           {!session ? (
-            <Link href="/sign-in">
+            <Link
+              href="/sign-in"
+              className="group-data-[collapsible=icon]:hidden"
+            >
               <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
                 Sign In
               </Button>
             </Link>
           ) : (
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 flex-1 min-w-0">
-                <Avatar className="w-8 h-8">
+            <div className="flex items-center justify-between gap-2 group-data-[collapsible=icon]:justify-center">
+              <div className="flex items-center gap-2 flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
+                <Avatar className="w-8 h-8 border border-white/10">
                   <AvatarImage src={session.user?.image || undefined} />
-                  <AvatarFallback>
-                    {session.user?.name?.charAt(0)?.toUpperCase() || <User className="w-4 h-4" />}
+                  <AvatarFallback className="bg-zinc-800 text-zinc-400">
+                    {session.user?.name?.charAt(0)?.toUpperCase() || (
+                      <User className="w-4 h-4" />
+                    )}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-sm font-medium truncate">
+                  <span className="text-sm font-medium truncate text-zinc-200">
                     {session.user?.name || "Account"}
                   </span>
-                  <span className="text-xs text-muted-foreground truncate">
+                  <span className="text-xs text-zinc-500 truncate">
                     {session.user?.email}
                   </span>
                 </div>
               </div>
+
+              {/* Collapsed View User Icon */}
+              <div className="hidden group-data-[collapsible=icon]:flex items-center justify-center w-full">
+                <Avatar className="w-8 h-8 border border-white/10">
+                  <AvatarImage src={session.user?.image || undefined} />
+                  <AvatarFallback className="bg-zinc-800 text-zinc-400">
+                    {session.user?.name?.charAt(0)?.toUpperCase() || (
+                      <User className="w-4 h-4" />
+                    )}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleSignOut}
-                className="shrink-0"
+                className="shrink-0 group-data-[collapsible=icon]:hidden text-zinc-400 hover:text-white hover:bg-white/5"
                 title="Sign Out"
                 aria-label="Sign out of your account"
               >

@@ -64,7 +64,7 @@ export function PricingCard({
 
   return (
     <Card
-      className={`relative w-full h-full flex flex-col bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl rounded-3xl ${tier.popular ? "ring-2 ring-violet-500 shadow-lg scale-105 z-10" : "hover:-translate-y-1"
+      className={`relative w-full h-full flex flex-col bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl rounded-3xl overflow-visible ${tier.popular ? "ring-2 ring-violet-500 shadow-lg scale-105 z-20" : "hover:-translate-y-1"
         }`}
     >
       {tier.popular && (

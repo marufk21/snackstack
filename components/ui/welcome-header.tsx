@@ -27,16 +27,21 @@ export function WelcomeHeader({ className = "" }: WelcomeHeaderProps) {
   const firstName = session.user.name?.split(" ")[0] || "User";
 
   return (
-    <div className={`${className}`}>
-      <div className="flex items-center gap-2 mb-2">
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-          Welcome back, {firstName}! 👋
-        </h1>
-        <Sparkles className="w-5 h-5 text-purple-500" />
+    <div className={`relative ${className} animate-fade-in-up`}>
+      {/* Subtle gradient background */}
+      <div className="absolute -inset-4 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-pink-500/5 dark:from-purple-500/10 dark:via-blue-500/10 dark:to-pink-500/10 rounded-2xl blur-2xl -z-10 opacity-50" />
+
+      <div className="relative">
+        <div className="flex items-center gap-3 mb-2">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground transition-all duration-300">
+            Welcome back, <span className="gradient-text">{firstName}</span>! 👋
+          </h1>
+          <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-purple-500 animate-pulse-glow" />
+        </div>
+        <p className="text-sm md:text-base text-muted-foreground transition-colors duration-300">
+          Ready to capture and enhance your ideas with AI?
+        </p>
       </div>
-      <p className="text-muted-foreground">
-        Ready to capture and enhance your ideas with AI?
-      </p>
     </div>
   );
 }

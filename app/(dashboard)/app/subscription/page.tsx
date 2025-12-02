@@ -139,8 +139,11 @@ export default function SubscriptionPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="relative container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+          <span className="text-lg font-medium">Loading subscription...</span>
+        </div>
       </div>
     );
   }
@@ -198,16 +201,18 @@ export default function SubscriptionPage() {
   // Free Trial User
   if (subscriptionData?.onFreeTrial) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Free Trial</h1>
-          <p className="text-muted-foreground">
+      <div className="relative container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8 animate-fade-in-up">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 gradient-text">
+            Free Trial
+          </h1>
+          <p className="text-muted-foreground text-sm md:text-base">
             You're currently on a 14-day free trial of SnackStack.
           </p>
         </div>
 
-        <div className="grid gap-6">
-          <Card className="border-blue-200 dark:border-blue-800">
+        <div className="grid gap-6 animate-fade-in-up animate-delay-100">
+          <Card className="border-blue-200 dark:border-blue-800 hover:shadow-lg transition-all duration-300">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -246,7 +251,7 @@ export default function SubscriptionPage() {
               </div>
 
               <Link href="/app/pricing" className="block">
-                <Button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700">
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   Upgrade to Premium
                 </Button>
               </Link>
@@ -272,16 +277,18 @@ export default function SubscriptionPage() {
   // No Subscription (Free Plan) - but only show if not loading
   if (!loading && !subscriptionData?.hasSubscription) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Subscription</h1>
-          <p className="text-muted-foreground">
+      <div className="relative container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8 animate-fade-in-up">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2 gradient-text">
+            Subscription
+          </h1>
+          <p className="text-muted-foreground text-sm md:text-base">
             Manage your SnackStack subscription and billing information.
           </p>
         </div>
 
-        <div className="grid gap-6">
-          <Card>
+        <div className="grid gap-6 animate-fade-in-up animate-delay-100">
+          <Card className="hover:shadow-lg transition-all duration-300">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -337,7 +344,7 @@ export default function SubscriptionPage() {
               <div className="flex flex-col gap-4">
                 <div className="flex gap-4">
                   <Link href="/app/pricing" className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700">
+                    <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                       Upgrade to Premium
                     </Button>
                   </Link>
@@ -396,17 +403,19 @@ export default function SubscriptionPage() {
   const planPrice = getPlanPrice(subscription.planType);
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Subscription Management</h1>
-        <p className="text-muted-foreground">
+    <div className="relative container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-8 animate-fade-in-up">
+        <h1 className="text-3xl md:text-4xl font-bold mb-2 gradient-text">
+          Subscription Management
+        </h1>
+        <p className="text-muted-foreground text-sm md:text-base">
           Manage your SnackStack subscription and billing information.
         </p>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid gap-6 animate-fade-in-up animate-delay-100">
         {/* Current Plan */}
-        <Card>
+        <Card className="hover:shadow-lg transition-all duration-300">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -474,7 +483,7 @@ export default function SubscriptionPage() {
         </Card>
 
         {/* Actions */}
-        <Card>
+        <Card className="hover:shadow-lg transition-all duration-300 animate-fade-in-up animate-delay-200">
           <CardHeader>
             <CardTitle>Manage Subscription</CardTitle>
             <CardDescription>
