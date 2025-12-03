@@ -105,15 +105,6 @@ export const metadata: Metadata = {
   creator: siteConfig.creator,
   publisher: siteConfig.publisher,
 
-  // Favicon and Icons
-  icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-    ],
-    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-  },
-
   // Manifest
   manifest: "/manifest.json",
 
@@ -260,7 +251,7 @@ export default function RootLayout({
                 <FramerProvider>
                   <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
+                    defaultTheme="dark"
                     enableSystem
                   >
                     <QueryProvider>
