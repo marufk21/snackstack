@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadToCloudinary } from "@/lib/server/cloudinary";
-import { protectSubscriptionRoute } from "@/lib/utils/api-protection";
+import { protectApiRoute } from "@/lib/utils/api-protection";
 
 export async function POST(request: NextRequest) {
   try {
-    // In development mode, skip subscription check for easier testing
-    if (process.env.NODE_ENV !== "development") {
-      // Protect route - require active subscription for uploads in production
-      const { error, user, subscription } = await protectSubscriptionRoute();
-      if (error) return error;
-    }
+    // Protect route - require authentication only (no subscription needed)
+    const { error, user } = await protectApiRoute();
+    if (error) return error;
 
     // Check if Cloudinary environment variables are set
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
