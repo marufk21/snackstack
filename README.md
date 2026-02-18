@@ -7,6 +7,13 @@ AI-powered notes and blogging platform built with Next.js 15, featuring subscrip
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=flat-square&logo=tailwind-css)
 ![Prisma](https://img.shields.io/badge/Prisma-6.15-2D3748?style=flat-square&logo=prisma)
 
+## 🔗 Live Demo
+
+- 🌐 **Landing Page:** https://snackstack-gold.vercel.app/
+- 🛠️ **Admin Blog Management:** https://snackstack-gold.vercel.app/admin
+- 👤 **User Dashboard Login:** https://snackstack-gold.vercel.app/sign-in
+- 🗺️ **Sitemap:** https://snackstack-gold.vercel.app/sitemap.xml
+
 ## ✨ Features
 
 - 🧠 **AI-Powered Notes** - Intelligent content suggestions with Google Gemini API
