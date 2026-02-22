@@ -3,8 +3,19 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { getNotes, createNote, type Note } from "@/server/api";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
 import { WelcomeHeader } from "@/components/ui/welcome-header";
 import { NoteCard } from "@/components/dashboard/note-card";
@@ -21,9 +32,11 @@ const NoteViewModal = dynamic(
 
 export default function NotesPage() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreatingNote, setIsCreatingNote] = useState(false);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   // Fetch all notes
   const { data, isLoading, error, refetch } = useQuery({
@@ -57,9 +70,13 @@ export default function NotesPage() {
       setSelectedNote(newNote);
       setIsModalOpen(true);
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error("Error creating note:", error);
-      alert("Failed to create note. Please try again.");
+      if (error.response?.status === 403) {
+        setIsUpgradeModalOpen(true);
+      } else {
+        alert("Failed to create note. Please try again.");
+      }
     },
     onSettled: () => {
       setIsCreatingNote(false);
@@ -201,18 +218,47 @@ export default function NotesPage() {
               </div>
             ))}
           </div>
-
-          {/* Note View/Edit Modal */}
-          <NoteViewModal
-            note={selectedNote}
-            isOpen={isModalOpen}
-            onClose={() => {
-              setIsModalOpen(false);
-              setSelectedNote(null);
-            }}
-          />
         </>
       )}
+
+      {/* Note View/Edit Modal */}
+      <NoteViewModal
+        note={selectedNote}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedNote(null);
+        }}
+      />
+
+      {/* Upgrade Required Modal */}
+      <AlertDialog
+        open={isUpgradeModalOpen}
+        onOpenChange={setIsUpgradeModalOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-500" />
+              Note Limit Reached
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              You&apos;ve reached the limit of notes for your current plan.
+              Upgrade to a premium plan to create unlimited notes and unlock
+              advanced AI insights.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Maybe Later</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => router.push("/app/pricing")}
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+            >
+              View Plans
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

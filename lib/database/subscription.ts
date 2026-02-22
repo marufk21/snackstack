@@ -486,7 +486,7 @@ export async function getSubscriptionLimits(userId: string): Promise<{
 
   // Define limits based on tier
   const limits: Record<PlanType | "free", number> = {
-    free: onFreeTrial ? 5 : 0, // Free trial gets 5 notes, otherwise 0
+    free: onFreeTrial ? 5 : 3, // Everyone gets 3 notes free, trial gets 5
     basic: 50,
     pro: 500,
     enterprise: Infinity,

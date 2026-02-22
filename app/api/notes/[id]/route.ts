@@ -269,9 +269,15 @@ export async function DELETE(
       return NextResponse.json({ error: "Note not found" }, { status: 404 });
     }
 
-    // Delete the note
-    await db.note.delete({
-      where: { id: params.id },
+    // Delete the note and decrement count
+    await db.$transaction(async (tx) => {
+      await tx.note.delete({
+        where: { id: params.id },
+      });
+
+      // Decrement user's note count if the function exists
+      const { decrementNoteCount } = await import("@/lib/database/subscription");
+      await decrementNoteCount(dbUserId!);
     });
 
     return NextResponse.json({ message: "Note deleted successfully" });
