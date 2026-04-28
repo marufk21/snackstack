@@ -16,43 +16,14 @@ AI-powered notes and blogging platform built with Next.js 15, featuring subscrip
 
 ## 📸 Screenshots
 
-<table>
-  <tr>
-    <td colspan="2" align="center">
-      <b>🏠 Landing Page</b><br/><br/>
-      <img src="public/readme/Screenshot 2026-04-16 172220.png" width="100%" style="border-radius:8px"/>
-    </td>
-  </tr>
-  <tr><td colspan="2"><br/></td></tr>
-  <tr>
-    <td align="center" width="50%">
-      <b>📊 User Dashboard</b><br/><br/>
-      <img src="public/readme/Screenshot 2026-04-16 173038.png" width="100%" style="border-radius:8px"/>
-    </td>
-    <td align="center" width="50%">
-      <b>🤖 AI Note Assistant</b><br/><br/>
-      <img src="public/readme/Screenshot 2026-04-16 173141.png" width="100%" style="border-radius:8px"/>
-    </td>
-  </tr>
-  <tr><td colspan="2"><br/></td></tr>
-  <tr>
-    <td align="center" width="50%">
-      <b>💳 Pricing Plans</b><br/><br/>
-      <img src="public/readme/Screenshot 2026-04-16 172418.png" width="100%" style="border-radius:8px"/>
-    </td>
-    <td align="center" width="50%">
-      <b>📝 Blog Management</b><br/><br/>
-      <img src="public/readme/Screenshot 2026-04-16 174033.png" width="100%" style="border-radius:8px"/>
-    </td>
-  </tr>
-  <tr><td colspan="2"><br/></td></tr>
-  <tr>
-    <td colspan="2" align="center">
-      <b>✍️ Create Blog Post</b><br/><br/>
-      <img src="public/readme/Screenshot 2026-04-16 174056.png" width="80%" style="border-radius:8px"/>
-    </td>
-  </tr>
-</table>
+<div style="display:flex; gap:16px;">\
+    <img src="public/readme/Screenshot 2026-04-16 172220.png" width="19.65%" style="border-radius:8px"/>
+    <img src="public/readme/Screenshot 2026-04-16 173038.png" width="16%" style="border-radius:8px"/>
+    <img src="public/readme/Screenshot 2026-04-16 173141.png" width="9.80%" style="border-radius:8px"/>
+    <img src="public/readme/Screenshot 2026-04-16 172418.png" width="13.10%" style="border-radius:8px"/>
+    <img src="public/readme/Screenshot 2026-04-16 174033.png" width="17.80%" style="border-radius:8px"/>
+    <img src="public/readme/Screenshot 2026-04-16 174056.png" width="12.30%" style="border-radius:8px"/>
+</div>
 
 ## ✨ Features
 
