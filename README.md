@@ -16,7 +16,7 @@ AI-powered notes and blogging platform built with Next.js 15, featuring subscrip
 
 ## 📸 Screenshots
 
-<div style="display:flex; gap:16px;">\
+<div style="display:flex; gap:16px;">
     <img src="public/readme/Screenshot 2026-04-16 172220.png" width="19.65%" style="border-radius:8px"/>
     <img src="public/readme/Screenshot 2026-04-16 173038.png" width="16%" style="border-radius:8px"/>
     <img src="public/readme/Screenshot 2026-04-16 173141.png" width="9.80%" style="border-radius:8px"/>
