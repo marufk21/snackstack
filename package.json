@@ -7,6 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "test": "jest",
+    "test:e2e": "playwright test -c __tests__/e2e/playwright.config.ts",
     "db:seed": "ts-node server/db/seed.ts",
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
     "postinstall": "prisma generate --schema=server/db/schema.prisma"
@@ -67,6 +68,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^16.0.6",
+    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

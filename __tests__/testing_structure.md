@@ -1,5 +1,6 @@
 # SnackStack Testing Folder Structure
 https://chatgpt.com/c/69ef1cdc-c26c-83e8-887b-f83e30362efd
+
 ## Recommended `__tests__` Directory Structure
 
 ```
