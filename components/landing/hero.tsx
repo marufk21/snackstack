@@ -144,7 +144,7 @@ const Hero = () => {
                   ref={subheadingRef}
                   className="gradient-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap inline-block"
                 >
-                  Modern Living
+                  for Modern Living
                 </span>
               </h1>
               <p

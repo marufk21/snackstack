@@ -291,7 +291,7 @@ const Footer = () => {
         <div className="w-full h-full flex justify-center items-end pt-8 md:pt-12 lg:pt-12 pb-2 md:pb-6 lg:pb-10">
           <div
             ref={textElementRef}
-            className="text-[16vw] font-black leading-[0.75] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/10 to-foreground/0 select-none pointer-events-none translate-y-2 md:translate-y-4"
+            className="text-[14vw] font-black leading-[0.85] sm:leading-[0.75] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/10 to-foreground/0 select-none pointer-events-none translate-y-2 md:translate-y-4"
           >
             SNACKSTACK
           </div>
