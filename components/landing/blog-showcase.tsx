@@ -80,7 +80,7 @@ export default function BlogShowCase({ blogs }: { blogs: Blog[] }) {
                     </div>
                   )}
                   <div className="p-6 flex flex-col flex-grow">
-                    <h2 className="text-xl font-semibold mb-2 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent group-hover:from-indigo-700 group-hover:to-purple-700 dark:group-hover:from-indigo-300 dark:group-hover:to-purple-300 transition-colors line-clamp-2">
+                    <h2 className="text-xl font-semibold mb-2 bg-gradient-to-r from-cyan-600 to-teal-600 dark:from-cyan-400 dark:to-teal-400 bg-clip-text text-transparent group-hover:from-cyan-700 group-hover:to-teal-700 dark:group-hover:from-cyan-300 dark:group-hover:to-teal-300 transition-colors line-clamp-2">
                       {blog.title}
                     </h2>
                     <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-grow">
@@ -92,9 +92,9 @@ export default function BlogShowCase({ blogs }: { blogs: Blog[] }) {
                       <span>{blog.author}</span>
                     </div>
                     <div className="mt-auto flex items-center font-medium">
-                      <span className="bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">Read more</span>
+                      <span className="bg-gradient-to-r from-cyan-600 to-teal-600 dark:from-cyan-400 dark:to-teal-400 bg-clip-text text-transparent">Read more</span>
                       <svg
-                        className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform text-indigo-600 dark:text-indigo-400"
+                        className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform text-cyan-600 dark:text-cyan-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -133,7 +133,7 @@ export default function BlogShowCase({ blogs }: { blogs: Blog[] }) {
             className={cn(
               "px-4 py-2 text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all",
               currentPage > 1
-                ? "bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-400 dark:hover:to-purple-400"
+                ? "bg-gradient-to-r from-cyan-600 to-teal-600 dark:from-cyan-500 dark:to-teal-500 text-white hover:from-cyan-700 hover:to-teal-700 dark:hover:from-cyan-400 dark:hover:to-teal-400"
                 : "bg-white dark:bg-card text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-card/80"
             )}
           >
@@ -148,7 +148,7 @@ export default function BlogShowCase({ blogs }: { blogs: Blog[] }) {
             className={cn(
               "px-4 py-2 text-sm font-medium rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-all",
               currentPage < totalPages
-                ? "bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-400 dark:hover:to-purple-400"
+                ? "bg-gradient-to-r from-cyan-600 to-teal-600 dark:from-cyan-500 dark:to-teal-500 text-white hover:from-cyan-700 hover:to-teal-700 dark:hover:from-cyan-400 dark:hover:to-teal-400"
                 : "bg-white dark:bg-card text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-card/80"
             )}
           >

@@ -98,7 +98,7 @@ export default function BlogsDashboard() {
               <Card className="overflow-hidden border-white/20 bg-white/70 backdrop-blur-xl shadow-xl dark:border-white/10 dark:bg-black/40">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200/50 dark:border-gray-700/50 p-6">
                   <div className="space-y-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-rose-500 bg-clip-text text-transparent">
                       Manage Blogs
                     </CardTitle>
                     <CardDescription className="text-base">
@@ -111,7 +111,7 @@ export default function BlogsDashboard() {
                       onClick={() =>
                         router.push("/admin/blogs-dashboard/new-blog")
                       }
-                      className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-2 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
+                      className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
                     >
                       <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                       <div className="relative flex items-center gap-2">
@@ -171,7 +171,7 @@ export default function BlogsDashboard() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, x: -10 }}
                                 transition={{ delay: index * 0.05 }}
-                                className="group hover:bg-indigo-50/30 dark:hover:bg-indigo-900/10 transition-colors"
+                                className="group hover:bg-teal-50/30 dark:hover:bg-teal-900/10 transition-colors"
                               >
                                 <td className="px-6 py-4 font-medium text-gray-900 dark:text-gray-100">
                                   {index + 1}
@@ -242,7 +242,7 @@ export default function BlogsDashboard() {
                                           `/admin/blogs-dashboard/view-blog?id=${blog.id}`
                                         )
                                       }
-                                      className="h-8 w-8 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
+                                      className="h-8 w-8 text-gray-500 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/20"
                                       title="View"
                                     >
                                       <EyeIcon className="h-4 w-4" />

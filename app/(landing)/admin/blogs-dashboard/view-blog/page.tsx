@@ -85,9 +85,9 @@ function ViewBlogContent() {
         <div className="mb-8 flex items-center">
           <div
             onClick={() => router.push("/admin/blogs-dashboard")}
-            className="group flex items-center cursor-pointer text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
+            className="group flex items-center cursor-pointer text-gray-600 hover:text-teal-600 dark:text-gray-400 dark:hover:text-teal-400 transition-colors"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 ring-1 ring-gray-200 transition-all group-hover:bg-indigo-50 group-hover:ring-indigo-200 dark:bg-gray-800/50 dark:ring-gray-700 dark:group-hover:bg-indigo-900/20 dark:group-hover:ring-indigo-500/30 mr-3 backdrop-blur-sm">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 ring-1 ring-gray-200 transition-all group-hover:bg-teal-50 group-hover:ring-teal-200 dark:bg-gray-800/50 dark:ring-gray-700 dark:group-hover:bg-teal-900/20 dark:group-hover:ring-teal-500/30 mr-3 backdrop-blur-sm">
               <ArrowLeftIcon className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
             </div>
             <span className="text-base font-medium">Back to Dashboard</span>
@@ -101,7 +101,7 @@ function ViewBlogContent() {
           <CardFooter className="flex justify-end border-t border-gray-200/50 dark:border-gray-700/50 p-6">
             <Button
               onClick={handleEdit}
-              className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-2 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-2 text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02]"
             >
               <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
               <div className="relative flex items-center gap-2">

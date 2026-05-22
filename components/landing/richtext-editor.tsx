@@ -101,7 +101,7 @@ export default function RichTextEditor({
       className={cn(
         "p-2 rounded-md text-sm font-medium transition-all",
         isActive
-          ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+          ? "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/40 dark:text-cyan-300"
           : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
       )}
     >

@@ -28,7 +28,7 @@ export default function SubscriptionDebugPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading subscription data...</p>
         </div>
       </div>
@@ -85,8 +85,8 @@ export default function SubscriptionDebugPage() {
 
           {/* Subscription Info */}
           {data?.subscription ? (
-            <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-              <h2 className="text-lg font-semibold text-purple-900 mb-2">
+            <div className="mb-6 p-4 bg-cyan-50 border border-cyan-200 rounded-lg">
+              <h2 className="text-lg font-semibold text-cyan-900 mb-2">
                 💳 Subscription Details
               </h2>
               <div className="space-y-1 text-sm">
@@ -150,7 +150,7 @@ export default function SubscriptionDebugPage() {
             </button>
             <a
               href="/admin/sync-subscription"
-              className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-block"
+              className="px-6 py-3 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors inline-block"
             >
               🔧 Sync from Stripe
             </a>

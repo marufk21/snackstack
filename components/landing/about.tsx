@@ -44,8 +44,8 @@ const About = () => {
       icon: <Brain className="w-5 h-5" />,
       title: "AI-Powered",
       description: "Gemini 1.5 Pro drives intelligent suggestions, auto-tagging, and content enhancement.",
-      gradient: "from-violet-500 to-purple-600",
-      bg: "bg-violet-500/10",
+      gradient: "from-cyan-500 to-cyan-600",
+      bg: "bg-cyan-500/10",
     },
   ];
 
@@ -193,18 +193,18 @@ const About = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         {/* Section Header */}
         <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20">
-          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-6">
+          <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-1.5 mb-6">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
             </span>
-            <span className="text-violet-600 dark:text-violet-400 text-xs font-semibold uppercase tracking-wider">
+            <span className="text-cyan-600 dark:text-cyan-400 text-xs font-semibold uppercase tracking-wider">
               About SnackStack
             </span>
           </div>
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 sm:mb-5 tracking-tight leading-tight">
             Built for{" "}
-            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
               Modern Thinkers
             </span>
           </h2>
@@ -221,7 +221,7 @@ const About = () => {
             <div className="space-y-3 sm:space-y-5">
               <h3 className="text-xl sm:text-3xl font-bold text-foreground leading-tight">
                 More than just{" "}
-                <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">notes</span>
+                <span className="bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">notes</span>
               </h3>
               <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 SnackStack fuses a rich editing surface with Gemini AI to surface connections,
@@ -255,9 +255,9 @@ const About = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="feature-card group relative bg-white dark:bg-zinc-900/60 border border-gray-200/60 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:shadow-violet-500/5 transition-all duration-500 hover:border-violet-500/30 hover:-translate-y-0.5 backdrop-blur-sm overflow-hidden"
+                className="feature-card group relative bg-white dark:bg-zinc-900/60 border border-gray-200/60 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:shadow-cyan-500/5 transition-all duration-500 hover:border-cyan-500/30 hover:-translate-y-0.5 backdrop-blur-sm overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/0 via-fuchsia-500/0 to-indigo-500/0 group-hover:from-violet-500/[0.02] group-hover:via-fuchsia-500/[0.02] group-hover:to-indigo-500/[0.02] transition-all duration-500 rounded-2xl" />
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-emerald-500/0 to-teal-500/0 group-hover:from-cyan-500/[0.02] group-hover:via-emerald-500/[0.02] group-hover:to-teal-500/[0.02] transition-all duration-500 rounded-2xl" />
                 <div className="relative flex items-start gap-4">
                   <div className={`bg-gradient-to-br ${feature.gradient} rounded-xl p-3 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     {feature.icon}
@@ -270,7 +270,7 @@ const About = () => {
                       {feature.description}
                     </p>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-violet-500 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-2" />
+                  <ArrowRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-cyan-500 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-2" />
                 </div>
               </div>
             ))}
@@ -284,12 +284,12 @@ const About = () => {
         >
           {stats.map((stat, index) => (
             <div key={index} className="relative text-center group p-3 sm:p-6 rounded-2xl hover:bg-white/50 dark:hover:bg-white/5 border border-transparent hover:border-gray-200/60 dark:hover:border-white/10 transition-all duration-300">
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-violet-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-cyan-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative flex flex-col items-center gap-2">
-                <div className="text-violet-500/60 group-hover:text-violet-500 transition-colors duration-300">
+                <div className="text-cyan-500/60 group-hover:text-cyan-500 transition-colors duration-300">
                   {stat.icon}
                 </div>
-                <div className="stat-number text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
+                <div className="stat-number text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
                   {stat.number}
                 </div>
                 <div className="text-muted-foreground font-medium text-xs sm:text-sm tracking-wide">

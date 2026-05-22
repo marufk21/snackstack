@@ -119,18 +119,18 @@ const Contact = () => {
     <PageWrapper ref={sectionRef} id="contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headerRef} className="text-center mb-6 sm:mb-10 md:mb-14">
-          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
             </span>
-            <span className="text-violet-600 dark:text-violet-400 text-xs font-semibold uppercase tracking-wider">
+            <span className="text-cyan-600 dark:text-cyan-400 text-xs font-semibold uppercase tracking-wider">
               Contact Us
             </span>
           </div>
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-2 sm:mb-4 lg:mb-6 tracking-tight">
             Get in{" "}
-            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
               Touch
             </span>
           </h2>
@@ -144,15 +144,15 @@ const Contact = () => {
           {/* Contact Info — 2 cols on desktop */}
           <div className="lg:col-span-2 space-y-3 sm:space-y-5">
             {/* Email Card */}
-            <div className="group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-sm hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300">
+            <div className="group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-sm hover:border-cyan-500/30 hover:shadow-lg hover:shadow-cyan-500/5 transition-all duration-300">
               <div className="flex items-start gap-4">
-                <div className="bg-violet-500/10 rounded-2xl p-3 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500 group-hover:text-white transition-all duration-300">
+                <div className="bg-cyan-500/10 rounded-2xl p-3 text-cyan-600 dark:text-cyan-400 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
                   <h4 className="font-semibold text-foreground mb-1">Email Us</h4>
                   <p className="text-sm text-muted-foreground mb-2">Our friendly team is here to help.</p>
-                  <a href="mailto:hello@snackstack.com" className="text-sm font-medium text-violet-600 dark:text-violet-400 hover:underline">hello@snackstack.com</a>
+                  <a href="mailto:hello@snackstack.com" className="text-sm font-medium text-cyan-600 dark:text-cyan-400 hover:underline">hello@snackstack.com</a>
                 </div>
               </div>
             </div>
@@ -172,12 +172,24 @@ const Contact = () => {
             </div>
 
             {/* Community Card */}
-            <div className="bg-gradient-to-br from-violet-600 via-fuchsia-500 to-indigo-600 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
+            <div className="group bg-gradient-to-br from-cyan-700 via-cyan-600 to-emerald-600 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-xl shadow-cyan-500/20 relative overflow-hidden border border-white/10">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-16 bg-white/5 rounded-full blur-2xl rotate-12" />
+              {/* Subtle dot pattern */}
+              <div
+                className="absolute inset-0 opacity-[0.06] pointer-events-none"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle, white 1px, transparent 1px)",
+                  backgroundSize: "16px 16px",
+                }}
+              />
               <div className="relative">
                 <h3 className="text-xl font-bold mb-2">Join our Community</h3>
-                <p className="text-white/70 text-sm mb-5">Connect with other users, share tips, and get early access to new features.</p>
-                <Button variant="secondary" className="w-full rounded-full bg-white text-violet-600 hover:bg-white/90 border-0 font-semibold">
+                <p className="text-white/80 text-sm mb-5 leading-relaxed">Connect with other users, share tips, and get early access to new features.</p>
+                <Button className="w-full rounded-full bg-white text-cyan-700 hover:bg-white/95 hover:shadow-lg hover:shadow-white/20 border-0 font-semibold transition-all duration-300 hover:scale-[1.02]">
                   Join Discord
                 </Button>
               </div>
@@ -200,7 +212,7 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Your name"
-                    className="w-full h-11 rounded-xl bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-white/10 focus:border-violet-500 transition-colors"
+                    className="w-full h-11 rounded-xl bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-white/10 focus:border-cyan-500 transition-colors"
                   />
                 </div>
                 <div className="form-field">
@@ -215,7 +227,7 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="your.email@example.com"
-                    className="w-full h-11 rounded-xl bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-white/10 focus:border-violet-500 transition-colors"
+                    className="w-full h-11 rounded-xl bg-gray-50 dark:bg-zinc-800/50 border-gray-200 dark:border-white/10 focus:border-cyan-500 transition-colors"
                   />
                 </div>
               </div>
@@ -232,7 +244,7 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder="Tell us what's on your mind..."
                   rows={5}
-                  className="w-full px-4 py-3 text-sm bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-white/10 rounded-xl shadow-xs outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 transition-all placeholder:text-muted-foreground resize-none text-foreground"
+                  className="w-full px-4 py-3 text-sm bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-white/10 rounded-xl shadow-xs outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-muted-foreground resize-none text-foreground"
                 />
               </div>
 
@@ -255,7 +267,7 @@ const Contact = () => {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white rounded-full py-3 text-base font-semibold shadow-lg hover:shadow-indigo-500/30 transition-all duration-300"
+                className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white rounded-full py-3 text-base font-semibold shadow-lg hover:shadow-teal-500/30 transition-all duration-300"
               >
                 {isSubmitting ? (
                   "Sending..."

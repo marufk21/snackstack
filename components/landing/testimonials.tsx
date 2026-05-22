@@ -92,18 +92,18 @@ const Testimonials = () => {
     <PageWrapper ref={sectionRef} id="testimonials" className="py-14 sm:py-20 md:py-24">
       <div className="max-w-8xl mx-auto">
         <div ref={headerRef} className="text-center mb-10 sm:mb-14 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
             </span>
-            <span className="text-violet-600 dark:text-violet-400 text-xs font-semibold uppercase tracking-wider">
+            <span className="text-cyan-600 dark:text-cyan-400 text-xs font-semibold uppercase tracking-wider">
               Testimonials
             </span>
           </div>
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-3 sm:mb-6 tracking-tight">
             Loved by{" "}
-            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">
               builders & thinkers
             </span>
           </h2>

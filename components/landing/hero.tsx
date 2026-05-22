@@ -34,7 +34,7 @@ import { usePostHog } from "@/hooks/use-posthog";
 const Dither = dynamic(() => import("@/components/landing/dither"), {
   ssr: false,
   loading: () => (
-    <div className="absolute inset-0 bg-gradient-to-b from-violet-50 to-white dark:from-zinc-900 dark:to-black opacity-30" />
+    <div className="absolute inset-0 bg-gradient-to-b from-cyan-50 to-white dark:from-zinc-900 dark:to-black opacity-30" />
   ),
 });
 
@@ -283,11 +283,11 @@ const Hero = () => {
               {/* Premium Pill Badge */}
               <div 
                 ref={badgeRef}
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-600 dark:text-violet-400 text-xs font-semibold shadow-[0_4px_15px_rgba(139,92,246,0.05)] hover:border-violet-500/40 hover:bg-violet-500/10 transition-all duration-300 backdrop-blur-md mb-6 w-fit mx-auto lg:mx-0 select-none cursor-pointer"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/5 text-cyan-600 dark:text-cyan-400 text-xs font-semibold shadow-[0_4px_15px_rgba(6,182,198,0.05)] hover:border-cyan-500/40 hover:bg-cyan-500/10 transition-all duration-300 backdrop-blur-md mb-6 w-fit mx-auto lg:mx-0 select-none cursor-pointer"
               >
                 <span className="flex h-2 w-2 relative">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                 </span>
                 <span className="flex items-center gap-1">
                   Introducing SnackStack 2.0
@@ -300,12 +300,12 @@ const Hero = () => {
                 ref={headingRef}
                 className="text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-5 leading-[1.1] tracking-tight text-gray-900 dark:text-white"
               >
-                <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent inline-block pb-1">
+                <span className="bg-gradient-to-r from-cyan-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent inline-block pb-1">
                   AI-Powered Notes
                 </span>
                 <br />
                 <span ref={subheadingRef} className="inline-block mt-1">
-                  for <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-extrabold">Modern Living</span>
+                  for <span className="bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-400 bg-clip-text text-transparent font-extrabold">Modern Living</span>
                 </span>
               </h1>
 
@@ -330,13 +330,13 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className="group relative w-full sm:w-auto px-7 py-3.5 text-base bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-bold shadow-[0_4px_20px_rgba(124,58,237,0.25)] hover:shadow-[0_4px_25px_rgba(124,58,237,0.45)] transition-all duration-300 hover:-translate-y-0.5 overflow-hidden flex items-center justify-center gap-2 cursor-pointer select-none"
+                    className="group relative w-full sm:w-auto px-7 py-3.5 text-base bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-full font-bold shadow-[0_4px_20px_rgba(6,182,198,0.25)] hover:shadow-[0_4px_25px_rgba(6,182,198,0.45)] transition-all duration-300 hover:-translate-y-0.5 overflow-hidden flex items-center justify-center gap-2 cursor-pointer select-none"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Start for Free
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </Link>
 
@@ -345,7 +345,7 @@ const Hero = () => {
                     className="group w-full sm:w-auto px-7 py-3.5 text-base bg-white/50 dark:bg-zinc-900/50 hover:bg-white/70 dark:hover:bg-zinc-900/70 text-gray-800 dark:text-gray-200 border border-gray-200/60 dark:border-white/10 rounded-full font-bold shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer select-none"
                   >
                     <span>Explore Workspace</span>
-                    <Play className="w-4 h-4 text-violet-500 fill-violet-500 group-hover:scale-110 transition-transform" />
+                    <Play className="w-4 h-4 text-cyan-500 fill-cyan-500 group-hover:scale-110 transition-transform" />
                   </button>
                 </a>
               </div>
@@ -375,7 +375,7 @@ const Hero = () => {
                 
                 {/* FLOATING CARD 1: Responsive Note Editor */}
                 <div
-                  className="absolute top-0 right-0 sm:right-6 w-[240px] sm:w-[280px] md:w-[310px] rounded-2xl sm:rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.07)] backdrop-blur-xl p-4 sm:p-5 border z-10 bg-white/80 border-black/5 shadow-black/5 dark:bg-zinc-900/70 dark:border-white/10 dark:shadow-none hover:border-violet-500/30 transition-all duration-300 animate-float"
+                  className="absolute top-0 right-0 sm:right-6 w-[240px] sm:w-[280px] md:w-[310px] rounded-2xl sm:rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.07)] backdrop-blur-xl p-4 sm:p-5 border z-10 bg-white/80 border-black/5 shadow-black/5 dark:bg-zinc-900/70 dark:border-white/10 dark:shadow-none hover:border-cyan-500/30 transition-all duration-300 animate-float"
                   style={{ animationDelay: "0s" }}
                 >
                   {/* Browser simulated controls */}
@@ -388,7 +388,7 @@ const Hero = () => {
                   {/* Header Title */}
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-500 font-bold text-xs">
+                      <div className="w-7 h-7 rounded-lg bg-cyan-500/10 flex items-center justify-center text-cyan-500 font-bold text-xs">
                         ⚡
                       </div>
                       <div>
@@ -415,7 +415,7 @@ const Hero = () => {
                         className={cn(
                           "px-2 py-1 rounded-md text-[9px] font-bold tracking-wider uppercase transition-all flex items-center gap-1 border cursor-pointer",
                           activeTag === "strategy" 
-                            ? "bg-violet-500/20 text-violet-600 border-violet-500/40 dark:text-violet-400" 
+                            ? "bg-cyan-500/20 text-cyan-600 border-cyan-500/40 dark:text-cyan-400" 
                             : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 text-gray-500 border-transparent"
                         )}
                       >
@@ -427,7 +427,7 @@ const Hero = () => {
                         className={cn(
                           "px-2 py-1 rounded-md text-[9px] font-bold tracking-wider uppercase transition-all flex items-center gap-1 border cursor-pointer",
                           activeTag === "pricing" 
-                            ? "bg-indigo-500/20 text-indigo-600 border-indigo-500/40 dark:text-indigo-400" 
+                            ? "bg-teal-500/20 text-teal-600 border-teal-500/40 dark:text-teal-400" 
                             : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 text-gray-500 border-transparent"
                         )}
                       >
@@ -440,14 +440,14 @@ const Hero = () => {
                     <div className="space-y-2 text-[10px] text-gray-600 dark:text-gray-300 font-sans text-left leading-relaxed">
                       <p className={cn(
                         "rounded px-1.5 py-0.5 transition-all duration-300",
-                        activeTag === "strategy" ? "bg-violet-500/15 text-violet-700 dark:text-violet-300 font-medium shadow-[0_0_8px_rgba(139,92,246,0.1)] border-l-2 border-violet-500" : ""
+                        activeTag === "strategy" ? "bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 font-medium shadow-[0_0_8px_rgba(6,182,198,0.1)] border-l-2 border-cyan-500" : ""
                       )}>
                         • Phoenix Beta release date scheduled for Dec 1st. Uptime target is 99.9%.
                       </p>
                       
                       <p className={cn(
                         "rounded px-1.5 py-0.5 transition-all duration-300",
-                        activeTag === "pricing" ? "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 font-medium shadow-[0_0_8px_rgba(99,102,241,0.1)] border-l-2 border-indigo-500" : ""
+                        activeTag === "pricing" ? "bg-teal-500/15 text-teal-700 dark:text-teal-300 font-medium shadow-[0_0_8px_rgba(20,184,166,0.1)] border-l-2 border-teal-500" : ""
                       )}>
                         • Setup subscription gates with Stripe: basic tier (₹749) & pro tier (₹1599) verified.
                       </p>
@@ -465,13 +465,13 @@ const Hero = () => {
 
                 {/* FLOATING CARD 2: AI Assistant (SnackBot Chatbot Simulation) */}
                 <div
-                  className="absolute top-32 sm:top-44 left-0 sm:left-0 w-[230px] sm:w-[270px] md:w-[290px] rounded-2xl sm:rounded-3xl shadow-[0_20px_45px_-10px_rgba(0,0,0,0.08)] backdrop-blur-xl p-3.5 sm:p-4.5 border z-20 bg-white/90 border-black/5 shadow-black/10 dark:bg-zinc-900/85 dark:border-white/10 dark:shadow-none hover:border-fuchsia-500/30 transition-all duration-300 animate-float"
+                  className="absolute top-32 sm:top-44 left-0 sm:left-0 w-[230px] sm:w-[270px] md:w-[290px] rounded-2xl sm:rounded-3xl shadow-[0_20px_45px_-10px_rgba(0,0,0,0.08)] backdrop-blur-xl p-3.5 sm:p-4.5 border z-20 bg-white/90 border-black/5 shadow-black/10 dark:bg-zinc-900/85 dark:border-white/10 dark:shadow-none hover:border-emerald-500/30 transition-all duration-300 animate-float"
                   style={{ animationDelay: "1.8s" }}
                 >
                   {/* Assistant Identity Header */}
                   <div className="flex items-center gap-2.5 mb-3.5 border-b border-gray-100 dark:border-white/5 pb-2.5">
                     <div className="relative">
-                      <div className="w-8.5 h-8.5 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-500 flex items-center justify-center shadow-md">
+                      <div className="w-8.5 h-8.5 rounded-full bg-gradient-to-br from-teal-500 via-cyan-500 to-emerald-500 flex items-center justify-center shadow-md">
                         <Bot className="w-4.5 h-4.5 text-white" />
                       </div>
                       <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-zinc-900 rounded-full" />
@@ -479,7 +479,7 @@ const Hero = () => {
                     <div className="text-left">
                       <h4 className="text-[11px] font-bold text-gray-800 dark:text-white flex items-center gap-1 select-none">
                         SnackBot Copilot
-                        <span className="px-1.5 py-0.2 rounded bg-violet-500/10 text-violet-500 text-[7px] uppercase font-extrabold tracking-wider">Gemini API</span>
+                        <span className="px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-500 text-[7px] uppercase font-extrabold tracking-wider">Gemini API</span>
                       </h4>
                       <p className="text-[9px] text-gray-400 dark:text-gray-500">
                         Ask summaries, actions or guides
@@ -493,31 +493,31 @@ const Hero = () => {
                       <span className="text-[8px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-bold block mb-2 text-left select-none">Simulate AI Actions:</span>
                       <button 
                         onClick={() => handleStartChatSim("summary")}
-                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-violet-500/5 dark:bg-zinc-800/40 dark:hover:bg-violet-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer animate-pulse"
+                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-cyan-500/5 dark:bg-zinc-800/40 dark:hover:bg-cyan-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer animate-pulse"
                       >
                         <span>⚡ Summarize yesterday's notes</span>
-                        <ChevronRight className="w-3 h-3 text-violet-500" />
+                        <ChevronRight className="w-3 h-3 text-cyan-500" />
                       </button>
                       <button 
                         onClick={() => handleStartChatSim("actions")}
-                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-violet-500/5 dark:bg-zinc-800/40 dark:hover:bg-violet-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer"
+                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-cyan-500/5 dark:bg-zinc-800/40 dark:hover:bg-cyan-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer"
                       >
                         <span>📝 Extract Action Items</span>
-                        <ChevronRight className="w-3 h-3 text-violet-500" />
+                        <ChevronRight className="w-3 h-3 text-cyan-500" />
                       </button>
                       <button 
                         onClick={() => handleStartChatSim("milestones")}
-                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-violet-500/5 dark:bg-zinc-800/40 dark:hover:bg-violet-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer"
+                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-cyan-500/5 dark:bg-zinc-800/40 dark:hover:bg-cyan-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer"
                       >
                         <span>🎯 Define Project Milestones</span>
-                        <ChevronRight className="w-3 h-3 text-violet-500" />
+                        <ChevronRight className="w-3 h-3 text-cyan-500" />
                       </button>
                     </div>
                   ) : (
                     <div className="space-y-3">
                       {/* User Request Bubble */}
                       <div className="flex justify-end">
-                        <div className="p-2.5 rounded-2xl rounded-tr-sm text-[9px] font-medium bg-violet-600 text-white shadow-sm select-none">
+                        <div className="p-2.5 rounded-2xl rounded-tr-sm text-[9px] font-medium bg-cyan-600 text-white shadow-sm select-none">
                           {chatPrompt === "summary" && "Summarize yesterday's notes."}
                           {chatPrompt === "actions" && "Extract Action Items."}
                           {chatPrompt === "milestones" && "Define Project Milestones."}
@@ -529,16 +529,16 @@ const Hero = () => {
                         
                         {chatStatus === "typing" && (
                           <div className="flex gap-1 mb-2.5 items-center">
-                            <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
-                            <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
-                            <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }} />
+                            <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
+                            <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+                            <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }} />
                           </div>
                         )}
 
                         <div className="whitespace-pre-line leading-relaxed font-mono text-[9px] text-left">
                           {typedText}
                           {chatStatus === "typing" && (
-                            <span className="w-1 h-3 bg-violet-500 inline-block animate-pulse ml-0.5" />
+                            <span className="w-1 h-3 bg-cyan-500 inline-block animate-pulse ml-0.5" />
                           )}
                         </div>
 
@@ -558,38 +558,38 @@ const Hero = () => {
 
                 {/* FLOATING CARD 3: Quick Capture Uploader Pipeline */}
                 <div
-                  className="hidden sm:block absolute bottom-0 right-4 w-[210px] sm:w-[230px] rounded-3xl shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] backdrop-blur-xl p-4.5 border z-30 bg-white/70 border-black/5 shadow-black/5 dark:bg-zinc-900/60 dark:border-white/10 dark:shadow-none hover:border-pink-500/30 transition-all duration-300 animate-float"
+                  className="hidden sm:block absolute bottom-0 right-4 w-[210px] sm:w-[230px] rounded-3xl shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] backdrop-blur-xl p-4.5 border z-30 bg-white/70 border-black/5 shadow-black/5 dark:bg-zinc-900/60 dark:border-white/10 dark:shadow-none hover:border-rose-400/30 transition-all duration-300 animate-float"
                   style={{ animationDelay: "3.2s" }}
                 >
                   <div className="flex items-center justify-between mb-3 select-none">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
                       <span className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-white/60">
                         Quick Capture
                       </span>
                     </div>
-                    <Zap className="w-3.5 h-3.5 text-violet-500 animate-pulse" />
+                    <Zap className="w-3.5 h-3.5 text-cyan-500 animate-pulse" />
                   </div>
                   
                   {/* Sequence Pipeline Rendering */}
                   {captureState === "empty" && (
                     <div 
                       onClick={startCaptureSequence}
-                      className="h-[95px] rounded-xl border border-dashed border-gray-300 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-violet-500/50 hover:bg-violet-500/5 transition-all duration-300 group/capture p-2"
+                      className="h-[95px] rounded-xl border border-dashed border-gray-300 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-cyan-500/50 hover:bg-cyan-500/5 transition-all duration-300 group/capture p-2"
                     >
-                      <Upload className="w-5 h-5 text-gray-400 group-hover/capture:text-violet-500 group-hover/capture:scale-110 transition-all mb-1.5" />
-                      <span className="text-[9px] font-bold text-violet-600 dark:text-violet-400">⚡ Click to Capture</span>
+                      <Upload className="w-5 h-5 text-gray-400 group-hover/capture:text-cyan-500 group-hover/capture:scale-110 transition-all mb-1.5" />
+                      <span className="text-[9px] font-bold text-cyan-600 dark:text-cyan-400">⚡ Click to Capture</span>
                       <span className="text-[8px] text-gray-400 dark:text-gray-500 mt-0.5">Drop text or image here</span>
                     </div>
                   )}
 
                   {captureState === "uploading" && (
                     <div className="h-[95px] rounded-xl border border-gray-200/50 dark:border-white/5 bg-gray-50/30 dark:bg-zinc-900/30 flex flex-col items-center justify-center p-3">
-                      <Loader2 className="w-5 h-5 text-violet-500 animate-spin mb-2" />
+                      <Loader2 className="w-5 h-5 text-cyan-500 animate-spin mb-2" />
                       <span className="text-[9px] font-bold text-gray-700 dark:text-gray-300 mb-1.5">Uploading file...</span>
                       <div className="w-full h-1.5 bg-gray-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-violet-600 rounded-full transition-all duration-100" 
+                          className="h-full bg-cyan-600 rounded-full transition-all duration-100" 
                           style={{ width: `${uploadPercent}%` }}
                         />
                       </div>
@@ -598,9 +598,9 @@ const Hero = () => {
                   )}
 
                   {captureState === "extracting" && (
-                    <div className="h-[95px] rounded-xl border border-violet-500/30 bg-violet-500/5 flex flex-col items-center justify-center p-3 text-center">
-                      <SparklesIcon className="w-6 h-6 text-fuchsia-500 animate-bounce mb-1.5" />
-                      <span className="text-[9px] font-bold text-fuchsia-600 dark:text-fuchsia-400 animate-pulse">Gemini OCR Parsing...</span>
+                    <div className="h-[95px] rounded-xl border border-cyan-500/30 bg-cyan-500/5 flex flex-col items-center justify-center p-3 text-center">
+                      <SparklesIcon className="w-6 h-6 text-emerald-500 animate-bounce mb-1.5" />
+                      <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 animate-pulse">Gemini OCR Parsing...</span>
                       <span className="text-[8px] text-gray-400 dark:text-gray-500 mt-1">Extracting visual structures</span>
                     </div>
                   )}
@@ -616,8 +616,8 @@ const Hero = () => {
                       </div>
                       
                       <div className="my-1.5 text-[8px] leading-relaxed text-gray-600 dark:text-gray-300">
-                        <span className="font-bold text-violet-500 block">AI Structure Extracted:</span>
-                        Dashboard mockup detailing collapsible side panels. Synced to <strong className="text-violet-600 font-semibold dark:text-violet-400">#strategy</strong> tag.
+                        <span className="font-bold text-cyan-500 block">AI Structure Extracted:</span>
+                        Dashboard mockup detailing collapsible side panels. Synced to <strong className="text-cyan-600 font-semibold dark:text-cyan-400">#strategy</strong> tag.
                       </div>
 
                       <button 
@@ -633,8 +633,8 @@ const Hero = () => {
                 </div>
 
                 {/* Aesthetic Backdrop Blur Blobs */}
-                <div className="absolute top-16 right-16 w-32 h-32 rounded-full bg-violet-500/10 blur-[60px] pointer-events-none" />
-                <div className="absolute bottom-16 left-12 w-32 h-32 rounded-full bg-indigo-500/10 blur-[60px] pointer-events-none" />
+                <div className="absolute top-16 right-16 w-32 h-32 rounded-full bg-cyan-500/10 blur-[60px] pointer-events-none" />
+                <div className="absolute bottom-16 left-12 w-32 h-32 rounded-full bg-teal-500/10 blur-[60px] pointer-events-none" />
 
               </div>
             </div>
@@ -650,7 +650,7 @@ const Hero = () => {
           <div className="mb-6 sm:mb-10 md:mb-12 max-w-3xl mx-auto select-none">
             <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-3 sm:mb-4 tracking-tight text-gray-900 dark:text-white leading-tight">
               A Unified{" "}
-              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-600 via-teal-500 to-emerald-500 bg-clip-text text-transparent">
                 Productivity Canvas
               </span>
             </h2>
@@ -668,11 +668,11 @@ const Hero = () => {
                 className={cn(
                   "px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[8px] sm:text-[10px] font-bold tracking-wider uppercase border flex items-center gap-1 sm:gap-1.5 shadow-sm transition-all duration-300 cursor-pointer",
                   ditherEnabled 
-                    ? "bg-violet-600 text-white border-violet-500 shadow-violet-500/20 shadow-lg" 
+                    ? "bg-cyan-600 text-white border-cyan-500 shadow-cyan-500/20 shadow-lg" 
                     : "bg-white/70 dark:bg-zinc-950/70 border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-800 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-900"
                 )}
               >
-                {ditherEnabled ? <Cpu className="w-3.5 h-3.5 text-pink-300 animate-spin" /> : <MonitorPlay className="w-3.5 h-3.5 text-violet-500 animate-pulse" />}
+                {ditherEnabled ? <Cpu className="w-3.5 h-3.5 text-rose-300 animate-spin" /> : <MonitorPlay className="w-3.5 h-3.5 text-cyan-500 animate-pulse" />}
                 🖥️ Ultra Visuals (WebGL): {ditherEnabled ? "ON" : "OFF"}
               </button>
             </div>
@@ -705,12 +705,12 @@ const Hero = () => {
                   className={cn(
                     "px-2.5 py-1 rounded-md text-[9px] font-bold uppercase transition-all flex items-center gap-1 border cursor-pointer",
                     copilotPanelOpen 
-                      ? "bg-violet-500/10 text-violet-500 border-violet-500/20" 
+                      ? "bg-cyan-500/10 text-cyan-500 border-cyan-500/20" 
                       : "bg-gray-200/50 text-gray-500 border-transparent dark:bg-zinc-800"
                   )}
                   title="Toggle AI Copilot"
                 >
-                  <SparklesIcon className="w-3 h-3 text-violet-500 animate-pulse" />
+                  <SparklesIcon className="w-3 h-3 text-cyan-500 animate-pulse" />
                   <span className="hidden sm:inline">AI Drawer</span>
                 </button>
               </div>
@@ -724,7 +724,7 @@ const Hero = () => {
                     
                     {/* Brand Banner */}
                     <div className="flex items-center gap-2 px-1 sm:px-1.5">
-                      <div className="w-5.5 h-5.5 rounded bg-violet-600 text-white flex items-center justify-center font-bold text-[10px]">
+                      <div className="w-5.5 h-5.5 rounded bg-cyan-600 text-white flex items-center justify-center font-bold text-[10px]">
                         S
                       </div>
                       <span className="font-extrabold text-xs hidden sm:inline-block tracking-tight text-gray-800 dark:text-white">
@@ -739,11 +739,11 @@ const Hero = () => {
                         className={cn(
                           "w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors cursor-pointer",
                           activeDashboardTab === "notes"
-                            ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold"
+                            ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold"
                             : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/5"
                         )}
                       >
-                        <FileText className="w-4 h-4 text-violet-500" />
+                        <FileText className="w-4 h-4 text-cyan-500" />
                         <span className="hidden sm:inline-block text-[11px]">All Notes</span>
                       </button>
 
@@ -752,11 +752,11 @@ const Hero = () => {
                         className={cn(
                           "w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors cursor-pointer",
                           activeDashboardTab === "capture"
-                            ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold"
+                            ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold"
                             : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/5"
                         )}
                       >
-                        <Zap className="w-4 h-4 text-violet-500" />
+                        <Zap className="w-4 h-4 text-cyan-500" />
                         <span className="hidden sm:inline-block text-[11px]">Quick Capture</span>
                       </button>
 
@@ -765,11 +765,11 @@ const Hero = () => {
                         className={cn(
                           "w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors cursor-pointer",
                           activeDashboardTab === "starred"
-                            ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold"
+                            ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-bold"
                             : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/5"
                         )}
                       >
-                        <SparklesIcon className="w-4 h-4 text-violet-500" />
+                        <SparklesIcon className="w-4 h-4 text-cyan-500" />
                         <span className="hidden sm:inline-block text-[11px]">AI Starred</span>
                       </button>
                     </div>
@@ -780,16 +780,16 @@ const Hero = () => {
                       <div className="space-y-1">
                         <div className={cn(
                           "flex items-center gap-2 px-2.5 py-1 text-xs transition-colors rounded-md",
-                          activeTag === "strategy" ? "bg-violet-500/10 font-bold animate-pulse" : ""
+                          activeTag === "strategy" ? "bg-cyan-500/10 font-bold animate-pulse" : ""
                         )}>
-                          <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                           <span className="hidden sm:inline-block truncate text-gray-500 dark:text-gray-400 text-[10px]">#strategy</span>
                         </div>
                         <div className={cn(
                           "flex items-center gap-2 px-2.5 py-1 text-xs transition-colors rounded-md",
-                          activeTag === "pricing" ? "bg-indigo-500/10 font-bold animate-pulse" : ""
+                          activeTag === "pricing" ? "bg-teal-500/10 font-bold animate-pulse" : ""
                         )}>
-                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
                           <span className="hidden sm:inline-block truncate text-gray-500 dark:text-gray-400 text-[10px]">#pricing</span>
                         </div>
                       </div>
@@ -807,7 +807,7 @@ const Hero = () => {
                 <div className="hidden sm:flex w-1/4 min-w-[160px] md:min-w-[200px] bg-white/30 dark:bg-black/30 p-3 md:p-4 border-r border-gray-200/50 dark:border-white/5 flex-col gap-3">
                   <div className="flex items-center justify-between px-1 select-none">
                     <span className="font-extrabold text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">Notes Feed</span>
-                    <button className="w-5 h-5 rounded-full bg-violet-500/10 text-violet-500 flex items-center justify-center font-bold text-xs select-none hover:bg-violet-500 hover:text-white transition-all cursor-pointer">
+                    <button className="w-5 h-5 rounded-full bg-cyan-500/10 text-cyan-500 flex items-center justify-center font-bold text-xs select-none hover:bg-cyan-500 hover:text-white transition-all cursor-pointer">
                       +
                     </button>
                   </div>
@@ -818,23 +818,23 @@ const Hero = () => {
                     <div className={cn(
                       "p-2.5 rounded-xl border text-left transition-all cursor-pointer",
                       activeDashboardTab === "notes" 
-                        ? "border-violet-500/30 bg-violet-500/5 dark:bg-violet-500/10 shadow-sm" 
+                        ? "border-cyan-500/30 bg-cyan-500/5 dark:bg-cyan-500/10 shadow-sm" 
                         : "border-gray-200/60 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40"
                     )}>
                       <span className="font-bold block text-xs truncate text-gray-800 dark:text-white">Q4 Product Launch</span>
                       <span className="text-[9px] text-gray-400 dark:text-zinc-400 block mt-1 truncate">Drafting target deliverables and Stripe integrations...</span>
-                      <span className="text-[8px] text-violet-500 block mt-2 font-mono">Edited 2m ago</span>
+                      <span className="text-[8px] text-cyan-500 block mt-2 font-mono">Edited 2m ago</span>
                     </div>
                     
                     <div className={cn(
                       "p-2.5 rounded-xl border text-left transition-all cursor-pointer",
                       activeDashboardTab === "capture" 
-                        ? "border-violet-500/30 bg-violet-500/5 dark:bg-violet-500/10 shadow-sm" 
+                        ? "border-cyan-500/30 bg-cyan-500/5 dark:bg-cyan-500/10 shadow-sm" 
                         : "border-gray-200/60 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40"
                     )}>
                       <span className="font-bold block text-xs truncate text-gray-800 dark:text-white">Quick Wireframe Scan</span>
                       <span className="text-[9px] text-gray-400 dark:text-zinc-400 block mt-1 truncate">Gemini AI identified wireframe nodes...</span>
-                      <span className="text-[8px] text-violet-500 block mt-2 font-mono">Uploaded 1h ago</span>
+                      <span className="text-[8px] text-cyan-500 block mt-2 font-mono">Uploaded 1h ago</span>
                     </div>
 
                     <div className={cn(
@@ -862,8 +862,8 @@ const Hero = () => {
                           {activeDashboardTab === "starred" && "Starred AI Suggestions"}
                         </span>
                         <div className="flex items-center gap-1.5 mt-2">
-                          <span className="px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 text-[8.5px] font-bold tracking-wider">#strategy</span>
-                          <span className="px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[8.5px] font-bold tracking-wider">#pricing</span>
+                          <span className="px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 text-[8.5px] font-bold tracking-wider">#strategy</span>
+                          <span className="px-1.5 py-0.5 rounded bg-teal-500/10 text-teal-600 dark:text-teal-400 text-[8.5px] font-bold tracking-wider">#pricing</span>
                         </div>
                       </div>
                       <span className="text-[8px] text-gray-400 dark:text-zinc-500 font-mono hidden md:inline">Modified today, 5:48 PM</span>
@@ -871,14 +871,14 @@ const Hero = () => {
 
                     {/* Rich text mock document */}
                     <div className="flex-1 font-mono text-[9px] sm:text-[10px] md:text-xs text-gray-700 dark:text-gray-300 leading-relaxed space-y-2.5 sm:space-y-3.5">
-                      <p className="font-bold text-violet-600 dark:text-violet-400 text-left">## 1. Project Launch Specification</p>
+                      <p className="font-bold text-cyan-600 dark:text-cyan-400 text-left">## 1. Project Launch Specification</p>
                       <p className="text-left">
                         Our central focus for the upcoming quarter is deploying the responsive note-taking layout. Leveraging Next.js 15 capabilities alongside shadcn/ui components, we ensure a premium tactile layout suitable for creative crews.
                       </p>
                       
-                      <p className="font-bold text-violet-600 dark:text-violet-400 text-left">## 2. Dynamic Integrations</p>
+                      <p className="font-bold text-cyan-600 dark:text-cyan-400 text-left">## 2. Dynamic Integrations</p>
                       <p className="text-left">
-                        • Integrated payment configurations are handled natively through <strong className="text-violet-500 font-bold">Stripe billing gates</strong>. Basic (₹749/mo) and Pro (₹1599/mo) layers are initialized inside server actions.
+                        • Integrated payment configurations are handled natively through <strong className="text-cyan-500 font-bold">Stripe billing gates</strong>. Basic (₹749/mo) and Pro (₹1599/mo) layers are initialized inside server actions.
                       </p>
                       <p className="text-left">
                         • Clerk authentication filters are active on all dynamic client workspaces to establish absolute tenant security.
@@ -898,7 +898,7 @@ const Hero = () => {
                         className="hidden sm:flex sm:min-w-[140px] md:min-w-[170px] bg-gray-50/70 dark:bg-zinc-900/50 border-l border-gray-200/50 dark:border-white/5 flex-col gap-4 overflow-y-auto"
                       >
                         <div className="p-3.5 border-b border-gray-200/50 dark:border-white/5 flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400 font-bold text-xs select-none">
+                          <div className="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 font-bold text-xs select-none">
                             <span>✨</span>
                             <span>AI Copilot</span>
                           </div>
@@ -907,8 +907,8 @@ const Hero = () => {
                         <div className="px-3.5 pb-4 space-y-4">
                           
                           {/* Live Auto-Summary Card */}
-                          <div className="p-2.5 rounded-xl border border-violet-500/20 bg-violet-500/5 dark:bg-violet-500/10 space-y-1.5 text-left">
-                            <span className="font-bold text-violet-600 dark:text-violet-400 block text-[9.5px]">Auto Summary</span>
+                          <div className="p-2.5 rounded-xl border border-cyan-500/20 bg-cyan-500/5 dark:bg-cyan-500/10 space-y-1.5 text-left">
+                            <span className="font-bold text-cyan-600 dark:text-cyan-400 block text-[9.5px]">Auto Summary</span>
                             <p className="text-[8.5px] leading-relaxed text-gray-500 dark:text-zinc-300">
                               Product roadmap prioritizing dynamic Clerk security, basic and pro pricing gates via Stripe, and Gemini structure scans. Uptime targeted at 99.9%.
                             </p>
@@ -918,8 +918,8 @@ const Hero = () => {
                           <div className="space-y-2 text-left">
                             <span className="font-bold block text-gray-700 dark:text-zinc-200 text-[9.5px]">Suggested Tags</span>
                             <div className="flex flex-wrap gap-1.5">
-                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-violet-500/10 cursor-pointer text-[8px] font-bold text-violet-500 select-none">+ billing</span>
-                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-violet-500/10 cursor-pointer text-[8px] font-bold text-violet-500 select-none">+ clerk</span>
+                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-cyan-500/10 cursor-pointer text-[8px] font-bold text-cyan-500 select-none">+ billing</span>
+                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-cyan-500/10 cursor-pointer text-[8px] font-bold text-cyan-500 select-none">+ clerk</span>
                             </div>
                           </div>
 
@@ -931,7 +931,7 @@ const Hero = () => {
                                 setActiveDashboardTab("starred");
                                 handleStartChatSim("summary");
                               }}
-                              className="w-full text-center py-1.5 px-2 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[8px] font-bold transition-all shadow-sm cursor-pointer select-none"
+                              className="w-full text-center py-1.5 px-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white text-[8px] font-bold transition-all shadow-sm cursor-pointer select-none"
                             >
                               Run Note Analysis
                             </button>

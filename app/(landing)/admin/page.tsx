@@ -129,7 +129,7 @@ export default function AdminLogin() {
                   value={userId}
                   onChange={(e) => setUserId(e.target.value)}
                   required
-                  className="bg-white/50 dark:bg-black/20 border-gray-200 dark:border-gray-700 focus:ring-purple-500"
+                  className="bg-white/50 dark:bg-black/20 border-gray-200 dark:border-gray-700 focus:ring-cyan-500"
                 />
               </div>
 
@@ -144,7 +144,7 @@ export default function AdminLogin() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-white/50 dark:bg-black/20 border-gray-200 dark:border-gray-700 focus:ring-purple-500 pr-10"
+                    className="bg-white/50 dark:bg-black/20 border-gray-200 dark:border-gray-700 focus:ring-cyan-500 pr-10"
                   />
                   <button
                     type="button"
@@ -163,7 +163,7 @@ export default function AdminLogin() {
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-5 text-base font-medium text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-5 text-base font-medium text-white shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
               >
                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                 <span className="relative flex items-center justify-center gap-2">
@@ -181,7 +181,7 @@ export default function AdminLogin() {
           </div>
 
           {/* Decorative bottom bar */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+          <div className="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-500 to-rose-500" />
         </motion.div>
       </div>
     </div>

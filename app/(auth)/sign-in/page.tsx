@@ -115,14 +115,14 @@ export default function SignInPage() {
                 By clicking continue, you agree to our{" "}
                 <a
                   href="#"
-                  className=" font-medium text-purple-500 hover:text-purple-500 dark:hover:text-purple-500 transition-colors"
+                  className=" font-medium text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-500 transition-colors"
                 >
                   Terms of Service
                 </a>{" "}
                 and{" "}
                 <a
                   href="#"
-                  className=" font-medium text-purple-500 hover:text-purple-500 dark:hover:text-purple-500 transition-colors"
+                  className=" font-medium text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-500 transition-colors"
                 >
                   Privacy Policy
                 </a>
@@ -131,7 +131,7 @@ export default function SignInPage() {
           </div>
 
           {/* Decorative bottom bar */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500" />
+          <div className="h-1.5 w-full bg-gradient-to-r from-cyan-500 via-rose-500 to-blue-500" />
         </motion.div>
 
         <motion.p
@@ -141,7 +141,7 @@ export default function SignInPage() {
           className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400"
         >
           New to SnackStack?{" "}
-          <span className="font-medium text-purple-600 dark:text-purple-400">
+          <span className="font-medium text-cyan-600 dark:text-cyan-400">
             Just sign in to get started
           </span>
         </motion.p>

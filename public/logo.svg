@@ -1,22 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
   <defs>
-    <linearGradient id="grad_blue" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#3B82F6" />
-      <stop offset="1" stop-color="#2563EB" />
+    <linearGradient id="grad_cyan" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22D3EE" />
+      <stop offset="1" stop-color="#06B6C6" />
     </linearGradient>
-    <linearGradient id="grad_purple" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#A855F7" />
-      <stop offset="1" stop-color="#7C3AED" />
+    <linearGradient id="grad_teal" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2DD4BF" />
+      <stop offset="1" stop-color="#14B8A6" />
     </linearGradient>
-    <linearGradient id="grad_pink" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#EC4899" />
-      <stop offset="1" stop-color="#DB2777" />
+    <linearGradient id="grad_emerald" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#34D399" />
+      <stop offset="1" stop-color="#10B981" />
     </linearGradient>
   </defs>
-  
-  <rect x="120" y="220" width="200" height="200" rx="45" transform="rotate(-15 220 320)" fill="url(#grad_blue)" />
-  <rect x="156" y="156" width="200" height="200" rx="45" transform="rotate(0 256 256)" fill="url(#grad_purple)" />
-  <rect x="192" y="92" width="200" height="200" rx="45" transform="rotate(15 292 192)" fill="url(#grad_pink)" />
-  
-  <path d="M220 180 C 220 180, 290 180, 290 230 C 290 280, 220 280, 220 330 C 220 380, 290 380, 290 380" stroke="white" stroke-width="35" stroke-linecap="round" stroke-linejoin="round" opacity="0.9" />
+
+  <!-- Bottom card - emerald -->
+  <rect x="128" y="228" width="208" height="196" rx="42" fill="url(#grad_emerald)" opacity="0.92"
+        transform="rotate(-12 232 326)" />
+
+  <!-- Middle card - teal -->
+  <rect x="152" y="168" width="208" height="196" rx="42" fill="url(#grad_teal)" opacity="0.94"
+        transform="rotate(0 256 266)" />
+
+  <!-- Top card - cyan -->
+  <rect x="176" y="108" width="208" height="196" rx="42" fill="url(#grad_cyan)" opacity="0.96"
+        transform="rotate(12 280 206)" />
+
+  <!-- Refined S letter -->
+  <path d="M236 160 C 236 160, 276 160, 276 190 C 276 220, 236 220, 236 240 C 236 260, 276 260, 276 280 C 276 310, 236 310, 236 310"
+        stroke="white" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" opacity="0.95" />
 </svg>

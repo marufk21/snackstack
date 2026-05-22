@@ -90,7 +90,7 @@ export function SubscriptionEndedDialog({
             Maybe Later
           </Button>
           <Link href="/app/pricing" className="w-full sm:w-auto">
-            <Button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700">
+            <Button className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700">
               {isTrial ? "Upgrade Now" : "Renew Subscription"}
             </Button>
           </Link>

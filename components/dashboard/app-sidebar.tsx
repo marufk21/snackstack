@@ -72,7 +72,7 @@ export function AppSidebar() {
           "--sidebar-width-icon": "3rem",
         } as React.CSSProperties
       }
-      className="border-r border-sidebar-border bg-sidebar/95 dark:bg-sidebar/90 backdrop-blur-2xl text-sidebar-foreground shadow-xl shadow-purple-500/5"
+      className="border-r border-sidebar-border bg-sidebar/95 dark:bg-sidebar/90 backdrop-blur-2xl text-sidebar-foreground shadow-xl shadow-cyan-500/5"
     >
       <SidebarHeader className="border-b border-sidebar-border h-14 md:h-16 flex items-center">
         <div className="flex items-center gap-4 px-2 overflow-hidden w-full group-data-[collapsible=icon]:justify-center">
@@ -116,8 +116,8 @@ export function AppSidebar() {
                       isActive={isActive}
                       className={`relative overflow-hidden transition-all duration-200 group-data-[collapsible=icon]:!p-2 ${
                         isActive
-                          ? "bg-purple-100 dark:bg-white/5 text-purple-700 dark:text-white hover:bg-purple-100 dark:hover:bg-white/5 hover:text-purple-700 dark:hover:text-white"
-                          : "hover:bg-purple-50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-white"
+                          ? "bg-cyan-100 dark:bg-white/5 text-cyan-700 dark:text-white hover:bg-cyan-100 dark:hover:bg-white/5 hover:text-cyan-700 dark:hover:text-white"
+                          : "hover:bg-cyan-50 dark:hover:bg-white/5 hover:text-cyan-600 dark:hover:text-white"
                       }`}
                     >
                       <Link
@@ -125,13 +125,13 @@ export function AppSidebar() {
                         className="flex items-center gap-3 w-full"
                       >
                         {isActive && (
-                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-gradient-to-b from-purple-600 to-blue-600 rounded-r-full shadow-[0_0_8px_rgba(124,58,237,0.4)]" />
+                          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-gradient-to-b from-cyan-600 to-blue-600 rounded-r-full shadow-[0_0_8px_rgba(6,182,198,0.4)]" />
                         )}
                         <item.icon
                           className={`w-5 h-5 transition-colors ${
                             isActive
-                              ? "text-purple-600 dark:text-white"
-                              : "text-zinc-500 dark:text-zinc-400 group-hover:text-purple-600 dark:group-hover:text-white"
+                              ? "text-cyan-600 dark:text-white"
+                              : "text-zinc-500 dark:text-zinc-400 group-hover:text-cyan-600 dark:group-hover:text-white"
                           }`}
                         />
                         <span
@@ -150,7 +150,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="bg-purple-300/40 dark:bg-white/5" />
+        <SidebarSeparator className="bg-cyan-300/40 dark:bg-white/5" />
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-500 dark:text-zinc-600">
@@ -178,7 +178,7 @@ export function AppSidebar() {
               href="/sign-in"
               className="group-data-[collapsible=icon]:hidden"
             >
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
+              <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white">
                 Sign In
               </Button>
             </Link>

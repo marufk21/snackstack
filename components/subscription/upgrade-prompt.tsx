@@ -32,7 +32,7 @@ export function UpgradePrompt({
   if (variant === "inline") {
     return (
       <div className={`flex items-center gap-2 text-sm ${className}`}>
-        <Sparkles className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+        <Sparkles className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
         <span className="text-muted-foreground">
           {feature} is available on the {planNames[requiredPlan]} plan.
         </span>
@@ -48,12 +48,12 @@ export function UpgradePrompt({
   if (variant === "banner") {
     return (
       <div
-        className={`bg-gradient-to-r from-violet-500/10 to-indigo-500/10 border border-violet-500/20 rounded-lg p-4 ${className}`}
+        className={`bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 rounded-lg p-4 ${className}`}
       >
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-full bg-violet-500/10 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+            <div className="w-10 h-10 rounded-full bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-1">
@@ -65,7 +65,7 @@ export function UpgradePrompt({
             </div>
           </div>
           <Link href="/app/pricing">
-            <Button className="bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 flex-shrink-0">
+            <Button className="bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 flex-shrink-0">
               Upgrade Now
             </Button>
           </Link>
@@ -76,15 +76,15 @@ export function UpgradePrompt({
 
   // Default: card variant
   return (
-    <Card className={`border-violet-500/20 ${className}`}>
+    <Card className={`border-cyan-500/20 ${className}`}>
       <CardHeader>
         <div className="flex items-center gap-2 mb-2">
-          <Badge className="bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20">
+          <Badge className="bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20">
             {planNames[requiredPlan]} Feature
           </Badge>
         </div>
         <CardTitle className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+          <Sparkles className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
           Unlock {feature}
         </CardTitle>
         <CardDescription>
@@ -100,19 +100,19 @@ export function UpgradePrompt({
               {requiredPlan === "pro" && (
                 <>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Unlimited notes and storage
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Advanced AI suggestions
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Real-time collaboration
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Priority support
                   </li>
                 </>
@@ -120,15 +120,15 @@ export function UpgradePrompt({
               {requiredPlan === "basic" && (
                 <>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Up to 50 notes
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Basic AI suggestions
                   </li>
                   <li className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
                     Email support
                   </li>
                 </>
@@ -136,7 +136,7 @@ export function UpgradePrompt({
             </ul>
           </div>
           <Link href="/app/pricing" className="block">
-            <Button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700">
+            <Button className="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700">
               View Plans & Upgrade
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

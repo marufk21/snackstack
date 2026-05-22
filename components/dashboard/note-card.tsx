@@ -38,14 +38,14 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
   const cardBgClass = [
     "bg-gradient-to-br from-blue-50/50 to-blue-100/30 dark:from-blue-950/20 dark:to-blue-900/10 border-blue-200/50 dark:border-blue-800/30",
     "bg-gradient-to-br from-green-50/50 to-green-100/30 dark:from-green-950/20 dark:to-green-900/10 border-green-200/50 dark:border-green-800/30",
-    "bg-gradient-to-br from-purple-50/50 to-purple-100/30 dark:from-purple-950/20 dark:to-purple-900/10 border-purple-200/50 dark:border-purple-800/30",
+    "bg-gradient-to-br from-cyan-50/50 to-cyan-100/30 dark:from-cyan-950/20 dark:to-cyan-900/10 border-cyan-200/50 dark:border-cyan-800/30",
     "bg-gradient-to-br from-orange-50/50 to-orange-100/30 dark:from-orange-950/20 dark:to-orange-900/10 border-orange-200/50 dark:border-orange-800/30",
-    "bg-gradient-to-br from-pink-50/50 to-pink-100/30 dark:from-pink-950/20 dark:to-pink-900/10 border-pink-200/50 dark:border-pink-800/30",
+    "bg-gradient-to-br from-rose-50/50 to-rose-100/30 dark:from-rose-950/20 dark:to-rose-900/10 border-rose-200/50 dark:border-rose-800/30",
   ][colorVariant];
 
   return (
     <Card
-      className={`group relative overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10 dark:hover:shadow-purple-500/20 hover:scale-[1.03] hover:-translate-y-1 hover:z-10 ripple-effect ${cardBgClass}`}
+      className={`group relative overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-cyan-500/10 dark:hover:shadow-cyan-500/20 hover:scale-[1.03] hover:-translate-y-1 hover:z-10 ripple-effect ${cardBgClass}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -61,7 +61,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/10 dark:from-black/0 dark:via-black/0 dark:to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       {/* Glowing border effect on hover */}
-      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-pink-500/20 blur-sm -z-10" />
+      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-rose-500/20 blur-sm -z-10" />
 
       <div className="relative p-6 h-full flex flex-col">
         {/* Header */}
@@ -71,7 +71,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
               {note.title}
             </h3>
             <Sparkles
-              className="w-4 h-4 text-purple-500 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110"
+              className="w-4 h-4 text-cyan-500 flex-shrink-0 opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110"
               aria-hidden="true"
             />
           </div>
@@ -99,7 +99,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
         </div>
 
         {/* AI Badge with pulse animation */}
-        <div className="inline-flex items-center gap-1.5 bg-purple-500/10 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-xs px-2.5 py-1.5 rounded-full w-fit mb-3 transition-all duration-300 group-hover:bg-purple-500/20 dark:group-hover:bg-purple-500/30 group-hover:scale-105">
+        <div className="inline-flex items-center gap-1.5 bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 text-xs px-2.5 py-1.5 rounded-full w-fit mb-3 transition-all duration-300 group-hover:bg-cyan-500/20 dark:group-hover:bg-cyan-500/30 group-hover:scale-105">
           <Brain className="w-3 h-3 group-hover:animate-pulse-glow" />
           <span className="font-medium">AI-Powered</span>
         </div>
@@ -124,7 +124,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       <div
         className={`absolute left-0 top-0 bottom-0 w-1 transition-all duration-500 ${
           note.imageUrl
-            ? "bg-gradient-to-b from-purple-500 to-purple-600"
+            ? "bg-gradient-to-b from-cyan-500 to-cyan-600"
             : note.content.length > 1000
             ? "bg-gradient-to-b from-green-500 to-green-600"
             : note.content.length > 500

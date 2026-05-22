@@ -68,20 +68,20 @@ export function PricingCard({
 
   return (
     <Card
-      className={`relative w-full h-full flex flex-col bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 backdrop-blur-sm transition-all duration-300 hover:border-violet-500/30 hover:shadow-xl rounded-3xl overflow-visible ${
+      className={`relative w-full h-full flex flex-col bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 backdrop-blur-sm transition-all duration-300 hover:border-cyan-500/30 hover:shadow-xl rounded-3xl overflow-visible ${
         tier.popular
-          ? "ring-2 ring-violet-500 shadow-lg z-20"
+          ? "ring-2 ring-cyan-500 shadow-lg z-20"
           : "hover:-translate-y-1"
       }`}
     >
       {tier.popular && (
-        <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-4 py-1 rounded-full shadow-lg border-0 text-sm font-semibold">
+        <Badge className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-cyan-600 to-teal-600 text-white px-4 py-1 rounded-full shadow-lg border-0 text-sm font-semibold">
           Most Popular
         </Badge>
       )}
 
       <CardHeader className="text-center pt-8 pb-6">
-        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
           {tier.name}
         </CardTitle>
         <CardDescription className="text-base text-muted-foreground mt-2">
@@ -121,8 +121,8 @@ export function PricingCard({
         <ul className="space-y-4">
           {tier.features.map((feature, index) => (
             <li key={index} className="flex items-start space-x-3">
-              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-violet-500/10 flex items-center justify-center mt-0.5">
-                <Check className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+              <div className="flex-shrink-0 w-6 h-6 rounded-full bg-cyan-500/10 flex items-center justify-center mt-0.5">
+                <Check className="h-4 w-4 text-cyan-600 dark:text-cyan-400" />
               </div>
               <span className="text-sm text-muted-foreground font-medium">
                 {feature}
@@ -136,8 +136,8 @@ export function PricingCard({
         <Button
           className={`w-full rounded-full py-6 text-lg font-semibold transition-all duration-300 ${
             tier.popular
-              ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-indigo-500/25"
-              : "bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 hover:border-violet-500/50 hover:bg-violet-50 dark:hover:bg-white/10 text-foreground"
+              ? "bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white shadow-lg hover:shadow-teal-500/25"
+              : "bg-white dark:bg-white/5 border-2 border-gray-200 dark:border-white/10 hover:border-cyan-500/50 hover:bg-cyan-50 dark:hover:bg-white/10 text-foreground"
           }`}
           variant={tier.popular ? "default" : "outline"}
           onClick={() => {

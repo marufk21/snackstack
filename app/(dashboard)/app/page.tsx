@@ -95,7 +95,7 @@ export default function NotesPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+          <Loader2 className="w-8 h-8 animate-spin text-cyan-500" />
           <span className="text-lg font-medium">Loading your notes...</span>
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function NotesPage() {
           <h2 className="text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2">
             My Notes
             {notes.length > 0 && (
-              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-purple-500" />
+              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-cyan-500" />
             )}
           </h2>
           <p className="text-sm md:text-base text-muted-foreground mt-1">
@@ -155,7 +155,7 @@ export default function NotesPage() {
         <Button
           onClick={handleCreateNewNote}
           size="lg"
-          className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           disabled={isCreatingNote}
         >
           {isCreatingNote ? (
@@ -169,11 +169,11 @@ export default function NotesPage() {
 
       {/* Notes Grid */}
       {notes.length === 0 ? (
-        <Card className="p-12 md:p-16 text-center animate-fade-in-up animate-delay-200 bg-gradient-to-br from-background to-muted/20 border-dashed border-2 hover:border-purple-500/50 transition-all duration-300">
+        <Card className="p-12 md:p-16 text-center animate-fade-in-up animate-delay-200 bg-gradient-to-br from-background to-muted/20 border-dashed border-2 hover:border-cyan-500/50 transition-all duration-300">
           <div className="max-w-md mx-auto">
             <div className="relative inline-block mb-6">
               <FileText className="w-20 h-20 md:w-24 md:h-24 text-muted-foreground/50" />
-              <Sparkles className="w-8 h-8 text-purple-500 absolute -top-2 -right-2 animate-pulse-glow" />
+              <Sparkles className="w-8 h-8 text-cyan-500 absolute -top-2 -right-2 animate-pulse-glow" />
             </div>
             <h2 className="text-xl md:text-2xl font-semibold mb-3">
               No notes yet
@@ -186,7 +186,7 @@ export default function NotesPage() {
             <Button
               onClick={handleCreateNewNote}
               size="lg"
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               disabled={isCreatingNote}
             >
               {isCreatingNote ? (
@@ -239,7 +239,7 @@ export default function NotesPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-500" />
+              <Sparkles className="w-5 h-5 text-cyan-500" />
               Note Limit Reached
             </AlertDialogTitle>
             <AlertDialogDescription>
@@ -252,7 +252,7 @@ export default function NotesPage() {
             <AlertDialogCancel>Maybe Later</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => router.push("/app/pricing")}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700"
             >
               View Plans
             </AlertDialogAction>

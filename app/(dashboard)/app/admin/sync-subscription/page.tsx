@@ -42,7 +42,7 @@ export default function SyncSubscriptionPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-50 to-blue-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -56,7 +56,7 @@ export default function SyncSubscriptionPage() {
         <button
           onClick={handleSync}
           disabled={loading}
-          className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105"
+          className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-cyan-700 hover:to-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-105"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">

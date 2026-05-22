@@ -305,7 +305,7 @@ export default async function BlogDetailsPage({
           {/* Article Content */}
           <article className="bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden p-8 md:p-12 relative">
             {/* Decorative top gradient */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-50" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-rose-500 opacity-50" />
 
             <BlogContentView blog={blog} />
 
@@ -322,7 +322,7 @@ export default async function BlogDetailsPage({
                     <ArrowLeftIcon className="h-3 w-3 group-hover:-translate-x-1 transition-transform" />
                     Previous Article
                   </span>
-                  <span className="text-sm sm:text-base font-semibold text-foreground truncate w-full group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  <span className="text-sm sm:text-base font-semibold text-foreground truncate w-full group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                     {prevBlog.title}
                   </span>
                 </Link>
@@ -341,7 +341,7 @@ export default async function BlogDetailsPage({
                     Next Article
                     <ArrowRightIcon className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                   </span>
-                  <span className="text-sm sm:text-base font-semibold text-foreground truncate w-full group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                  <span className="text-sm sm:text-base font-semibold text-foreground truncate w-full group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                     {nextBlog.title}
                   </span>
                 </Link>

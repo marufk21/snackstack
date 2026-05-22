@@ -45,7 +45,7 @@ export default function BlogContentView({ blog, className = "" }: BlogContentVie
 
       {/* Excerpt */}
       {blog.excerpt && (
-        <p className="text-xl text-muted-foreground leading-relaxed border-l-4 border-purple-500 pl-4">
+        <p className="text-xl text-muted-foreground leading-relaxed border-l-4 border-cyan-500 pl-4">
           {blog.excerpt}
         </p>
       )}
@@ -55,11 +55,11 @@ export default function BlogContentView({ blog, className = "" }: BlogContentVie
         className="prose prose-lg dark:prose-invert max-w-none 
           prose-headings:text-foreground prose-headings:font-bold
           prose-p:text-muted-foreground prose-p:leading-relaxed
-          prose-a:text-purple-600 dark:prose-a:text-purple-400 prose-a:no-underline hover:prose-a:underline
+          prose-a:text-cyan-600 dark:prose-a:text-cyan-400 prose-a:no-underline hover:prose-a:underline
           prose-strong:text-foreground
           prose-code:text-foreground prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded
           prose-pre:bg-muted prose-pre:border prose-pre:border-border
-          prose-blockquote:border-purple-500 prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:text-muted-foreground
+          prose-blockquote:border-cyan-500 prose-blockquote:border-l-4 prose-blockquote:pl-4 prose-blockquote:text-muted-foreground
           prose-img:rounded-xl prose-img:border prose-img:border-border"
         dangerouslySetInnerHTML={{ __html: blog.content }}
       />

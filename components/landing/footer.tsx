@@ -148,7 +148,7 @@ const Footer = () => {
                     className="object-contain"
                   />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="text-xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
                   SnackStack
                 </span>
               </Link>
@@ -194,7 +194,7 @@ const Footer = () => {
                           item === "Blog" ? "/blogs" : `#${item.toLowerCase()}`
                         )
                       }
-                      className="hover:text-violet-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-violet-600 after:transition-all hover:after:w-full"
+                      className="hover:text-cyan-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-cyan-600 after:transition-all hover:after:w-full"
                     >
                       {item}
                     </Link>
@@ -231,7 +231,7 @@ const Footer = () => {
                             handleLinkClick(e, href);
                           }
                         }}
-                        className="hover:text-violet-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-violet-600 after:transition-all hover:after:w-full"
+                        className="hover:text-cyan-600 transition-colors relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-0 after:h-px after:bg-cyan-600 after:transition-all hover:after:w-full"
                       >
                         {item}
                       </Link>
@@ -280,10 +280,10 @@ const Footer = () => {
         ref={bigTextRef}
         className="fixed bottom-0 left-0 w-full -z-10 bg-background backdrop-blur-sm border-t border-border/50"
       >
-        <div className="w-full h-full flex justify-center items-end px-4 sm:px-6 md:px-8 pt-8 sm:pt-12 md:pt-20 pb-4 sm:pb-6 md:pb-10">
+        <div className="w-full h-full flex justify-center items-end px-4 sm:px-6 md:px-8 pt-6 sm:pt-10 md:pt-14 pb-3 sm:pb-4 md:pb-6">
           <div
             ref={textElementRef}
-            className="text-[14vw] sm:text-[15vw] md:text-[14vw] font-black leading-[0.75] tracking-[-0.05em] text-transparent bg-clip-text bg-gradient-to-b from-foreground/25 via-foreground/10 to-transparent select-none pointer-events-none"
+            className="text-[14vw] sm:text-[15vw] md:text-[14vw] font-black leading-[0.75] tracking-[-0.05em] text-transparent bg-clip-text bg-gradient-to-b from-cyan-500/40 via-teal-500/20 to-transparent select-none pointer-events-none"
           >
             SNACKSTACK
           </div>

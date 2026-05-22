@@ -39,7 +39,7 @@ export default function AdminHeader() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent dark:from-indigo-400 dark:to-purple-400">
+                <span className="text-lg font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent dark:from-cyan-400 dark:to-teal-400">
                   SnackStack
                 </span>
                 <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">

@@ -72,7 +72,7 @@ export function InfiniteMovingCards({
             <blockquote className="flex h-full flex-col justify-between">
               <div>
                 <svg
-                  className="mb-3 h-5 w-5 text-violet-400 dark:text-violet-600"
+                  className="mb-3 h-5 w-5 text-cyan-400 dark:text-cyan-600"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >

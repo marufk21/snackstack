@@ -181,7 +181,7 @@ const Navbar = () => {
         {isActive && (
           <motion.span 
             layoutId="activeNavbarIndicator"
-            className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-500 rounded-full"
+            className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-cyan-600 to-emerald-500 rounded-full"
             transition={{ type: "spring", stiffness: 350, damping: 25 }}
           />
         )}
@@ -210,7 +210,7 @@ const Navbar = () => {
           className={cn(
             "flex items-center gap-3 px-5 py-3.5 rounded-2xl text-base font-semibold transition-all duration-300",
             isActive
-              ? "bg-gradient-to-r from-violet-500/15 to-fuchsia-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20 shadow-[0_2px_10px_rgba(139,92,246,0.08)]"
+              ? "bg-gradient-to-r from-cyan-500/15 to-emerald-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 shadow-[0_2px_10px_rgba(6,182,198,0.08)]"
               : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-50/80 dark:hover:bg-white/5 border border-transparent"
           )}
           onClick={(e) => handleNavClick(e, item.href)}
@@ -220,7 +220,7 @@ const Navbar = () => {
           </span>
           <span className="flex-1">{item.label}</span>
           {isActive && (
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-500 flex-shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 flex-shrink-0" />
           )}
         </Link>
       </motion.div>
@@ -244,8 +244,8 @@ const Navbar = () => {
             className={cn(
               "w-full mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-500 ease-in-out",
               scrolled
-                ? "max-w-6xl py-2 bg-white/80 dark:bg-zinc-950/70 backdrop-blur-2xl rounded-full border border-gray-200/50 dark:border-white/10 shadow-lg dark:shadow-2xl shadow-black/5"
-                : "max-w-8xl rounded-3xl border-none bg-transparent"
+                ? "max-w-6xl py-2 bg-white/80 dark:bg-zinc-950/70 backdrop-blur-2xl rounded-2xl border border-gray-200/50 dark:border-white/10 shadow-lg dark:shadow-2xl shadow-black/5"
+                : "max-w-8xl rounded-2xl border-none bg-transparent"
             )}
           >
             <div
@@ -264,7 +264,7 @@ const Navbar = () => {
                   <div className="relative">
                     <div
                       className={cn(
-                        "relative transition-all duration-500 ease-in-out flex items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/10 to-indigo-500/10 border border-violet-500/20 dark:border-white/5",
+                        "relative transition-all duration-500 ease-in-out flex items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 dark:border-white/5",
                         scrolled ? "w-8.5 h-8.5 p-1.5" : "w-10 h-10 p-2"
                       )}
                     >
@@ -284,7 +284,7 @@ const Navbar = () => {
                         scrolled ? "text-lg" : "text-xl sm:text-2xl"
                       )}
                     >
-                      Snack<span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">Stack</span>
+                      Snack<span className="bg-gradient-to-r from-cyan-600 via-emerald-500 to-teal-600 bg-clip-text text-transparent">Stack</span>
                     </span>
                   </div>
                 </motion.div>
@@ -312,16 +312,14 @@ const Navbar = () => {
                 )}
               >
                 {/* Theme Toggle Button */}
-                <div className="flex items-center justify-center bg-gray-50 hover:bg-gray-100 dark:bg-zinc-900/60 dark:hover:bg-zinc-800/80 border border-gray-200/50 dark:border-white/5 p-1 rounded-full shadow-sm transition-all duration-300">
-                  <ThemeToggleButton />
-                </div>
+                <ThemeToggleButton />
 
                 {/* Authentication Dynamic Buttons */}
                 {!session ? (
                   <Link href="/sign-in">
                     <button
                       className={cn(
-                        "group relative hidden lg:flex items-center gap-1.5 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 text-white rounded-full font-bold shadow-[0_4px_15px_rgba(124,58,237,0.15)] hover:shadow-[0_4px_20px_rgba(124,58,237,0.35)] transition-all duration-500 hover:-translate-y-0.5 overflow-hidden cursor-pointer select-none",
+                        "group relative hidden lg:flex items-center gap-1.5 bg-gradient-to-r from-cyan-600 via-teal-600 to-cyan-600 text-white rounded-full font-bold shadow-[0_4px_15px_rgba(6,182,198,0.15)] hover:shadow-[0_4px_20px_rgba(6,182,198,0.35)] transition-all duration-500 hover:-translate-y-0.5 overflow-hidden cursor-pointer select-none",
                         scrolled ? "px-5 py-2 text-xs" : "px-6 py-2.5 text-sm"
                       )}
                     >
@@ -329,7 +327,7 @@ const Navbar = () => {
                         Sign In
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </span>
-                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </button>
                   </Link>
                 ) : (
@@ -343,9 +341,9 @@ const Navbar = () => {
                       <span>Dashboard</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
-                    <Avatar className="w-8.5 h-8.5 cursor-pointer ring-2 ring-violet-500/20 hover:ring-violet-500 transition-all duration-350">
+                    <Avatar className="w-8.5 h-8.5 cursor-pointer ring-2 ring-cyan-500/20 hover:ring-cyan-500 transition-all duration-350">
                       <AvatarImage src={session.user?.image || undefined} />
-                      <AvatarFallback className="bg-violet-500/10 text-violet-600 font-black">
+                      <AvatarFallback className="bg-cyan-500/10 text-cyan-600 font-black">
                         {session.user?.name?.charAt(0)?.toUpperCase() || (
                           <User className="w-4 h-4" />
                         )}
@@ -360,7 +358,7 @@ const Navbar = () => {
                     className={cn(
                       "relative rounded-full p-2.5 transition-all duration-300 cursor-pointer overflow-hidden",
                       isOpen
-                        ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/30"
+                        ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/30"
                         : "text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white bg-gray-50 hover:bg-gray-100 dark:bg-zinc-900/60 dark:hover:bg-zinc-800 border border-gray-200/50 dark:border-white/5"
                     )}
                     onClick={() => setIsOpen(!isOpen)}
@@ -389,7 +387,7 @@ const Navbar = () => {
                 )}
               >
                 {/* Subtle gradient accent at top */}
-                <div className="h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
+                <div className="h-px bg-gradient-to-r from-transparent via-cyan-500/40 to-transparent" />
 
                 <motion.div
                   variants={{
@@ -416,21 +414,21 @@ const Navbar = () => {
                     {!session ? (
                       <>
                         <Link href="/sign-in" className="w-full block">
-                          <button className="w-full py-3.5 bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 text-white rounded-2xl font-bold shadow-[0_4px_20px_rgba(139,92,246,0.3)] hover:shadow-[0_4px_25px_rgba(139,92,246,0.5)] transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm tracking-wide">
+                          <button className="w-full py-3.5 bg-gradient-to-r from-cyan-600 via-emerald-500 to-teal-600 text-white rounded-2xl font-bold shadow-[0_4px_20px_rgba(6,182,198,0.3)] hover:shadow-[0_4px_25px_rgba(6,182,198,0.5)] transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm tracking-wide">
                             Sign In
                             <ArrowRight className="w-4 h-4 inline ml-1.5 -mt-0.5" />
                           </button>
                         </Link>
                         <p className="text-center text-[11px] text-muted-foreground">
                           New here?{" "}
-                          <Link href="/sign-in" className="text-violet-600 dark:text-violet-400 font-semibold hover:underline">
+                          <Link href="/sign-in" className="text-cyan-600 dark:text-cyan-400 font-semibold hover:underline">
                             Start for free →
                           </Link>
                         </p>
                       </>
                     ) : (
                       <Link href="/app" className="w-full block">
-                        <button className="w-full py-3.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm tracking-wide">
+                        <button className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm tracking-wide">
                           My Notes Dashboard
                           <ChevronRight className="w-4 h-4 inline ml-1.5 -mt-0.5" />
                         </button>

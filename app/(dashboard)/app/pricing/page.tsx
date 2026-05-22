@@ -123,7 +123,7 @@ export default function PricingPage() {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
             Choose Your <span className="gradient-text">SnackStack</span> Plan
           </h1>
-          <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-purple-500 animate-pulse-glow" />
+          <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-cyan-500 animate-pulse-glow" />
         </div>
         <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
           Unlock the full potential of AI-powered note-taking. Choose a plan

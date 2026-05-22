@@ -17,7 +17,7 @@ export default function NotFound() {
         {/* 404 Number with Gradient */}
         <div className="mb-8">
           <h1 className="text-9xl sm:text-[12rem] font-bold leading-none">
-            <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-600 via-rose-500 to-blue-600 bg-clip-text text-transparent">
               404
             </span>
           </h1>

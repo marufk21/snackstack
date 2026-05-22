@@ -21,7 +21,7 @@ const PageWrapper = forwardRef<HTMLElement, PageWrapperProps>(({
       {...props}
     >
       {/* Subtle background gradient for depth */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-violet-500/5 via-transparent to-transparent opacity-50" style={{
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-500/5 via-transparent to-transparent opacity-50" style={{
         background: `
         radial-gradient(
           circle at center,

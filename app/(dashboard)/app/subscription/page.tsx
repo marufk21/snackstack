@@ -141,7 +141,7 @@ export default function SubscriptionPage() {
     return (
       <div className="relative container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
           <span className="text-lg font-medium">Loading subscription...</span>
         </div>
       </div>
@@ -251,7 +251,7 @@ export default function SubscriptionPage() {
               </div>
 
               <Link href="/app/pricing" className="block">
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                   Upgrade to Premium
                 </Button>
               </Link>
@@ -344,7 +344,7 @@ export default function SubscriptionPage() {
               <div className="flex flex-col gap-4">
                 <div className="flex gap-4">
                   <Link href="/app/pricing" className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                       Upgrade to Premium
                     </Button>
                   </Link>

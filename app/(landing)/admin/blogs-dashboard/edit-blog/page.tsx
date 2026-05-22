@@ -153,9 +153,9 @@ function EditBlogContent() {
         <div className="mb-8 flex items-center">
           <div
             onClick={() => router.push("/admin/blogs-dashboard")}
-            className="group flex items-center cursor-pointer text-gray-600 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-indigo-400 transition-colors"
+            className="group flex items-center cursor-pointer text-gray-600 hover:text-teal-600 dark:text-gray-400 dark:hover:text-teal-400 transition-colors"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 ring-1 ring-gray-200 transition-all group-hover:bg-indigo-50 group-hover:ring-indigo-200 dark:bg-gray-800/50 dark:ring-gray-700 dark:group-hover:bg-indigo-900/20 dark:group-hover:ring-indigo-500/30 mr-3 backdrop-blur-sm">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/80 ring-1 ring-gray-200 transition-all group-hover:bg-teal-50 group-hover:ring-teal-200 dark:bg-gray-800/50 dark:ring-gray-700 dark:group-hover:bg-teal-900/20 dark:group-hover:ring-teal-500/30 mr-3 backdrop-blur-sm">
               <ArrowLeftIcon className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
             </div>
             <span className="text-base font-medium">Back to Dashboard</span>
@@ -164,7 +164,7 @@ function EditBlogContent() {
 
         <Card className="overflow-hidden border-white/20 bg-white/70 backdrop-blur-xl shadow-xl dark:border-white/10 dark:bg-black/40">
           <CardHeader className="border-b border-gray-200/50 dark:border-gray-700/50 p-6">
-            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-rose-500 bg-clip-text text-transparent">
               Edit Blog Post
             </CardTitle>
             <CardDescription className="text-base">
@@ -239,7 +239,7 @@ function EditBlogContent() {
                                 setStatus(option);
                                 setStatusOpen(false);
                               }}
-                              className={`px-3 py-2 text-sm cursor-pointer capitalize hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors ${status === option ? "bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400" : ""
+                              className={`px-3 py-2 text-sm cursor-pointer capitalize hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors ${status === option ? "bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400" : ""
                                 }`}
                             >
                               {option}
@@ -259,7 +259,7 @@ function EditBlogContent() {
                       type="file"
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="cursor-pointer bg-white/50 dark:bg-black/20 file:mr-1 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 dark:file:bg-indigo-900/20 dark:file:text-indigo-400"
+                      className="cursor-pointer bg-white/50 dark:bg-black/20 file:mr-1 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 dark:file:bg-teal-900/20 dark:file:text-teal-400"
                     />
                     <UploadCloud className="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" />
                   </div>
@@ -306,7 +306,7 @@ function EditBlogContent() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg transition-all hover:scale-105"
+                className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white shadow-lg transition-all hover:scale-105"
               >
                 {isSubmitting ? (
                   <>
