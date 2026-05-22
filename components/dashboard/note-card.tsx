@@ -40,7 +40,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
     "bg-gradient-to-br from-green-50/50 to-green-100/30 dark:from-green-950/20 dark:to-green-900/10 border-green-200/50 dark:border-green-800/30",
     "bg-gradient-to-br from-cyan-50/50 to-cyan-100/30 dark:from-cyan-950/20 dark:to-cyan-900/10 border-cyan-200/50 dark:border-cyan-800/30",
     "bg-gradient-to-br from-orange-50/50 to-orange-100/30 dark:from-orange-950/20 dark:to-orange-900/10 border-orange-200/50 dark:border-orange-800/30",
-    "bg-gradient-to-br from-rose-50/50 to-rose-100/30 dark:from-rose-950/20 dark:to-rose-900/10 border-rose-200/50 dark:border-rose-800/30",
+    "bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 dark:from-emerald-950/20 dark:to-emerald-900/10 border-emerald-200/50 dark:border-emerald-800/30",
   ][colorVariant];
 
   return (
@@ -61,7 +61,7 @@ export function NoteCard({ note, onClick }: NoteCardProps) {
       <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/0 to-white/10 dark:from-black/0 dark:via-black/0 dark:to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
       {/* Glowing border effect on hover */}
-      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-rose-500/20 blur-sm -z-10" />
+      <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-cyan-500/20 via-blue-500/20 to-emerald-500/20 blur-sm -z-10" />
 
       <div className="relative p-6 h-full flex flex-col">
         {/* Header */}

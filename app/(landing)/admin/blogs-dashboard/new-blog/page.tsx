@@ -134,7 +134,7 @@ export default function NewBlog() {
 
         <Card className="overflow-hidden border-white/20 bg-white/70 backdrop-blur-xl shadow-xl dark:border-white/10 dark:bg-black/40">
           <CardHeader className="border-b border-gray-200/50 dark:border-gray-700/50 p-6">
-            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-rose-500 bg-clip-text text-transparent">
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-emerald-500 bg-clip-text text-transparent">
               Create New Blog Post
             </CardTitle>
             <CardDescription className="text-base">

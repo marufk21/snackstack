@@ -98,7 +98,7 @@ export default function BlogsDashboard() {
               <Card className="overflow-hidden border-white/20 bg-white/70 backdrop-blur-xl shadow-xl dark:border-white/10 dark:bg-black/40">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200/50 dark:border-gray-700/50 p-6">
                   <div className="space-y-1">
-                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-rose-500 bg-clip-text text-transparent">
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-teal-600 via-cyan-600 to-emerald-500 bg-clip-text text-transparent">
                       Manage Blogs
                     </CardTitle>
                     <CardDescription className="text-base">

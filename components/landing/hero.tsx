@@ -558,12 +558,12 @@ const Hero = () => {
 
                 {/* FLOATING CARD 3: Quick Capture Uploader Pipeline */}
                 <div
-                  className="hidden sm:block absolute bottom-0 right-4 w-[210px] sm:w-[230px] rounded-3xl shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] backdrop-blur-xl p-4.5 border z-30 bg-white/70 border-black/5 shadow-black/5 dark:bg-zinc-900/60 dark:border-white/10 dark:shadow-none hover:border-rose-400/30 transition-all duration-300 animate-float"
+                  className="hidden sm:block absolute bottom-0 right-4 w-[210px] sm:w-[230px] rounded-3xl shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] backdrop-blur-xl p-4.5 border z-30 bg-white/70 border-black/5 shadow-black/5 dark:bg-zinc-900/60 dark:border-white/10 dark:shadow-none hover:border-cyan-400/30 transition-all duration-300 animate-float"
                   style={{ animationDelay: "3.2s" }}
                 >
                   <div className="flex items-center justify-between mb-3 select-none">
                     <div className="flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse" />
+                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                       <span className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-white/60">
                         Quick Capture
                       </span>
@@ -672,7 +672,7 @@ const Hero = () => {
                     : "bg-white/70 dark:bg-zinc-950/70 border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-800 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-900"
                 )}
               >
-                {ditherEnabled ? <Cpu className="w-3.5 h-3.5 text-rose-300 animate-spin" /> : <MonitorPlay className="w-3.5 h-3.5 text-cyan-500 animate-pulse" />}
+                {ditherEnabled ? <Cpu className="w-3.5 h-3.5 text-cyan-300 animate-spin" /> : <MonitorPlay className="w-3.5 h-3.5 text-cyan-500 animate-pulse" />}
                 🖥️ Ultra Visuals (WebGL): {ditherEnabled ? "ON" : "OFF"}
               </button>
             </div>

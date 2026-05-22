@@ -131,7 +131,7 @@ export default function SignInPage() {
           </div>
 
           {/* Decorative bottom bar */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-cyan-500 via-rose-500 to-blue-500" />
+          <div className="h-1.5 w-full bg-gradient-to-r from-cyan-500 via-teal-500 to-emerald-500" />
         </motion.div>
 
         <motion.p

@@ -181,7 +181,7 @@ export default function AdminLogin() {
           </div>
 
           {/* Decorative bottom bar */}
-          <div className="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-500 to-rose-500" />
+          <div className="h-1.5 w-full bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-500" />
         </motion.div>
       </div>
     </div>

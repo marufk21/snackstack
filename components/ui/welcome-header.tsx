@@ -29,7 +29,7 @@ export function WelcomeHeader({ className = "" }: WelcomeHeaderProps) {
   return (
     <div className={`relative ${className} animate-fade-in-up`}>
       {/* Subtle gradient background */}
-      <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/5 via-teal-500/5 to-rose-500/5 dark:from-cyan-500/10 dark:via-teal-500/10 dark:to-rose-500/10 rounded-2xl blur-2xl -z-10 opacity-50" />
+      <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/5 via-teal-500/5 to-emerald-500/5 dark:from-cyan-500/10 dark:via-teal-500/10 dark:to-emerald-500/10 rounded-2xl blur-2xl -z-10 opacity-50" />
 
       <div className="relative">
         <div className="flex items-center gap-3 mb-2">

@@ -305,7 +305,7 @@ export default async function BlogDetailsPage({
           {/* Article Content */}
           <article className="bg-white/70 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden p-8 md:p-12 relative">
             {/* Decorative top gradient */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-rose-500 opacity-50" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-500 opacity-50" />
 
             <BlogContentView blog={blog} />
 
