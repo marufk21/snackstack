@@ -6,7 +6,6 @@ import { Sparkles, Brain, FileText, ArrowRight, Wand2, Zap, Star, Layers } from 
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { cn } from "@/lib/utils";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -18,7 +17,7 @@ const Features = () => {
 
   const services = [
     {
-      icon: <Wand2 className="w-5 h-5" />,
+      icon: <Wand2 className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "AI-Powered Suggestions",
       description:
         "Get intelligent suggestions and insights as you write. Our AI helps you organize thoughts, find connections, and enhance your notes.",
@@ -32,7 +31,7 @@ const Features = () => {
       image: "/features/ai-suggestions.png",
     },
     {
-      icon: <Brain className="w-5 h-5" />,
+      icon: <Brain className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "Intelligent Organization",
       description:
         "Automatically categorize and tag your notes with AI. Find what you need instantly with powerful search and smart filters.",
@@ -46,7 +45,7 @@ const Features = () => {
       image: "/features/smart-organization.png",
     },
     {
-      icon: <Sparkles className="w-5 h-5" />,
+      icon: <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "Collaborative Features",
       description:
         "Work together seamlessly with real-time collaboration. Share notes, get feedback, and build on each other's ideas.",
@@ -60,7 +59,7 @@ const Features = () => {
       image: "/features/collaboration.png",
     },
     {
-      icon: <FileText className="w-5 h-5" />,
+      icon: <FileText className="w-4 h-4 sm:w-5 sm:h-5" />,
       title: "Rich Note-Taking",
       description:
         "Create beautiful, rich notes with markdown support, images, and embedded content. All your information in one place.",
@@ -111,21 +110,36 @@ const Features = () => {
     const container = containerRef.current;
 
     if (track && container) {
-      const getScrollAmount = () => {
-        return -(track.scrollWidth - window.innerWidth);
-      };
-
-      gsap.to(track, {
-        x: getScrollAmount,
-        ease: "none",
-        scrollTrigger: {
-          trigger: container,
-          start: "top top",
-          end: () => `+=${track.scrollWidth}`,
-          pin: true,
-          scrub: 1,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
+      ScrollTrigger.matchMedia({
+        "(min-width: 768px)": () => {
+          gsap.to(track, {
+            x: () => -(track.scrollWidth - window.innerWidth),
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top top",
+              end: () => `+=${track.scrollWidth}`,
+              pin: true,
+              scrub: 1,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+        },
+        "(max-width: 767px)": () => {
+          gsap.to(track, {
+            x: () => -(track.scrollWidth - window.innerWidth),
+            ease: "power1.out",
+            scrollTrigger: {
+              trigger: container,
+              start: "top top",
+              end: () => `+=${track.scrollWidth}`,
+              pin: true,
+              scrub: 0.6,
+              anticipatePin: 0.5,
+              invalidateOnRefresh: true,
+            },
+          });
         },
       });
     }
@@ -146,46 +160,43 @@ const Features = () => {
           return (
             <div
               key={index}
-              className="w-screen h-screen flex items-center justify-center px-6 sm:px-10 md:px-14 lg:px-20 shrink-0 relative"
+              className="w-screen h-screen flex items-center justify-center px-4 sm:px-10 md:px-14 lg:px-20 shrink-0 relative"
             >
-              {/* Subtle background texture */}
-              <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_40%,transparent_100%)]" />
+              {/* Ambient glow orb — lighter on mobile */}
+              <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] ${accent.glow} blur-[60px] sm:blur-[120px] rounded-full opacity-30 sm:opacity-50`} />
 
-              {/* Ambient glow orb */}
-              <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] ${accent.glow} blur-[120px] rounded-full opacity-50`} />
-
-              <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center relative z-10">
+              <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 items-center relative z-10">
                 {/* Left: Content */}
-                <div className="space-y-5 sm:space-y-7 order-2 md:order-1">
+                <div className="space-y-4 sm:space-y-7 order-2 md:order-1">
                   {/* Step indicator */}
-                  <div className={`inline-flex items-center gap-2.5 px-3 py-1.5 rounded-full border ${accent.border} ${accent.bg} backdrop-blur-sm`}>
-                    <span className={`w-2 h-2 rounded-full ${accent.dot}`} />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  <div className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full border ${accent.border} ${accent.bg}`}>
+                    <span className={`w-1.5 h-1.5 rounded-full ${accent.dot}`} />
+                    <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                       Feature {index + 1} of {services.length}
                     </span>
                   </div>
 
                   {/* Title & Description */}
-                  <div className="space-y-4">
-                    <h3 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-foreground leading-[1.1] tracking-tight">
+                  <div className="space-y-2 sm:space-y-4">
+                    <h3 className="text-xl sm:text-4xl md:text-5xl font-extrabold text-foreground leading-[1.1] tracking-tight">
                       {service.title}
                     </h3>
-                    <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed max-w-lg font-light">
+                    <p className="text-xs sm:text-base md:text-lg text-muted-foreground leading-relaxed max-w-lg">
                       {service.description}
                     </p>
                   </div>
 
                   {/* Feature grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                     {service.features.map((feature, fIndex) => (
                       <div
                         key={fIndex}
-                        className="group flex items-center gap-3 px-4 py-3 rounded-xl bg-white/40 dark:bg-white/[0.03] border border-gray-200/30 dark:border-white/[0.06] backdrop-blur-sm hover:border-white/20 dark:hover:border-white/15 transition-all duration-300 hover:bg-white/60 dark:hover:bg-white/[0.06] hover:-translate-y-0.5"
+                        className="flex items-center gap-2.5 px-3 py-2 sm:px-4 sm:py-3 rounded-lg sm:rounded-xl bg-white/40 dark:bg-white/[0.03] border border-gray-200/30 dark:border-white/[0.06]"
                       >
-                        <div className={`w-8 h-8 rounded-lg ${accent.bg} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                          <Zap className={`w-3.5 h-3.5 ${accent.text}`} />
+                        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-md sm:rounded-lg ${accent.bg} flex items-center justify-center flex-shrink-0`}>
+                          <Zap className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${accent.text}`} />
                         </div>
-                        <span className="text-sm font-semibold text-foreground/80 group-hover:text-foreground transition-colors">
+                        <span className="text-xs sm:text-sm font-medium sm:font-semibold text-foreground/80">
                           {feature}
                         </span>
                       </div>
@@ -195,47 +206,37 @@ const Features = () => {
 
                 {/* Right: Visual */}
                 <div className="order-1 md:order-2 flex justify-center relative w-full mb-2 md:mb-0">
-                  <div className="relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[440px] aspect-[4/3]">
-                    {/* Layered glow orbs behind the visual */}
-                    <div className={`absolute -inset-10 ${accent.glow} blur-[100px] rounded-full opacity-60`} />
-                    <div className="absolute -inset-4 bg-gradient-to-br from-background/80 via-transparent to-background/80 blur-3xl rounded-full" />
-
+                  <div className="relative w-full max-w-[260px] sm:max-w-[340px] md:max-w-[440px] aspect-[4/3]">
                     {/* Main visual card */}
-                    <div className="relative h-full rounded-2xl md:rounded-3xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl overflow-hidden shadow-2xl shadow-black/10 dark:shadow-black/30">
-                      {/* Inner glow */}
+                    <div className="relative h-full rounded-2xl md:rounded-3xl bg-white/[0.03] border border-white/[0.08] overflow-hidden shadow-xl sm:shadow-2xl shadow-black/10 dark:shadow-black/30">
                       <div className={`absolute inset-0 bg-gradient-to-br ${accent.bg} opacity-40`} />
 
                       <Image
                         src={service.image}
                         alt={service.title}
                         fill
+                        sizes="(max-width: 640px) 260px, (max-width: 768px) 340px, 440px"
                         className="object-cover opacity-90"
                       />
 
-                      {/* Gradient overlay */}
-                      <div className={`absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent`} />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
 
-                      {/* Floating stats badge */}
-                      <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-white/20 dark:border-white/[0.08] shadow-lg">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-9 h-9 rounded-xl ${accent.bg} ${accent.border} border flex items-center justify-center`}>
-                            {React.cloneElement(service.icon as React.ReactElement<any>, { className: `w-4 h-4 ${accent.text}` })}
+                      {/* Floating badge */}
+                      <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl bg-white/90 dark:bg-zinc-900/90 border border-white/20 dark:border-white/[0.08] shadow-lg">
+                        <div className="flex items-center gap-2.5 sm:gap-3">
+                          <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl ${accent.bg} ${accent.border} border flex items-center justify-center`}>
+                            {React.cloneElement(service.icon as React.ReactElement<any>, { className: `w-3.5 h-3.5 sm:w-4 sm:h-4 ${accent.text}` })}
                           </div>
-                          <div className="text-left flex-1">
-                            <div className="text-xs font-bold text-foreground">{service.title}</div>
-                            <div className="text-[10px] text-muted-foreground flex items-center gap-1">
-                              <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
-                              {service.features.length} powerful capabilities
+                          <div className="text-left flex-1 min-w-0">
+                            <div className="text-[11px] sm:text-xs font-bold text-foreground truncate">{service.title}</div>
+                            <div className="text-[9px] sm:text-[10px] text-muted-foreground flex items-center gap-1">
+                              <Star className="w-2 h-2 sm:w-2.5 sm:h-2.5 fill-amber-500 text-amber-500 flex-shrink-0" />
+                              {service.features.length} capabilities
                             </div>
                           </div>
-                          <ArrowRight className={`w-4 h-4 ${accent.text} opacity-50`} />
+                          <ArrowRight className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${accent.text} opacity-50 flex-shrink-0`} />
                         </div>
                       </div>
-                    </div>
-
-                    {/* Floating decorative element */}
-                    <div className={`absolute -top-3 -right-3 w-12 h-12 rounded-xl ${accent.bg} ${accent.border} border backdrop-blur-xl flex items-center justify-center shadow-lg rotate-12`}>
-                      <Layers className={`w-5 h-5 ${accent.text}`} />
                     </div>
                   </div>
                 </div>

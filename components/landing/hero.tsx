@@ -330,7 +330,7 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className="group relative w-full sm:w-auto px-7 py-3.5 text-base bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-full font-bold shadow-[0_4px_20px_rgba(6,182,198,0.25)] hover:shadow-[0_4px_25px_rgba(6,182,198,0.45)] transition-all duration-300 hover:-translate-y-0.5 overflow-hidden flex items-center justify-center gap-2 cursor-pointer select-none"
+                    className="group relative w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5 text-sm sm:text-base bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-full font-bold shadow-[0_4px_20px_rgba(6,182,198,0.25)] hover:shadow-[0_4px_25px_rgba(6,182,198,0.45)] transition-all duration-300 hover:-translate-y-0.5 overflow-hidden flex items-center justify-center gap-2 cursor-pointer select-none"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Start for Free
@@ -342,7 +342,7 @@ const Hero = () => {
 
                 <a href="#workspace-preview" className="w-full sm:w-auto">
                   <button
-                    className="group w-full sm:w-auto px-7 py-3.5 text-base bg-white/50 dark:bg-zinc-900/50 hover:bg-white/70 dark:hover:bg-zinc-900/70 text-gray-800 dark:text-gray-200 border border-gray-200/60 dark:border-white/10 rounded-full font-bold shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer select-none"
+                    className="group w-full sm:w-auto px-5 py-2.5 sm:px-7 sm:py-3.5 text-sm sm:text-base bg-white/50 dark:bg-zinc-900/50 hover:bg-white/70 dark:hover:bg-zinc-900/70 text-gray-800 dark:text-gray-200 border border-gray-200/60 dark:border-white/10 rounded-full font-bold shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer select-none"
                   >
                     <span>Explore Workspace</span>
                     <Play className="w-4 h-4 text-cyan-500 fill-cyan-500 group-hover:scale-110 transition-transform" />

@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User, ArrowRight, ChevronRight, Sparkles } from "lucide-react";
+import { Menu, X, User, ArrowRight, ChevronRight, Sparkles, Lightbulb, Zap, Tag, MessageCircle, FileText } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -193,11 +193,11 @@ const Navbar = () => {
     const isActive = activeSection === item.href || pathname === item.href;
 
     const icons: Record<string, React.ReactNode> = {
-      About: <span className="text-base">💡</span>,
-      Services: <span className="text-base">⚡</span>,
-      Pricing: <span className="text-base">💎</span>,
-      Contact: <span className="text-base">💬</span>,
-      Blogs: <span className="text-base">📝</span>,
+      About: <Lightbulb className="w-3.5 h-3.5" />,
+      Services: <Zap className="w-3.5 h-3.5" />,
+      Pricing: <Tag className="w-3.5 h-3.5" />,
+      Contact: <MessageCircle className="w-3.5 h-3.5" />,
+      Blogs: <FileText className="w-3.5 h-3.5" />,
     };
 
     return (
@@ -208,14 +208,14 @@ const Navbar = () => {
         <Link
           href={item.href}
           className={cn(
-            "flex items-center gap-3 px-5 py-3.5 rounded-2xl text-base font-semibold transition-all duration-300",
+            "flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium transition-all duration-300",
             isActive
               ? "bg-gradient-to-r from-cyan-500/15 to-emerald-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 shadow-[0_2px_10px_rgba(6,182,198,0.08)]"
               : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white hover:bg-gray-50/80 dark:hover:bg-white/5 border border-transparent"
           )}
           onClick={(e) => handleNavClick(e, item.href)}
         >
-          <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-gray-100 dark:bg-white/5 flex items-center justify-center">
+          <span className="flex-shrink-0 flex items-center justify-center text-muted-foreground">
             {icons[item.label]}
           </span>
           <span className="flex-1">{item.label}</span>
@@ -380,7 +380,7 @@ const Navbar = () => {
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                 className={cn(
-                  "lg:hidden overflow-hidden backdrop-blur-2xl mt-2 rounded-3xl transition-all duration-500 ease-in-out",
+                  "lg:hidden overflow-hidden backdrop-blur-2xl mt-2 rounded-2xl transition-all duration-500 ease-in-out",
                   "bg-white/90 dark:bg-zinc-950/95",
                   "border border-gray-200/50 dark:border-white/10",
                   "shadow-[0_20px_50px_-12px_rgba(0,0,0,0.12)] dark:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.4)]"
@@ -399,7 +399,7 @@ const Navbar = () => {
                   }}
                   initial="hidden"
                   animate="visible"
-                  className="px-4 sm:px-6 py-6 space-y-5"
+                  className="px-4 sm:px-6 py-4 space-y-4"
                 >
                   {/* Navigation links */}
                   <div className="space-y-1">
@@ -410,27 +410,21 @@ const Navbar = () => {
                   </div>
 
                   {/* Bottom actions area */}
-                  <div className="pt-5 border-t border-gray-200/60 dark:border-white/10 space-y-3">
+                  <div className="pt-4 border-t border-gray-200/60 dark:border-white/10 space-y-3">
                     {!session ? (
                       <>
                         <Link href="/sign-in" className="w-full block">
-                          <button className="w-full py-3.5 bg-gradient-to-r from-cyan-600 via-emerald-500 to-teal-600 text-white rounded-2xl font-bold shadow-[0_4px_20px_rgba(6,182,198,0.3)] hover:shadow-[0_4px_25px_rgba(6,182,198,0.5)] transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm tracking-wide">
+                          <button className="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-lg font-medium shadow-lg transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm">
                             Sign In
-                            <ArrowRight className="w-4 h-4 inline ml-1.5 -mt-0.5" />
+                            <ArrowRight className="w-3.5 h-3.5 inline ml-1 -mt-0.5" />
                           </button>
                         </Link>
-                        <p className="text-center text-[11px] text-muted-foreground">
-                          New here?{" "}
-                          <Link href="/sign-in" className="text-cyan-600 dark:text-cyan-400 font-semibold hover:underline">
-                            Start for free →
-                          </Link>
-                        </p>
                       </>
                     ) : (
                       <Link href="/app" className="w-full block">
-                        <button className="w-full py-3.5 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm tracking-wide">
+                        <button className="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-lg font-medium shadow-lg transition-all duration-300 active:scale-[0.98] cursor-pointer select-none text-sm">
                           My Notes Dashboard
-                          <ChevronRight className="w-4 h-4 inline ml-1.5 -mt-0.5" />
+                          <ChevronRight className="w-3.5 h-3.5 inline ml-1 -mt-0.5" />
                         </button>
                       </Link>
                     )}
