@@ -1,39 +1,161 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowRight,
+  Play,
+  Sparkles as SparklesIcon,
+  Bot,
+  Upload,
+  Loader2,
+  FileText,
+  RefreshCw,
+  Tag,
+  ChevronRight,
+  Sparkles,
+  Zap,
+  CheckCircle2,
+  Trash2,
+  Cpu,
+  MonitorPlay
+} from "lucide-react";
 
-const Dither = dynamic(() => import("@/components/landing/dither"), {
-  ssr: false,
-  loading: () => (
-    <div className="absolute inset-0 bg-gradient-to-b from-violet-50 to-white dark:from-zinc-900 dark:to-black" />
-  ),
-});
 import MistBackground from "@/components/ui/mist-background";
 import { cn } from "@/lib/utils";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
-
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePostHog } from "@/hooks/use-posthog";
+
+// Dynamically import the advanced Dither wave component for performance toggle
+const Dither = dynamic(() => import("@/components/landing/dither"), {
+  ssr: false,
+  loading: () => (
+    <div className="absolute inset-0 bg-gradient-to-b from-violet-50 to-white dark:from-zinc-900 dark:to-black opacity-30" />
+  ),
+});
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const Hero = () => {
   const { capture } = usePostHog();
 
+  // Reference elements for entrance & scroll-triggered animations
   const heroRef = useRef<HTMLDivElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const subheadingRef = useRef<HTMLSpanElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const mockupRef = useRef<HTMLDivElement>(null);
   const ditherRef = useRef<HTMLDivElement>(null);
 
-  useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  // Performance-friendly visual states
+  const [ditherEnabled, setDitherEnabled] = useState(false);
+  const [activeDashboardTab, setActiveDashboardTab] = useState<"notes" | "capture" | "starred">("notes");
+  const [copilotPanelOpen, setCopilotPanelOpen] = useState(true);
 
-    // Animate dither background with parallax
+  // Simulated Interactive States for Card 1 (Note Editor)
+  const [activeTag, setActiveTag] = useState<"strategy" | "pricing" | null>(null);
+
+  // Simulated Interactive States for Card 2 (AI Assistant Chat)
+  const [chatPrompt, setChatPrompt] = useState<"summary" | "actions" | "milestones" | null>(null);
+  const [chatStatus, setChatStatus] = useState<"idle" | "typing" | "completed">("idle");
+  const [typedText, setTypedText] = useState("");
+  const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const chatResponses = {
+    summary: "Sure! Q4 roadmap summarized:\n• Phoenix Beta set for Dec 1st.\n• Stripe billing integration ready.\n• Uptime target set to 99.9%.",
+    actions: "Here are your action items:\n• Configure Clerk auth middlewares.\n• Deploy Postgres database backups.\n• Finalize subscription tier layout.",
+    milestones: "Key project milestones:\n• Q4 Landing Overhaul: Nov 25.\n• Stripe Integration: Dec 5.\n• Public Launch: Dec 15."
+  };
+
+  const handleStartChatSim = (promptType: "summary" | "actions" | "milestones") => {
+    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+    
+    setChatPrompt(promptType);
+    setChatStatus("typing");
+    setTypedText("");
+    
+    const responseText = chatResponses[promptType];
+    let index = 0;
+    
+    typingIntervalRef.current = setInterval(() => {
+      if (index < responseText.length) {
+        setTypedText((prev) => prev + responseText.charAt(index));
+        index++;
+      } else {
+        if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+        setChatStatus("completed");
+      }
+    }, 15);
+  };
+
+  const handleResetChatSim = () => {
+    if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+    setChatPrompt(null);
+    setChatStatus("idle");
+    setTypedText("");
+  };
+
+  // Simulated Interactive States for Card 3 (Quick Capture Dropzone)
+  const [captureState, setCaptureState] = useState<"empty" | "uploading" | "extracting" | "done">("empty");
+  const [uploadPercent, setUploadPercent] = useState(0);
+
+  const startCaptureSequence = () => {
+    if (captureState !== "empty") return;
+    setCaptureState("uploading");
+    setUploadPercent(0);
+
+    // Simulated upload progress counting to 100%
+    let progress = 0;
+    const uploadInterval = setInterval(() => {
+      progress += Math.floor(Math.random() * 25) + 10;
+      if (progress >= 100) {
+        clearInterval(uploadInterval);
+        setUploadPercent(100);
+        
+        // Transition to AI analysis stage after a brief delay
+        setTimeout(() => {
+          setCaptureState("extracting");
+          
+          // Transition to final result extraction after simulated analysis
+          setTimeout(() => {
+            setCaptureState("done");
+          }, 1500);
+        }, 300);
+      } else {
+        setUploadPercent(progress);
+      }
+    }, 120);
+  };
+
+  const resetCaptureSequence = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCaptureState("empty");
+    setUploadPercent(0);
+  };
+
+  // Clean up timers on component unmount
+  useEffect(() => {
+    return () => {
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+    };
+  }, []);
+
+  // GSAP animations for entrance triggers and 3D tilting
+  useGSAP(() => {
+    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+    // Background parallax scroll effect if dither is active
     if (ditherRef.current) {
       gsap.to(ditherRef.current, {
-        y: 100,
+        y: 120,
         ease: "none",
         scrollTrigger: {
           trigger: heroRef.current,
@@ -44,122 +166,163 @@ const Hero = () => {
       });
     }
 
-    // Main heading animation with stagger
-    if (headingRef.current) {
-      const gradientSpan = headingRef.current.querySelector(".gradient-text");
-
+    // Floating pill badge animation
+    if (badgeRef.current) {
       tl.fromTo(
-        gradientSpan,
-        { opacity: 0, y: 50, scale: 0.9 },
-        { opacity: 1, y: 0, scale: 1, duration: 1, ease: "back.out(1.7)" },
-        0.2
+        badgeRef.current,
+        { opacity: 0, y: -20, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.8 },
+        0.1
       );
     }
 
-    // Subheading animation
+    // Main heading entrance
+    if (headingRef.current) {
+      tl.fromTo(
+        headingRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.9, ease: "power3.out" },
+        0.3
+      );
+    }
+
+    // Subheading stagger
     if (subheadingRef.current) {
       tl.fromTo(
         subheadingRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.8 },
         0.5
       );
     }
 
-    // Description animation
+    // Description text
     if (descriptionRef.current) {
       tl.fromTo(
         descriptionRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 20 },
         { opacity: 1, y: 0, duration: 0.8 },
-        0.7
+        0.6
       );
     }
 
-    // Buttons animation with stagger
+    // CTA buttons stagger
     if (buttonsRef.current) {
-      const buttons = buttonsRef.current.querySelectorAll("a");
+      const buttons = buttonsRef.current.querySelectorAll("button, a");
       tl.fromTo(
         buttons,
-        { opacity: 0, y: 20, scale: 0.9 },
+        { opacity: 0, y: 15, scale: 0.95 },
         { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1 },
-        0.9
+        0.75
+      );
+    }
+
+    // 3D Dashboard Mockup Scroll Trigger Animation
+    if (mockupRef.current) {
+      gsap.fromTo(
+        mockupRef.current,
+        {
+          rotateX: 18,
+          rotateY: -3,
+          y: 80,
+          scale: 0.93,
+          transformPerspective: 1500,
+        },
+        {
+          rotateX: 0,
+          rotateY: 0,
+          y: 0,
+          scale: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: mockupRef.current,
+            start: "top 95%",
+            end: "top 45%",
+            scrub: 1.2,
+          },
+        }
       );
     }
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden ">
-      {/* <div ref={ditherRef} className="absolute inset-0 z-0">
-        <Dither
-          waveColor={[0.4, 0.1, 0.6]}
-          disableAnimation={false}
-          enableMouseInteraction={true}
-          mouseRadius={0.3}
-          colorNum={8}
-          waveAmplitude={0.3}
-          waveFrequency={3}
-          waveSpeed={0.1}
-        />
-      </div> */}
+    <section className="relative w-full overflow-hidden" ref={heroRef}>
+      {/* Dynamic 3D WebGL Background - Performance Switchable */}
+      {ditherEnabled && (
+        <div ref={ditherRef} className="absolute inset-0 z-0 opacity-40 dark:opacity-20 pointer-events-none transition-opacity duration-700">
+          <Dither
+            waveColor={[0.4, 0.1, 0.6]}
+            disableAnimation={false}
+            enableMouseInteraction={true}
+            mouseRadius={0.35}
+            colorNum={6}
+            waveAmplitude={0.25}
+            waveFrequency={2.5}
+            waveSpeed={0.08}
+          />
+        </div>
+      )}
 
-      <div
-        className="min-h-screen w-full bg-white dark:bg-black relative overflow-hidden transition-colors duration-500"
-        style={{
-          backgroundColor: "var(--background)",
-          minHeight: "100vh",
-        }}
-      >
-        <MistBackground />
+      {/* Primary Landing Scaffold */}
+      <div className="min-h-[900px] sm:min-h-screen w-full bg-white dark:bg-black relative overflow-hidden transition-colors duration-500 pb-12 sm:pb-20 pt-20 sm:pt-28">
+        
+        {/* Soft floating fluid color fields */}
+        <MistBackground className="opacity-90 dark:opacity-60" />
 
-        <div
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `
-        radial-gradient(circle, rgba(139,92,246,0.6) 1px, transparent 1px),
-        radial-gradient(circle, rgba(59,130,246,0.4) 1px, transparent 1px),
-        radial-gradient(circle, rgba(236,72,153,0.5) 1px, transparent 1px)
-      `,
-            backgroundSize: "20px 20px, 40px 40px, 60px 60px",
-            backgroundPosition: "0 0, 10px 10px, 30px 30px",
-          }}
-        />
-        {/* Your Content/Components */}
-        <div
-          ref={heroRef}
-          className="relative z-10 min-h-screen flex items-center justify-center pt-12 md:py-16 lg:py-20"
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8 xl:gap-12 items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Left Side - Text Content */}
-            <div className="text-center lg:text-left flex flex-col justify-center order-2">
+        {/* Sophisticated fine mesh grid overlay */}
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_15%,#000_80%,transparent_100%)] pointer-events-none" />
+
+        {/* Content & Interactive Features Layout Grid */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-center">
+            
+            {/* Left Side: Dynamic Copy & CTAs */}
+            <div className="text-center lg:text-left flex flex-col justify-center lg:col-span-6 xl:col-span-7">
+              
+              {/* Premium Pill Badge */}
+              <div 
+                ref={badgeRef}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 text-violet-600 dark:text-violet-400 text-xs font-semibold shadow-[0_4px_15px_rgba(139,92,246,0.05)] hover:border-violet-500/40 hover:bg-violet-500/10 transition-all duration-300 backdrop-blur-md mb-6 w-fit mx-auto lg:mx-0 select-none cursor-pointer"
+              >
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+                </span>
+                <span className="flex items-center gap-1">
+                  Introducing SnackStack 2.0
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </span>
+              </div>
+
+              {/* Main Heading */}
               <h1
                 ref={headingRef}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-3 md:mb-4 lg:mb-6 leading-[1.1] tracking-tight"
+                className="text-3xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-5 leading-[1.1] tracking-tight text-gray-900 dark:text-white"
               >
-                <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap inline-block">
+                <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent inline-block pb-1">
                   AI-Powered Notes
                 </span>
                 <br />
-                <span
-                  ref={subheadingRef}
-                  className="gradient-text bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent whitespace-nowrap inline-block"
-                >
-                  for Modern Living
+                <span ref={subheadingRef} className="inline-block mt-1">
+                  for <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent font-extrabold">Modern Living</span>
                 </span>
               </h1>
+
+              {/* Description Paragraph */}
               <p
                 ref={descriptionRef}
-                className="hidden sm:block text-base sm:text-lg md:text-xl mb-4 md:mb-6 lg:mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-200"
+                className="text-sm sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light text-gray-600 dark:text-gray-300"
               >
-                Capture, organize, and enhance your ideas with the power of
-                artificial intelligence. The smart way to take notes for
-                individuals and teams.
+                Capture, organize, and enhance your ideas with the fluid speed of Next.js and the cognitive power of Gemini AI. The aesthetic workspace designed for modern developers and creative squads.
               </p>
+
+              {/* Action CTA Buttons */}
               <div
                 ref={buttonsRef}
-                className="flex flex-col sm:flex-row gap-2 md:gap-3 lg:gap-4 justify-center lg:justify-start"
+                className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start items-center"
               >
-                <Link href="/sign-in">
+                <Link href="/sign-in" className="w-full sm:w-auto">
                   <button
                     onClick={() =>
                       capture("get_started_clicked", {
@@ -167,235 +330,646 @@ const Hero = () => {
                         location: "landing_page",
                       })
                     }
-                    className="group relative px-5 py-2.5 text-sm md:px-8 md:py-4 md:text-lg bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-semibold shadow-lg hover:shadow-indigo-500/30 transition-all duration-300 hover:-translate-y-1 overflow-hidden mt-3"
+                    className="group relative w-full sm:w-auto px-7 py-3.5 text-base bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-full font-bold shadow-[0_4px_20px_rgba(124,58,237,0.25)] hover:shadow-[0_4px_25px_rgba(124,58,237,0.45)] transition-all duration-300 hover:-translate-y-0.5 overflow-hidden flex items-center justify-center gap-2 cursor-pointer select-none"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       Start for Free
-                      <svg
-                        className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 7l5 5m0 0l-5 5m5-5H6"
-                        ></path>
-                      </svg>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-violet-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   </button>
                 </Link>
+
+                <a href="#workspace-preview" className="w-full sm:w-auto">
+                  <button
+                    className="group w-full sm:w-auto px-7 py-3.5 text-base bg-white/50 dark:bg-zinc-900/50 hover:bg-white/70 dark:hover:bg-zinc-900/70 text-gray-800 dark:text-gray-200 border border-gray-200/60 dark:border-white/10 rounded-full font-bold shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer select-none"
+                  >
+                    <span>Explore Workspace</span>
+                    <Play className="w-4 h-4 text-violet-500 fill-violet-500 group-hover:scale-110 transition-transform" />
+                  </button>
+                </a>
               </div>
+
+              {/* Technologies / Integrations Microbar */}
+              <div className="mt-10 pt-6 border-t border-gray-200/50 dark:border-white/5 flex flex-wrap items-center gap-3 justify-center lg:justify-start select-none">
+                <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Supercharged By</span>
+                <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
+                  <span className="flex items-center gap-1.5 bg-gray-50 dark:bg-zinc-900/40 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
+                    🤖 Gemini 1.5 Pro
+                  </span>
+                  <span className="flex items-center gap-1.5 bg-gray-50 dark:bg-zinc-900/40 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
+                    ▲ Next.js 15
+                  </span>
+                  <span className="flex items-center gap-1.5 bg-gray-50 dark:bg-zinc-900/40 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
+                    💳 Stripe
+                  </span>
+                </div>
+              </div>
+
             </div>
-            {/* Right Side - Visual Element */}
-            <div className="relative flex justify-center lg:justify-end items-center pt-12 perspective-1000 order-2">
-              <div className="relative w-full max-w-lg h-[400px] sm:h-[550px] scale-[0.85] sm:scale-100 origin-center lg:origin-right">
-                {/* Floating Card 1 - Main Note Editor */}
+
+            {/* Right Side: Interactive Visual Artifacts (Floating Workspace Elements) */}
+            <div className="relative flex justify-center lg:justify-end items-center pt-4 sm:pt-8 perspective-1000 lg:col-span-6 xl:col-span-5 h-[380px] sm:h-[450px] md:h-[500px]">
+
+              <div className="relative w-full max-w-[340px] sm:max-w-[420px] md:max-w-[480px] h-full scale-[0.82] sm:scale-100 origin-center lg:origin-right">
+                
+                {/* FLOATING CARD 1: Responsive Note Editor */}
                 <div
-                  className="absolute top-0 right-4 w-80 h-[420px] rounded-3xl shadow-2xl backdrop-blur-xl p-6 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-10 bg-white/80 border-black/5 shadow-black/5 dark:bg-gray-900/60 dark:border-white/10 dark:shadow-none"
+                  className="absolute top-0 right-0 sm:right-6 w-[240px] sm:w-[280px] md:w-[310px] rounded-2xl sm:rounded-3xl shadow-[0_20px_40px_-15px_rgba(0,0,0,0.07)] backdrop-blur-xl p-4 sm:p-5 border z-10 bg-white/80 border-black/5 shadow-black/5 dark:bg-zinc-900/70 dark:border-white/10 dark:shadow-none hover:border-violet-500/30 transition-all duration-300 animate-float"
                   style={{ animationDelay: "0s" }}
                 >
-                  {/* Window Controls */}
-                  <div className="flex gap-2 mb-6">
-                    <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                    <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                  {/* Browser simulated controls */}
+                  <div className="flex gap-1.5 mb-4 select-none">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400/80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400/80" />
                   </div>
 
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6">
+                  {/* Header Title */}
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center text-violet-500">
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                          />
-                        </svg>
+                      <div className="w-7 h-7 rounded-lg bg-violet-500/10 flex items-center justify-center text-violet-500 font-bold text-xs">
+                        ⚡
                       </div>
                       <div>
-                        <h3 className="text-sm font-bold text-gray-900 dark:text-white">
-                          Project Phoenix
+                        <h3 className="text-xs font-bold text-gray-800 dark:text-white truncate max-w-[130px] text-left">
+                          Q4 Product Launch
                         </h3>
-                        <p className="text-xs text-muted-foreground">
-                          Last edited just now
+                        <p className="text-[9px] text-gray-400 dark:text-gray-500 text-left">
+                          Last edited 2m ago
                         </p>
                       </div>
                     </div>
-                    <div className="px-2 py-1 rounded-md bg-green-500/10 text-green-500 text-xs font-medium">
-                      Active
+                    <div className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[9px] font-bold">
+                      Active Note
                     </div>
                   </div>
 
-                  {/* Content Area */}
-                  <div className="space-y-4">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className="px-2 py-1 rounded-md bg-violet-500/10 text-violet-500 text-xs font-medium">
+                  {/* Interactive Tags - Toggling changes body highlights */}
+                  <div className="space-y-3.5">
+                    
+                    {/* Tags block */}
+                    <div className="flex flex-wrap gap-1.5">
+                      <button 
+                        onClick={() => setActiveTag(activeTag === "strategy" ? null : "strategy")}
+                        className={cn(
+                          "px-2 py-1 rounded-md text-[9px] font-bold tracking-wider uppercase transition-all flex items-center gap-1 border cursor-pointer",
+                          activeTag === "strategy" 
+                            ? "bg-violet-500/20 text-violet-600 border-violet-500/40 dark:text-violet-400" 
+                            : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 text-gray-500 border-transparent"
+                        )}
+                      >
+                        <Tag className="w-2.5 h-2.5" />
                         #strategy
-                      </span>
-                      <span className="px-2 py-1 rounded-md bg-blue-500/10 text-blue-500 text-xs font-medium">
-                        #q4-goals
-                      </span>
+                      </button>
+                      <button 
+                        onClick={() => setActiveTag(activeTag === "pricing" ? null : "pricing")}
+                        className={cn(
+                          "px-2 py-1 rounded-md text-[9px] font-bold tracking-wider uppercase transition-all flex items-center gap-1 border cursor-pointer",
+                          activeTag === "pricing" 
+                            ? "bg-indigo-500/20 text-indigo-600 border-indigo-500/40 dark:text-indigo-400" 
+                            : "bg-gray-100 hover:bg-gray-200 dark:bg-zinc-800/50 dark:hover:bg-zinc-800 text-gray-500 border-transparent"
+                        )}
+                      >
+                        <Tag className="w-2.5 h-2.5" />
+                        #pricing
+                      </button>
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="h-4 rounded w-3/4 bg-gray-100 dark:bg-white/10" />
-                      <div className="h-4 rounded w-full bg-gray-100 dark:bg-white/10" />
-                      <div className="h-4 rounded w-5/6 bg-gray-100 dark:bg-white/10" />
-                    </div>
-
-                    {/* AI Suggestion Block */}
-                    <div className="mt-6 p-4 rounded-xl border backdrop-blur-md bg-violet-50/50 border-violet-100 dark:bg-violet-500/10 dark:border-violet-500/20">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-4 h-4 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 flex items-center justify-center">
-                          <svg
-                            className="w-2.5 h-2.5 text-white"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M13 10V3L4 14h7v7l9-11h-7z"
-                            />
-                          </svg>
-                        </div>
-                        <span className="text-xs font-semibold text-violet-600 dark:text-violet-400">
-                          AI Insight
-                        </span>
-                      </div>
-                      <p className="text-xs leading-relaxed text-violet-700/80 dark:text-violet-200/80">
-                        Based on your recent notes, consider exploring the
-                        market expansion strategy for Q1 2025.
+                    {/* Note Content Area */}
+                    <div className="space-y-2 text-[10px] text-gray-600 dark:text-gray-300 font-sans text-left leading-relaxed">
+                      <p className={cn(
+                        "rounded px-1.5 py-0.5 transition-all duration-300",
+                        activeTag === "strategy" ? "bg-violet-500/15 text-violet-700 dark:text-violet-300 font-medium shadow-[0_0_8px_rgba(139,92,246,0.1)] border-l-2 border-violet-500" : ""
+                      )}>
+                        • Phoenix Beta release date scheduled for Dec 1st. Uptime target is 99.9%.
+                      </p>
+                      
+                      <p className={cn(
+                        "rounded px-1.5 py-0.5 transition-all duration-300",
+                        activeTag === "pricing" ? "bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 font-medium shadow-[0_0_8px_rgba(99,102,241,0.1)] border-l-2 border-indigo-500" : ""
+                      )}>
+                        • Setup subscription gates with Stripe: basic tier (₹749) & pro tier (₹1599) verified.
                       </p>
                     </div>
+
+                    {/* Micro Instruction Badge */}
+                    <div className="pt-2 border-t border-gray-100 dark:border-white/5 text-center">
+                      <span className="text-[8px] text-gray-400 dark:text-gray-500 font-medium select-none animate-pulse">
+                        💡 Click tag chips to highlight document sections
+                      </span>
+                    </div>
+
                   </div>
                 </div>
 
-                {/* Floating Card 2 - AI Chat Assistant */}
+                {/* FLOATING CARD 2: AI Assistant (SnackBot Chatbot Simulation) */}
                 <div
-                  className="absolute top-40 left-0 w-72 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-20 bg-white/90 border-black/5 shadow-black/10 dark:bg-gray-900/70 dark:border-white/10 dark:shadow-none"
-                  style={{ animationDelay: "1.5s" }}
+                  className="absolute top-32 sm:top-44 left-0 sm:left-0 w-[230px] sm:w-[270px] md:w-[290px] rounded-2xl sm:rounded-3xl shadow-[0_20px_45px_-10px_rgba(0,0,0,0.08)] backdrop-blur-xl p-3.5 sm:p-4.5 border z-20 bg-white/90 border-black/5 shadow-black/10 dark:bg-zinc-900/85 dark:border-white/10 dark:shadow-none hover:border-fuchsia-500/30 transition-all duration-300 animate-float"
+                  style={{ animationDelay: "1.8s" }}
                 >
-                  <div className="flex items-center gap-3 mb-4 border-b border-gray-200/10 pb-3">
+                  {/* Assistant Identity Header */}
+                  <div className="flex items-center gap-2.5 mb-3.5 border-b border-gray-100 dark:border-white/5 pb-2.5">
                     <div className="relative">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg">
-                        <svg
-                          className="w-5 h-5 text-white"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"
-                          />
-                        </svg>
+                      <div className="w-8.5 h-8.5 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-fuchsia-500 flex items-center justify-center shadow-md">
+                        <Bot className="w-4.5 h-4.5 text-white" />
                       </div>
-                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white dark:border-gray-900 rounded-full" />
+                      <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-zinc-900 rounded-full" />
                     </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-gray-900 dark:text-white">
-                        SnackBot
+                    <div className="text-left">
+                      <h4 className="text-[11px] font-bold text-gray-800 dark:text-white flex items-center gap-1 select-none">
+                        SnackBot Copilot
+                        <span className="px-1.5 py-0.2 rounded bg-violet-500/10 text-violet-500 text-[7px] uppercase font-extrabold tracking-wider">Gemini API</span>
                       </h4>
-                      <p className="text-xs text-muted-foreground">
-                        Online • Helping you
+                      <p className="text-[9px] text-gray-400 dark:text-gray-500">
+                        Ask summaries, actions or guides
                       </p>
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="self-end p-3 rounded-2xl rounded-tr-sm text-xs ml-8 bg-violet-600 text-white">
-                      Summarize the meeting notes from yesterday.
+                  {/* Suggestion Prompt Buttons */}
+                  {chatStatus === "idle" ? (
+                    <div className="space-y-1.5 mb-1.5">
+                      <span className="text-[8px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-bold block mb-2 text-left select-none">Simulate AI Actions:</span>
+                      <button 
+                        onClick={() => handleStartChatSim("summary")}
+                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-violet-500/5 dark:bg-zinc-800/40 dark:hover:bg-violet-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer animate-pulse"
+                      >
+                        <span>⚡ Summarize yesterday's notes</span>
+                        <ChevronRight className="w-3 h-3 text-violet-500" />
+                      </button>
+                      <button 
+                        onClick={() => handleStartChatSim("actions")}
+                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-violet-500/5 dark:bg-zinc-800/40 dark:hover:bg-violet-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer"
+                      >
+                        <span>📝 Extract Action Items</span>
+                        <ChevronRight className="w-3 h-3 text-violet-500" />
+                      </button>
+                      <button 
+                        onClick={() => handleStartChatSim("milestones")}
+                        className="w-full text-left p-2 rounded-xl bg-gray-50 hover:bg-violet-500/5 dark:bg-zinc-800/40 dark:hover:bg-violet-500/10 border border-black/5 dark:border-white/5 text-[9px] font-semibold text-gray-700 dark:text-gray-200 transition-colors flex items-center justify-between cursor-pointer"
+                      >
+                        <span>🎯 Define Project Milestones</span>
+                        <ChevronRight className="w-3 h-3 text-violet-500" />
+                      </button>
                     </div>
-                    <div className="self-start p-3 rounded-2xl rounded-tl-sm text-xs mr-4 bg-gray-100 text-gray-700 dark:bg-white/10 dark:text-gray-200">
-                      <div className="flex gap-1 mb-2">
-                        <span
-                          className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"
-                          style={{ animationDelay: "0s" }}
-                        />
-                        <span
-                          className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"
-                          style={{ animationDelay: "0.2s" }}
-                        />
-                        <span
-                          className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"
-                          style={{ animationDelay: "0.4s" }}
-                        />
+                  ) : (
+                    <div className="space-y-3">
+                      {/* User Request Bubble */}
+                      <div className="flex justify-end">
+                        <div className="p-2.5 rounded-2xl rounded-tr-sm text-[9px] font-medium bg-violet-600 text-white shadow-sm select-none">
+                          {chatPrompt === "summary" && "Summarize yesterday's notes."}
+                          {chatPrompt === "actions" && "Extract Action Items."}
+                          {chatPrompt === "milestones" && "Define Project Milestones."}
+                        </div>
                       </div>
-                      Processing your request...
+
+                      {/* AI Typing and Response block */}
+                      <div className="p-2.5 rounded-2xl rounded-tl-sm text-[9px] bg-gray-50 text-gray-700 dark:bg-zinc-800/40 dark:text-gray-200 border border-black/5 dark:border-white/5">
+                        
+                        {chatStatus === "typing" && (
+                          <div className="flex gap-1 mb-2.5 items-center">
+                            <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0s" }} />
+                            <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+                            <span className="w-1.5 h-1.5 bg-violet-500 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }} />
+                          </div>
+                        )}
+
+                        <div className="whitespace-pre-line leading-relaxed font-mono text-[9px] text-left">
+                          {typedText}
+                          {chatStatus === "typing" && (
+                            <span className="w-1 h-3 bg-violet-500 inline-block animate-pulse ml-0.5" />
+                          )}
+                        </div>
+
+                        {chatStatus === "completed" && (
+                          <button
+                            onClick={handleResetChatSim}
+                            className="mt-2.5 w-full py-1.5 px-2.5 rounded-lg bg-gray-200/50 dark:bg-zinc-800 text-gray-600 hover:text-gray-900 dark:text-zinc-400 dark:hover:text-white border border-black/5 dark:border-white/5 transition-all text-[8px] font-bold flex items-center justify-center gap-1 cursor-pointer select-none"
+                          >
+                            <RefreshCw className="w-2.5 h-2.5 animate-spin-slow" />
+                            Ask Another Question
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
 
-                {/* Floating Card 3 - Quick Capture */}
+                {/* FLOATING CARD 3: Quick Capture Uploader Pipeline */}
                 <div
-                  className="hidden sm:block absolute bottom-0 right-12 w-64 rounded-3xl shadow-2xl backdrop-blur-xl p-5 transform hover:scale-[1.02] transition-all duration-500 animate-float border z-30 bg-white/60 border-black/5 shadow-black/5 dark:bg-gray-900/50 dark:border-white/10 dark:shadow-none"
-                  style={{ animationDelay: "2.5s" }}
+                  className="hidden sm:block absolute bottom-0 right-4 w-[210px] sm:w-[230px] rounded-3xl shadow-[0_15px_35px_-10px_rgba(0,0,0,0.06)] backdrop-blur-xl p-4.5 border z-30 bg-white/70 border-black/5 shadow-black/5 dark:bg-zinc-900/60 dark:border-white/10 dark:shadow-none hover:border-pink-500/30 transition-all duration-300 animate-float"
+                  style={{ animationDelay: "3.2s" }}
                 >
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
-                      <span className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-white/60">
+                  <div className="flex items-center justify-between mb-3 select-none">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-gray-500 dark:text-white/60">
                         Quick Capture
                       </span>
                     </div>
-                    <svg
-                      className="w-4 h-4 text-muted-foreground"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
+                    <Zap className="w-3.5 h-3.5 text-violet-500 animate-pulse" />
                   </div>
-                  <div className="h-20 rounded-xl border border-dashed flex items-center justify-center border-gray-300 bg-gray-50 dark:border-white/20 dark:bg-white/5">
-                    <span className="text-xs text-muted-foreground">
-                      Drop images or text here
-                    </span>
+                  
+                  {/* Sequence Pipeline Rendering */}
+                  {captureState === "empty" && (
+                    <div 
+                      onClick={startCaptureSequence}
+                      className="h-[95px] rounded-xl border border-dashed border-gray-300 dark:border-white/10 bg-gray-50/50 dark:bg-white/5 flex flex-col items-center justify-center cursor-pointer hover:border-violet-500/50 hover:bg-violet-500/5 transition-all duration-300 group/capture p-2"
+                    >
+                      <Upload className="w-5 h-5 text-gray-400 group-hover/capture:text-violet-500 group-hover/capture:scale-110 transition-all mb-1.5" />
+                      <span className="text-[9px] font-bold text-violet-600 dark:text-violet-400">⚡ Click to Capture</span>
+                      <span className="text-[8px] text-gray-400 dark:text-gray-500 mt-0.5">Drop text or image here</span>
+                    </div>
+                  )}
+
+                  {captureState === "uploading" && (
+                    <div className="h-[95px] rounded-xl border border-gray-200/50 dark:border-white/5 bg-gray-50/30 dark:bg-zinc-900/30 flex flex-col items-center justify-center p-3">
+                      <Loader2 className="w-5 h-5 text-violet-500 animate-spin mb-2" />
+                      <span className="text-[9px] font-bold text-gray-700 dark:text-gray-300 mb-1.5">Uploading file...</span>
+                      <div className="w-full h-1.5 bg-gray-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-violet-600 rounded-full transition-all duration-100" 
+                          style={{ width: `${uploadPercent}%` }}
+                        />
+                      </div>
+                      <span className="text-[8px] text-gray-400 font-mono mt-1">{uploadPercent}%</span>
+                    </div>
+                  )}
+
+                  {captureState === "extracting" && (
+                    <div className="h-[95px] rounded-xl border border-violet-500/30 bg-violet-500/5 flex flex-col items-center justify-center p-3 text-center">
+                      <SparklesIcon className="w-6 h-6 text-fuchsia-500 animate-bounce mb-1.5" />
+                      <span className="text-[9px] font-bold text-fuchsia-600 dark:text-fuchsia-400 animate-pulse">Gemini OCR Parsing...</span>
+                      <span className="text-[8px] text-gray-400 dark:text-gray-500 mt-1">Extracting visual structures</span>
+                    </div>
+                  )}
+
+                  {captureState === "done" && (
+                    <div className="rounded-xl border border-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/20 p-2.5 flex flex-col justify-between hover:bg-emerald-500/15 transition-all duration-300 text-left">
+                      <div className="flex items-center justify-between border-b border-emerald-500/20 pb-1.5">
+                        <span className="text-[8.5px] font-bold text-emerald-600 dark:text-emerald-400 truncate w-32 flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                          wireframe_v2.png
+                        </span>
+                        <span className="text-[7.5px] text-gray-400 dark:text-zinc-500 font-mono">1.2 MB</span>
+                      </div>
+                      
+                      <div className="my-1.5 text-[8px] leading-relaxed text-gray-600 dark:text-gray-300">
+                        <span className="font-bold text-violet-500 block">AI Structure Extracted:</span>
+                        Dashboard mockup detailing collapsible side panels. Synced to <strong className="text-violet-600 font-semibold dark:text-violet-400">#strategy</strong> tag.
+                      </div>
+
+                      <button 
+                        onClick={resetCaptureSequence}
+                        className="py-1 rounded bg-zinc-200/50 hover:bg-red-500/10 hover:text-red-500 dark:bg-zinc-800 text-[8px] font-bold flex items-center justify-center gap-1 transition-all cursor-pointer"
+                      >
+                        <Trash2 className="w-2.5 h-2.5" />
+                        Clear & Reset
+                      </button>
+                    </div>
+                  )}
+
+                </div>
+
+                {/* Aesthetic Backdrop Blur Blobs */}
+                <div className="absolute top-16 right-16 w-32 h-32 rounded-full bg-violet-500/10 blur-[60px] pointer-events-none" />
+                <div className="absolute bottom-16 left-12 w-32 h-32 rounded-full bg-indigo-500/10 blur-[60px] pointer-events-none" />
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ---------------------------------------------------- */}
+        {/* INTERACTIVE 3D WORKSPACE PREVIEW MOCKUP SECTION */}
+        {/* ---------------------------------------------------- */}
+        <div id="workspace-preview" className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24 md:mt-32 pb-6 z-30 text-center">
+          
+          <div className="mb-6 sm:mb-10 md:mb-12 max-w-3xl mx-auto select-none">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold mb-3 sm:mb-4 tracking-tight text-gray-900 dark:text-white leading-tight">
+              A Unified{" "}
+              <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
+                Productivity Canvas
+              </span>
+            </h2>
+            <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 font-light leading-relaxed">
+              Hover folder feeds, sync cloud nodes, and slide the context-aware AI Copilot panel. Experience visual and architectural harmony.
+            </p>
+          </div>
+
+          <div className="perspective-1500 w-full flex justify-center relative">
+            
+            {/* Dither Performance Toggler Switch */}
+            <div className="absolute -top-10 sm:-top-12 right-0 sm:right-4 z-40 select-none">
+              <button
+                onClick={() => setDitherEnabled(!ditherEnabled)}
+                className={cn(
+                  "px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[8px] sm:text-[10px] font-bold tracking-wider uppercase border flex items-center gap-1 sm:gap-1.5 shadow-sm transition-all duration-300 cursor-pointer",
+                  ditherEnabled 
+                    ? "bg-violet-600 text-white border-violet-500 shadow-violet-500/20 shadow-lg" 
+                    : "bg-white/70 dark:bg-zinc-950/70 border-gray-200 dark:border-white/10 text-gray-500 hover:text-gray-800 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-900"
+                )}
+              >
+                {ditherEnabled ? <Cpu className="w-3.5 h-3.5 text-pink-300 animate-spin" /> : <MonitorPlay className="w-3.5 h-3.5 text-violet-500 animate-pulse" />}
+                🖥️ Ultra Visuals (WebGL): {ditherEnabled ? "ON" : "OFF"}
+              </button>
+            </div>
+
+            {/* Main Interactive 3D Browser Mockup Container */}
+            <div
+              ref={mockupRef}
+              className="w-full max-w-5xl rounded-3xl bg-white/80 dark:bg-zinc-950/85 border border-gray-200/80 dark:border-white/10 shadow-[0_30px_70px_-15px_rgba(0,0,0,0.1)] dark:shadow-none backdrop-blur-2xl overflow-hidden transition-all duration-700 ease-out origin-top mockup-3d-tilt"
+            >
+              
+              {/* Browser Window Header Navigation Bar */}
+              <div className="flex items-center justify-between px-4 py-3 bg-gray-100/90 dark:bg-zinc-900/90 border-b border-gray-200/50 dark:border-white/5 select-none">
+                
+                {/* Simulated window triggers */}
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-red-400/95" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-400/95" />
+                  <div className="w-3 h-3 rounded-full bg-green-400/95" />
+                </div>
+                
+                {/* Safe HTTPS browser URL input */}
+                <div className="flex-1 max-w-[180px] sm:max-w-md mx-auto h-6 sm:h-6.5 bg-white/70 dark:bg-zinc-800/80 rounded-lg text-[8px] sm:text-[9.5px] text-gray-400 dark:text-zinc-500 flex items-center justify-center gap-1 sm:gap-1.5 border border-gray-200/30 dark:border-white/5 font-mono truncate px-2">
+                  <span className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-emerald-500 flex-shrink-0" />
+                  <span className="truncate">snackstack.com/app/dashboard</span>
+                </div>
+                
+                {/* Sidebar Collapsible Trigger Action */}
+                <button 
+                  onClick={() => setCopilotPanelOpen(!copilotPanelOpen)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-md text-[9px] font-bold uppercase transition-all flex items-center gap-1 border cursor-pointer",
+                    copilotPanelOpen 
+                      ? "bg-violet-500/10 text-violet-500 border-violet-500/20" 
+                      : "bg-gray-200/50 text-gray-500 border-transparent dark:bg-zinc-800"
+                  )}
+                  title="Toggle AI Copilot"
+                >
+                  <SparklesIcon className="w-3 h-3 text-violet-500 animate-pulse" />
+                  <span className="hidden sm:inline">AI Drawer</span>
+                </button>
+              </div>
+
+              {/* Inner Workspace Layout */}
+              <div className="flex h-[260px] sm:h-[380px] md:h-[460px] overflow-hidden text-[10px] sm:text-sm font-sans select-none text-left">
+                
+                {/* COLUMN 1: SIDEBAR (Directories & Tags) */}
+                <div className="hidden sm:flex w-1/4 min-w-[150px] md:min-w-[190px] bg-gray-50/50 dark:bg-zinc-900/30 p-3 md:p-4 border-r border-gray-200/50 dark:border-white/5 flex-col justify-between">
+                  <div className="space-y-5">
+                    
+                    {/* Brand Banner */}
+                    <div className="flex items-center gap-2 px-1 sm:px-1.5">
+                      <div className="w-5.5 h-5.5 rounded bg-violet-600 text-white flex items-center justify-center font-bold text-[10px]">
+                        S
+                      </div>
+                      <span className="font-extrabold text-xs hidden sm:inline-block tracking-tight text-gray-800 dark:text-white">
+                        SnackStack
+                      </span>
+                    </div>
+                    
+                    {/* Navigation Directories List */}
+                    <div className="space-y-1">
+                      <button 
+                        onClick={() => setActiveDashboardTab("notes")}
+                        className={cn(
+                          "w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors cursor-pointer",
+                          activeDashboardTab === "notes"
+                            ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold"
+                            : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/5"
+                        )}
+                      >
+                        <FileText className="w-4 h-4 text-violet-500" />
+                        <span className="hidden sm:inline-block text-[11px]">All Notes</span>
+                      </button>
+
+                      <button 
+                        onClick={() => setActiveDashboardTab("capture")}
+                        className={cn(
+                          "w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors cursor-pointer",
+                          activeDashboardTab === "capture"
+                            ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold"
+                            : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/5"
+                        )}
+                      >
+                        <Zap className="w-4 h-4 text-violet-500" />
+                        <span className="hidden sm:inline-block text-[11px]">Quick Capture</span>
+                      </button>
+
+                      <button 
+                        onClick={() => setActiveDashboardTab("starred")}
+                        className={cn(
+                          "w-full flex items-center gap-2 p-2 rounded-lg text-left transition-colors cursor-pointer",
+                          activeDashboardTab === "starred"
+                            ? "bg-violet-500/10 text-violet-600 dark:text-violet-400 font-bold"
+                            : "text-gray-500 hover:bg-black/5 dark:hover:bg-white/5"
+                        )}
+                      >
+                        <SparklesIcon className="w-4 h-4 text-violet-500" />
+                        <span className="hidden sm:inline-block text-[11px]">AI Starred</span>
+                      </button>
+                    </div>
+
+                    {/* Tag Folders */}
+                    <div className="space-y-2 pt-2 border-t border-gray-200/50 dark:border-white/5">
+                      <span className="text-[9px] uppercase font-extrabold tracking-widest text-gray-400 dark:text-gray-500 px-2 hidden sm:inline-block">Tags</span>
+                      <div className="space-y-1">
+                        <div className={cn(
+                          "flex items-center gap-2 px-2.5 py-1 text-xs transition-colors rounded-md",
+                          activeTag === "strategy" ? "bg-violet-500/10 font-bold animate-pulse" : ""
+                        )}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                          <span className="hidden sm:inline-block truncate text-gray-500 dark:text-gray-400 text-[10px]">#strategy</span>
+                        </div>
+                        <div className={cn(
+                          "flex items-center gap-2 px-2.5 py-1 text-xs transition-colors rounded-md",
+                          activeTag === "pricing" ? "bg-indigo-500/10 font-bold animate-pulse" : ""
+                        )}>
+                          <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                          <span className="hidden sm:inline-block truncate text-gray-500 dark:text-gray-400 text-[10px]">#pricing</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Cloud status footer indicator */}
+                  <div className="p-2 rounded-lg border border-gray-200/50 dark:border-white/5 bg-white/40 dark:bg-zinc-800/10 text-center text-[9px] font-mono font-medium text-gray-400 dark:text-zinc-500 hidden sm:flex items-center gap-1.5 justify-center group cursor-pointer select-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 group-hover:scale-125 transition-transform" />
+                    ☁️ Cloud Synced
                   </div>
                 </div>
 
-                {/* Decorative Elements */}
-                <div className="absolute top-20 right-20 w-32 h-32 rounded-full bg-violet-500/20 blur-[80px] pointer-events-none" />
-                <div className="absolute bottom-20 left-10 w-40 h-40 rounded-full bg-indigo-500/20 blur-[80px] pointer-events-none" />
+                {/* COLUMN 2: NOTES LIST FEED */}
+                <div className="hidden sm:flex w-1/4 min-w-[160px] md:min-w-[200px] bg-white/30 dark:bg-black/30 p-3 md:p-4 border-r border-gray-200/50 dark:border-white/5 flex-col gap-3">
+                  <div className="flex items-center justify-between px-1 select-none">
+                    <span className="font-extrabold text-[11px] uppercase tracking-wider text-gray-400 dark:text-gray-500">Notes Feed</span>
+                    <button className="w-5 h-5 rounded-full bg-violet-500/10 text-violet-500 flex items-center justify-center font-bold text-xs select-none hover:bg-violet-500 hover:text-white transition-all cursor-pointer">
+                      +
+                    </button>
+                  </div>
+                  
+                  {/* Sidebar list items */}
+                  <div className="space-y-2 overflow-y-auto pr-1 flex-1">
+                    
+                    <div className={cn(
+                      "p-2.5 rounded-xl border text-left transition-all cursor-pointer",
+                      activeDashboardTab === "notes" 
+                        ? "border-violet-500/30 bg-violet-500/5 dark:bg-violet-500/10 shadow-sm" 
+                        : "border-gray-200/60 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40"
+                    )}>
+                      <span className="font-bold block text-xs truncate text-gray-800 dark:text-white">Q4 Product Launch</span>
+                      <span className="text-[9px] text-gray-400 dark:text-zinc-400 block mt-1 truncate">Drafting target deliverables and Stripe integrations...</span>
+                      <span className="text-[8px] text-violet-500 block mt-2 font-mono">Edited 2m ago</span>
+                    </div>
+                    
+                    <div className={cn(
+                      "p-2.5 rounded-xl border text-left transition-all cursor-pointer",
+                      activeDashboardTab === "capture" 
+                        ? "border-violet-500/30 bg-violet-500/5 dark:bg-violet-500/10 shadow-sm" 
+                        : "border-gray-200/60 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40"
+                    )}>
+                      <span className="font-bold block text-xs truncate text-gray-800 dark:text-white">Quick Wireframe Scan</span>
+                      <span className="text-[9px] text-gray-400 dark:text-zinc-400 block mt-1 truncate">Gemini AI identified wireframe nodes...</span>
+                      <span className="text-[8px] text-violet-500 block mt-2 font-mono">Uploaded 1h ago</span>
+                    </div>
+
+                    <div className={cn(
+                      "p-2.5 rounded-xl border text-left transition-all cursor-pointer border-gray-200/60 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 hover:border-black/10 dark:hover:border-white/10"
+                    )}>
+                      <span className="font-bold block text-xs truncate text-gray-800 dark:text-white">Development Backlog</span>
+                      <span className="text-[9px] text-gray-400 dark:text-zinc-400 block mt-1 truncate">Aligning engineering milestones and seeding Postgres...</span>
+                      <span className="text-[8px] text-gray-400 dark:text-zinc-500 block mt-2 font-mono">Edited 1d ago</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* COLUMN 3: TEXT EDITOR & COLLAPSIBLE AI DRAWER */}
+                <div className="flex-1 bg-white/10 dark:bg-black/10 flex overflow-hidden">
+                  
+                  {/* Rich Text Editor Area */}
+                  <div className="flex-1 p-3 sm:p-4.5 flex flex-col gap-3 sm:gap-3.5 overflow-y-auto">
+
+                    {/* Document Header */}
+                    <div className="border-b border-gray-200/50 dark:border-white/5 pb-2 sm:pb-3 flex items-center justify-between">
+                      <div>
+                        <span className="font-extrabold text-sm sm:text-base text-gray-800 dark:text-white block">
+                          {activeDashboardTab === "notes" && "Q4 Product Launch"}
+                          {activeDashboardTab === "capture" && "Quick Wireframe Scan"}
+                          {activeDashboardTab === "starred" && "Starred AI Suggestions"}
+                        </span>
+                        <div className="flex items-center gap-1.5 mt-2">
+                          <span className="px-1.5 py-0.5 rounded bg-violet-500/10 text-violet-600 dark:text-violet-400 text-[8.5px] font-bold tracking-wider">#strategy</span>
+                          <span className="px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[8.5px] font-bold tracking-wider">#pricing</span>
+                        </div>
+                      </div>
+                      <span className="text-[8px] text-gray-400 dark:text-zinc-500 font-mono hidden md:inline">Modified today, 5:48 PM</span>
+                    </div>
+
+                    {/* Rich text mock document */}
+                    <div className="flex-1 font-mono text-[9px] sm:text-[10px] md:text-xs text-gray-700 dark:text-gray-300 leading-relaxed space-y-2.5 sm:space-y-3.5">
+                      <p className="font-bold text-violet-600 dark:text-violet-400 text-left">## 1. Project Launch Specification</p>
+                      <p className="text-left">
+                        Our central focus for the upcoming quarter is deploying the responsive note-taking layout. Leveraging Next.js 15 capabilities alongside shadcn/ui components, we ensure a premium tactile layout suitable for creative crews.
+                      </p>
+                      
+                      <p className="font-bold text-violet-600 dark:text-violet-400 text-left">## 2. Dynamic Integrations</p>
+                      <p className="text-left">
+                        • Integrated payment configurations are handled natively through <strong className="text-violet-500 font-bold">Stripe billing gates</strong>. Basic (₹749/mo) and Pro (₹1599/mo) layers are initialized inside server actions.
+                      </p>
+                      <p className="text-left">
+                        • Clerk authentication filters are active on all dynamic client workspaces to establish absolute tenant security.
+                      </p>
+                    </div>
+
+                  </div>
+
+                  {/* Reactive Collapsible AI Drawer Panel */}
+                  <AnimatePresence>
+                    {copilotPanelOpen && (
+                      <motion.div
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: "35%", opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: "easeInOut" }}
+                        className="hidden sm:flex sm:min-w-[140px] md:min-w-[170px] bg-gray-50/70 dark:bg-zinc-900/50 border-l border-gray-200/50 dark:border-white/5 flex-col gap-4 overflow-y-auto"
+                      >
+                        <div className="p-3.5 border-b border-gray-200/50 dark:border-white/5 flex items-center justify-between">
+                          <div className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400 font-bold text-xs select-none">
+                            <span>✨</span>
+                            <span>AI Copilot</span>
+                          </div>
+                        </div>
+
+                        <div className="px-3.5 pb-4 space-y-4">
+                          
+                          {/* Live Auto-Summary Card */}
+                          <div className="p-2.5 rounded-xl border border-violet-500/20 bg-violet-500/5 dark:bg-violet-500/10 space-y-1.5 text-left">
+                            <span className="font-bold text-violet-600 dark:text-violet-400 block text-[9.5px]">Auto Summary</span>
+                            <p className="text-[8.5px] leading-relaxed text-gray-500 dark:text-zinc-300">
+                              Product roadmap prioritizing dynamic Clerk security, basic and pro pricing gates via Stripe, and Gemini structure scans. Uptime targeted at 99.9%.
+                            </p>
+                          </div>
+
+                          {/* Live Tag suggestions */}
+                          <div className="space-y-2 text-left">
+                            <span className="font-bold block text-gray-700 dark:text-zinc-200 text-[9.5px]">Suggested Tags</span>
+                            <div className="flex flex-wrap gap-1.5">
+                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-violet-500/10 cursor-pointer text-[8px] font-bold text-violet-500 select-none">+ billing</span>
+                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-violet-500/10 cursor-pointer text-[8px] font-bold text-violet-500 select-none">+ clerk</span>
+                            </div>
+                          </div>
+
+                          {/* Quick AI Action tools */}
+                          <div className="space-y-2 text-left">
+                            <span className="font-bold block text-gray-700 dark:text-zinc-200 text-[9.5px]">Assistant Actions</span>
+                            <button 
+                              onClick={() => {
+                                setActiveDashboardTab("starred");
+                                handleStartChatSim("summary");
+                              }}
+                              className="w-full text-center py-1.5 px-2 rounded-lg bg-violet-600 hover:bg-violet-700 text-white text-[8px] font-bold transition-all shadow-sm cursor-pointer select-none"
+                            >
+                              Run Note Analysis
+                            </button>
+                          </div>
+
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                </div>
               </div>
+
             </div>
           </div>
         </div>
+
       </div>
 
+      {/* Embedded CSS Animations for Premium Float Dynamics */}
       <style jsx>{`
         @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
+          0%, 100% {
+            transform: translateY(0px) rotate(0deg);
           }
           50% {
-            transform: translateY(-20px);
+            transform: translateY(-12px) rotate(0.5deg);
           }
         }
         .animate-float {
-          animation: float 6s ease-in-out infinite;
+          animation: float 7s ease-in-out infinite;
+        }
+        .animate-spin-slow {
+          animation: spin 6s linear infinite;
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
       `}</style>
     </section>

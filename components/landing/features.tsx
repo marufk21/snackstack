@@ -102,6 +102,7 @@ const Features = () => {
 
   return (
     <section
+      id="services"
       ref={containerRef}
       className="relative w-full overflow-hidden bg-background z-0"
     >
@@ -111,35 +112,36 @@ const Features = () => {
         {services.map((service, index) => (
           <div
             key={index}
-            className="w-screen h-screen flex items-center justify-center px-6 py-8 sm:p-8 md:p-10 lg:p-12 shrink-0 relative"
+            className="w-screen h-screen flex items-center justify-center px-4 py-6 sm:p-8 md:p-10 lg:p-12 shrink-0 relative"
           >
-            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center">
+            {/* Slide background glow */}
+            <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-[0.03] dark:opacity-[0.05]`} />
+            <div className={`absolute top-1/3 left-1/4 w-96 h-96 bg-gradient-to-br ${service.gradient} opacity-[0.06] blur-[120px] rounded-full`} />
+
+            <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-14 items-center relative z-10">
               {/* Left: Content */}
-              <div className="space-y-5 md:space-y-6 lg:space-y-8 order-2 md:order-1">
-                <div
-                  className={`w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br ${service.gradient} p-3 sm:p-4 md:p-5 text-white shadow-2xl hidden sm:block`}
-                >
-                  {React.cloneElement(service.icon as React.ReactElement<any>, {
-                    className: "w-full h-full",
-                  })}
+              <div className="space-y-4 sm:space-y-6 md:space-y-8 order-2 md:order-1">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+                  <span className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient}`} />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Feature {index + 1} of {services.length}
+                  </span>
                 </div>
-                <div className="space-y-3 md:space-y-4">
-                  <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
+                <div className="space-y-4">
+                  <h3 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                     {service.title}
                   </h3>
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed max-w-lg">
+                  <p className="text-xs sm:text-base md:text-lg text-muted-foreground leading-relaxed max-w-lg font-light">
                     {service.description}
                   </p>
                 </div>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                   {service.features.map((feature, fIndex) => (
                     <li
                       key={fIndex}
-                      className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg font-medium text-muted-foreground"
+                      className="flex items-center gap-3 text-sm font-medium text-foreground/80 bg-white/40 dark:bg-white/5 border border-gray-200/40 dark:border-white/5 rounded-xl px-4 py-3 backdrop-blur-sm hover:border-violet-500/30 transition-all duration-300"
                     >
-                      <div
-                        className={`w-2 h-2 rounded-full bg-gradient-to-r ${service.gradient} flex-shrink-0`}
-                      />
+                      <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${service.gradient} flex-shrink-0`} />
                       {feature}
                     </li>
                   ))}
@@ -148,19 +150,33 @@ const Features = () => {
 
               {/* Right: Visual */}
               <div className="order-1 md:order-2 flex justify-center relative w-full mb-4 md:mb-0">
-                <div
-                  className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-20 blur-[100px] rounded-full`}
-                />
-                <div className="relative w-full max-w-[450px] md:max-w-[500px] aspect-[5/4] bg-white/5 border border-white/10 rounded-2xl md:rounded-3xl backdrop-blur-xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-10 mix-blend-overlay`}
-                  />
+                <div className="relative w-full max-w-[420px] md:max-w-[460px] aspect-[5/4]">
+                  {/* Glowing backdrop */}
+                  <div className={`absolute -inset-6 bg-gradient-to-br ${service.gradient} opacity-10 blur-[80px] rounded-full`} />
+
+                  {/* Main visual card */}
+                  <div className="relative h-full rounded-2xl md:rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl overflow-hidden shadow-2xl">
+                    <Image
+                      src={service.image}
+                      alt={service.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-15 mix-blend-overlay`} />
+
+                    {/* Floating badge on the visual */}
+                    <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg">
+                      <div className="flex items-center gap-2.5">
+                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${service.gradient} flex items-center justify-center text-white text-sm`}>
+                          {React.cloneElement(service.icon as React.ReactElement<any>, { className: "w-4 h-4" })}
+                        </div>
+                        <div className="text-left">
+                          <div className="text-xs font-bold text-foreground">{service.title}</div>
+                          <div className="text-[10px] text-muted-foreground">{service.features.length} capabilities</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

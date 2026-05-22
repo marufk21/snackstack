@@ -5,7 +5,6 @@ import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { stripePriceIds } from "@/config/stripe-client";
-import { DollarSign } from "lucide-react";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import PageWrapper from "./page-wrapper";
@@ -196,26 +195,29 @@ const Pricing = () => {
     <PageWrapper ref={sectionRef} id="pricing">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-8 md:mb-12 lg:mb-14">
-          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-4 py-2 mb-6">
-            <DollarSign className="w-4 h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-purple-600 dark:text-purple-400 text-sm font-medium">
-              Pricing
+        <div ref={headerRef} className="text-center mb-4 sm:mb-10 md:mb-14">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-3 sm:px-4 py-1 sm:py-1.5 mb-4 sm:mb-6 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500" />
+            </span>
+            <span className="text-violet-600 dark:text-violet-400 text-xs font-semibold uppercase tracking-wider">
+              Pricing Plans
             </span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 md:mb-4 lg:mb-6 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-2 sm:mb-4 lg:mb-6 tracking-tight">
             Choose Your{" "}
             <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
               Perfect Plan
             </span>
           </h2>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Unlock the full potential of AI-powered note-taking. Choose a plan
             that fits your needs and start creating amazing content today.
           </p>
 
           {/* Billing Toggle */}
-          <div className="flex justify-center mt-6 md:mt-8">
+          <div className="flex justify-center mt-4 sm:mt-6 md:mt-8">
             <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
           </div>
         </div>
@@ -228,9 +230,21 @@ const Pricing = () => {
         )}
 
         {/* Pricing Cards */}
-        <div ref={cardsRef} className="grid md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5 mb-8 md:mb-12 lg:mb-14">
+        <div
+          ref={cardsRef}
+          className="flex overflow-x-auto snap-x snap-mandatory lg:grid lg:grid-cols-4 gap-3 md:gap-4 lg:gap-5 mb-6 sm:mb-10 md:mb-14 px-4 sm:px-0 -mx-4 sm:mx-0 pb-2"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <style jsx>{`
+            div::-webkit-scrollbar {
+              display: none;
+            }
+          `}</style>
           {pricingTiers.map((tier, index) => (
-            <div key={tier.id} className="pricing-card-wrapper w-full">
+            <div
+              key={tier.id}
+              className="pricing-card-wrapper min-w-[85vw] sm:min-w-[340px] lg:min-w-0 snap-center shrink-0"
+            >
               <PricingCard
                 tier={tier}
                 isYearly={isYearly}

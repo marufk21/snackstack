@@ -5,9 +5,12 @@ import {
   CheckCircle2,
   Zap,
   Shield,
-  Rocket,
   Brain,
   Sparkles,
+  Cpu,
+  Globe,
+  CloudLightning,
+  ArrowRight,
 } from "lucide-react";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
@@ -24,27 +27,33 @@ const About = () => {
 
   const features = [
     {
-      icon: <Zap className="w-6 h-6" />,
+      icon: <Zap className="w-5 h-5" />,
       title: "Lightning Fast",
-      description: "Optimized for speed and performance across all devices",
+      description: "Optimized for speed and performance across all devices with edge-rendered pages.",
+      gradient: "from-amber-500 to-orange-600",
+      bg: "bg-amber-500/10",
     },
     {
-      icon: <Shield className="w-6 h-6" />,
+      icon: <Shield className="w-5 h-5" />,
       title: "Secure & Reliable",
-      description: "Enterprise-grade security with 99.9% uptime guarantee",
+      description: "Enterprise-grade encryption with 99.9% uptime guarantee and SOC 2 compliance.",
+      gradient: "from-emerald-500 to-teal-600",
+      bg: "bg-emerald-500/10",
     },
     {
-      icon: <Brain className="w-6 h-6" />,
+      icon: <Brain className="w-5 h-5" />,
       title: "AI-Powered",
-      description: "Intelligent suggestions and organization powered by AI",
+      description: "Gemini 1.5 Pro drives intelligent suggestions, auto-tagging, and content enhancement.",
+      gradient: "from-violet-500 to-purple-600",
+      bg: "bg-violet-500/10",
     },
   ];
 
   const stats = [
-    { number: "10K+", label: "Active Users" },
-    { number: "99.9%", label: "Uptime" },
-    { number: "24/7", label: "Support" },
-    { number: "50+", label: "Countries" },
+    { number: "10K+", label: "Active Users", icon: <Globe className="w-4 h-4" /> },
+    { number: "99.9%", label: "Uptime", icon: <CloudLightning className="w-4 h-4" /> },
+    { number: "24/7", label: "Support", icon: <Sparkles className="w-4 h-4" /> },
+    { number: "50+", label: "Countries", icon: <Cpu className="w-4 h-4" /> },
   ];
 
   useGSAP(() => {
@@ -183,78 +192,85 @@ const About = () => {
     <PageWrapper ref={sectionRef} id="about">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
         {/* Section Header */}
-        <div ref={headerRef} className="text-center mb-10 md:mb-14 lg:mb-16">
-          <div className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 mb-5 md:mb-6">
-            <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-600 dark:text-purple-400" />
-            <span className="text-purple-600 dark:text-purple-400 text-xs sm:text-sm font-medium">
-              About Us
+        <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16 lg:mb-20">
+          <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-6">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-violet-500" />
+            </span>
+            <span className="text-violet-600 dark:text-violet-400 text-xs font-semibold uppercase tracking-wider">
+              About SnackStack
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-foreground mb-4 md:mb-5 lg:mb-6 tracking-tight leading-tight">
-            About{" "}
-            <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
-              SnackStack
+          <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-3 sm:mb-5 tracking-tight leading-tight">
+            Built for{" "}
+            <span className="bg-gradient-to-r from-violet-600 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
+              Modern Thinkers
             </span>
           </h2>
-          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            We're revolutionizing how people capture and organize their ideas.
-            Our AI-powered note-taking platform combines cutting-edge technology
-            with intuitive design to deliver powerful solutions that enhance
-            your thinking.
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light">
+            We are redefining how ideas are captured, organized, and enhanced —
+            blending cutting-edge AI with an intuitive design language built for speed and clarity.
           </p>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center mb-10 md:mb-14 lg:mb-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center mb-8 sm:mb-14 md:mb-18">
           {/* Left Content */}
-          <div ref={leftContentRef} className="space-y-6 md:space-y-8">
-            <div className="space-y-4 md:space-y-6">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground leading-tight">
-                AI-Powered Note-Taking
+          <div ref={leftContentRef} className="space-y-6 sm:space-y-8">
+            <div className="space-y-3 sm:space-y-5">
+              <h3 className="text-xl sm:text-3xl font-bold text-foreground leading-tight">
+                More than just{" "}
+                <span className="bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">notes</span>
               </h3>
-              <p className="text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed">
-                SnackStack was built for the modern need to capture and enhance
-                ideas. Our team of experienced engineers and AI specialists have
-                crafted a platform that uses artificial intelligence to help you
-                organize thoughts, find connections, and express ideas more
-                effectively.
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                SnackStack fuses a rich editing surface with Gemini AI to surface connections,
+                automate tagging, and transform raw thoughts into structured insight — without
+                breaking your flow.
               </p>
             </div>
 
-            <div className="space-y-3 md:space-y-4">
+            <div className="space-y-2 sm:space-y-4">
               {[
-                "AI-powered suggestions and content enhancement",
-                "Intelligent organization and automatic tagging",
-                "Seamless collaboration with real-time editing",
-                "Powerful search and relationship mapping",
+                { title: "AI suggestions", desc: "Context-aware content enhancement and summaries" },
+                { title: "Smart organization", desc: "Auto-tagging, folders, and relationship mapping" },
+                { title: "Real-time collaboration", desc: "Share and co-edit notes with your team instantly" },
+                { title: "Powerful search", desc: "Full-text and semantic search across all your notes" },
               ].map((item, index) => (
-                <div key={index} className="check-item flex items-start gap-2 sm:gap-3">
-                  <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-sm sm:text-base text-muted-foreground">{item}</span>
+                <div key={index} className="check-item flex items-start gap-4 p-3.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors duration-200">
+                  <div className="bg-emerald-500/10 rounded-lg p-1.5 flex-shrink-0 mt-0.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-semibold text-foreground block">{item.title}</span>
+                    <span className="text-xs text-muted-foreground">{item.desc}</span>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right Content - Features Grid */}
-          <div ref={rightContentRef} className="grid gap-5 md:gap-6">
+          <div ref={rightContentRef} className="grid gap-3 sm:gap-5">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="feature-card group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-xl md:rounded-2xl p-5 md:p-6 hover:shadow-xl transition-all duration-300 hover:border-violet-500/30 backdrop-blur-sm"
+                className="feature-card group relative bg-white dark:bg-zinc-900/60 border border-gray-200/60 dark:border-white/10 rounded-2xl p-6 hover:shadow-xl hover:shadow-violet-500/5 transition-all duration-500 hover:border-violet-500/30 hover:-translate-y-0.5 backdrop-blur-sm overflow-hidden"
               >
-                <div className="flex items-start gap-3 sm:gap-4">
-                  <div className="bg-gradient-to-br from-violet-500 to-indigo-500 rounded-lg sm:rounded-xl p-2.5 sm:p-3 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-500/0 via-fuchsia-500/0 to-indigo-500/0 group-hover:from-violet-500/[0.02] group-hover:via-fuchsia-500/[0.02] group-hover:to-indigo-500/[0.02] transition-all duration-500 rounded-2xl" />
+                <div className="relative flex items-start gap-4">
+                  <div className={`bg-gradient-to-br ${feature.gradient} rounded-xl p-3 text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     {feature.icon}
                   </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg sm:text-xl font-bold text-foreground mb-1.5 sm:mb-2">
+                  <div className="flex-1 pt-0.5">
+                    <h4 className="text-lg font-bold text-foreground mb-1.5">
                       {feature.title}
                     </h4>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
+                  <ArrowRight className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-violet-500 group-hover:translate-x-1 transition-all duration-300 flex-shrink-0 mt-2" />
                 </div>
               </div>
             ))}
@@ -264,15 +280,21 @@ const About = () => {
         {/* Stats Section */}
         <div
           ref={statsRef}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 pt-10 md:pt-14 lg:pt-16 border-t border-border"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 pt-8 sm:pt-12 md:pt-16 border-t border-gray-200/60 dark:border-white/10"
         >
           {stats.map((stat, index) => (
-            <div key={index} className="text-center group p-4 sm:p-5 md:p-6 rounded-xl md:rounded-2xl bg-white/50 dark:bg-white/5 border border-transparent hover:border-violet-500/20 transition-all duration-300">
-              <div className="stat-number text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">
-                {stat.number}
-              </div>
-              <div className="text-muted-foreground font-medium text-xs sm:text-sm md:text-base lg:text-lg">
-                {stat.label}
+            <div key={index} className="relative text-center group p-3 sm:p-6 rounded-2xl hover:bg-white/50 dark:hover:bg-white/5 border border-transparent hover:border-gray-200/60 dark:hover:border-white/10 transition-all duration-300">
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-violet-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative flex flex-col items-center gap-2">
+                <div className="text-violet-500/60 group-hover:text-violet-500 transition-colors duration-300">
+                  {stat.icon}
+                </div>
+                <div className="stat-number text-2xl sm:text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
+                  {stat.number}
+                </div>
+                <div className="text-muted-foreground font-medium text-xs sm:text-sm tracking-wide">
+                  {stat.label}
+                </div>
               </div>
             </div>
           ))}

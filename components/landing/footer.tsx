@@ -133,8 +133,8 @@ const Footer = () => {
         bg-background ensures it covers the fixed text behind it.
       */}
       <div className="relative z-10 bg-background border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 lg:pt-16 pb-6 md:pb-8 lg:pb-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 lg:gap-10 mb-6 md:mb-12 lg:mb-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 md:pt-14 pb-4 sm:pb-6 md:pb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 lg:gap-10 mb-4 sm:mb-8 md:mb-12">
             <div className="col-span-2 md:col-span-2 text-center md:text-left">
               <Link
                 href="/"
@@ -242,7 +242,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-6 text-sm text-muted-foreground pt-8 border-t border-white/10">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6 text-sm text-muted-foreground pt-5 sm:pt-8 border-t border-white/10">
             <div className="flex items-center gap-4">
               <p>© {currentYear} SnackStack. All rights reserved.</p>
             </div>
@@ -271,27 +271,19 @@ const Footer = () => {
         className="relative z-10 w-full pointer-events-none"
       />
 
-      {/* 
-        Big Text Feature 
+      {/*
+        Big Text Feature
         Fixed at the bottom, z-index -10.
         Revealed when the user scrolls past the opaque Links section into the transparent Spacer.
       */}
       <div
         ref={bigTextRef}
-        className="fixed bottom-0 left-0 w-full -z-10 bg-black/5 dark:bg-white/5 backdrop-blur-lg border-t border-white/5"
+        className="fixed bottom-0 left-0 w-full -z-10 bg-background backdrop-blur-sm border-t border-border/50"
       >
-        {/* Background Glow for the Big Text area */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-7xl">
-            <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl" />
-          </div>
-        </div>
-
-        <div className="w-full h-full flex justify-center items-end pt-8 md:pt-12 lg:pt-12 pb-2 md:pb-6 lg:pb-10">
+        <div className="w-full h-full flex justify-center items-end px-4 sm:px-6 md:px-8 pt-8 sm:pt-12 md:pt-20 pb-4 sm:pb-6 md:pb-10">
           <div
             ref={textElementRef}
-            className="text-[14vw] font-black leading-[0.85] sm:leading-[0.75] tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-foreground/10 to-foreground/0 select-none pointer-events-none translate-y-2 md:translate-y-4"
+            className="text-[14vw] sm:text-[15vw] md:text-[14vw] font-black leading-[0.75] tracking-[-0.05em] text-transparent bg-clip-text bg-gradient-to-b from-foreground/25 via-foreground/10 to-transparent select-none pointer-events-none"
           >
             SNACKSTACK
           </div>

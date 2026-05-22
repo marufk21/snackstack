@@ -15,7 +15,7 @@ const PageWrapper = forwardRef<HTMLElement, PageWrapperProps>(({
     <section
       ref={ref}
       className={cn(
-        "relative w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col justify-center py-8 md:py-12 lg:py-16 overflow-hidden",
+        "relative w-full max-w-screen mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden",
         className
       )}
       {...props}
