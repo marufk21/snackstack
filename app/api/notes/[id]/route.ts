@@ -1,7 +1,7 @@
 import { auth } from "@/config/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/database";
+import { db } from "@/lib/database/client";
 import { generateUniqueSlug } from "@/lib/utils/notes";
 import { getOrCreateUserByEmail } from "@/lib/database/user";
 

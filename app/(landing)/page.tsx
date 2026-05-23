@@ -1,4 +1,7 @@
-import { Hero, About, Services, Footer } from "@/components/landing";
+import Hero from "@/components/landing/hero";
+import About from "@/components/landing/about";
+import Services from "@/components/landing/features";
+import Footer from "@/components/landing/footer";
 import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 

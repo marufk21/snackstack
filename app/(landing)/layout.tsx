@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar } from "@/components/landing";
+import Navbar from "@/components/landing/navbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

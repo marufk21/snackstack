@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import { type Note } from "@/server/api";
+import { type Note } from "@/server/api/notes";
 import {
   Calendar,
   Clock,

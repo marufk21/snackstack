@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { uploadFile } from "@/server/api";
+import { uploadFile } from "@/server/api/upload";
 
 export interface UploadResult {
   public_id: string;

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { getNotes, createNote, type Note } from "@/server/api";
+import { getNotes, createNote, type Note } from "@/server/api/notes";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,

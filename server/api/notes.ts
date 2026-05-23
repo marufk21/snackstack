@@ -1,4 +1,4 @@
-import { apiClient } from "../axios";
+import { apiClient } from "../axios/config";
 
 export interface Note {
   id: string;

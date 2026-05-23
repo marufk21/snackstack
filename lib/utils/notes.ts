@@ -1,5 +1,5 @@
 import "server-only";
-import { db } from "@/lib/database";
+import { db } from "@/lib/database/client";
 
 // Helper function to generate slug
 export function generateSlug(title: string): string {

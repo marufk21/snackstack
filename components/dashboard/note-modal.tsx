@@ -3,12 +3,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  updateNote,
-  deleteNote,
-  type Note,
-  generateAiSuggestion,
-} from "@/server/api";
+import { updateNote, deleteNote, type Note } from "@/server/api/notes";
+import { generateAiSuggestion } from "@/server/api/ai-suggestion";
 import { useAppStore } from "@/stores/use-app-store";
 import {
   X,
