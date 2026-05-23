@@ -34,16 +34,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session;
     },
-    async jwt({ token, user, account, profile }) {
-      // On first sign-in, store user info in token
-      // Note: We use email as ID initially to keep this Edge-compatible
-      // API routes will resolve email to database ID and handle user creation
+    async jwt({ token, account, profile }) {
+      // On first sign-in, look up or create the database user and store
+      // the real DB user ID as token.sub. Dynamic import keeps Prisma out
+      // of the Edge middleware bundle — DB calls only happen at sign-in.
       if (account && profile) {
-        token.sub = profile.email as string; // Store email initially
+        const { getOrCreateUserByEmail } = await import("@/lib/database/user");
+        const dbUser = await getOrCreateUserByEmail(
+          profile.email!,
+          profile.name
+        );
+        token.sub = dbUser.id;
         token.email = profile.email;
         token.name = profile.name;
         token.picture = (profile as any).picture || profile.image;
-        token.isSubscribed = false; // Default value, will be updated by API routes
+        token.isSubscribed = dbUser.isSubscribed ?? false;
       }
 
       return token;

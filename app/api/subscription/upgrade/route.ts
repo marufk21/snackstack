@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
   try {
     const session = await auth();
-    if (!session?.user?.id || !session?.user?.email) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
@@ -19,22 +19,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing priceId or planType" }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+    // Resolve the database user ID from email. The JWT callback may store
+    // the email as token.sub for Edge compatibility on older sessions.
+    const dbUser = await prisma.user.findUnique({
+      where: { email: session.user.email },
       include: { subscription: true },
     });
 
-    if (!user) {
+    if (!dbUser) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    let customerId = user.subscription?.stripeCustomerId;
+    const userId = dbUser.id;
+
+    let customerId = dbUser.subscription?.stripeCustomerId;
 
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: session.user.email,
         name: session.user.name || undefined,
-        metadata: { userId: session.user.id },
+        metadata: { userId },
       });
       customerId = customer.id;
     }
@@ -46,7 +50,7 @@ export async function POST(request: NextRequest) {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${request.nextUrl.origin}/app/subscription?success=true`,
       cancel_url: `${request.nextUrl.origin}/app/subscription?canceled=true`,
-      metadata: { userId: session.user.id, userEmail: session.user.email, planType },
+      metadata: { userId, userEmail: session.user.email, planType },
     });
 
     return NextResponse.json({ url: checkoutSession.url, sessionId: checkoutSession.id });

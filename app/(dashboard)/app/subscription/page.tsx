@@ -17,57 +17,47 @@ import {
   Download,
   AlertTriangle,
   Loader2,
-  Clock,
+  Sparkles,
+  ImageIcon,
+  FileText,
 } from "lucide-react";
 import Link from "next/link";
-import { SubscriptionEndedDialog } from "@/components/subscription/subscription-ended-dialog";
 import { useSubscription } from "@/hooks/use-subscription";
 
-// Disable static generation for this page
 export const dynamic = "force-dynamic";
 
 export default function SubscriptionPage() {
   const {
     subscription: subscriptionData,
     isLoading: loading,
-    onFreeTrial,
-    remainingTrialDays,
     noteCount,
     noteLimit,
     hasSubscription,
+    aiSuggestionsRemaining,
+    aiSuggestionsLimit,
     tier,
+    limits,
     refetch,
   } = useSubscription();
 
   const [actionLoading, setActionLoading] = useState(false);
-  const [showEndedDialog, setShowEndedDialog] = useState(
-    !!(onFreeTrial && remainingTrialDays && remainingTrialDays <= 3)
-  );
-  const [error, setError] = useState<string | null>(null); // Keep error state for other potential errors
 
   const handleCancelSubscription = async () => {
     if (
       !confirm(
         "Are you sure you want to cancel your subscription? You'll still have access until the end of your billing period."
       )
-    ) {
+    )
       return;
-    }
 
     setActionLoading(true);
     try {
-      const response = await fetch("/api/subscription/cancel", {
-        method: "POST",
-      });
-
+      const response = await fetch("/api/subscription/cancel", { method: "POST" });
       if (!response.ok) throw new Error("Failed to cancel subscription");
-
       await refetch();
       alert("Subscription will be canceled at the end of the billing period");
     } catch (err) {
-      alert(
-        err instanceof Error ? err.message : "Failed to cancel subscription"
-      );
+      alert(err instanceof Error ? err.message : "Failed to cancel subscription");
     } finally {
       setActionLoading(false);
     }
@@ -79,9 +69,7 @@ export default function SubscriptionPage() {
       const response = await fetch("/api/subscription/reactivate", {
         method: "POST",
       });
-
       if (!response.ok) throw new Error("Failed to reactivate subscription");
-
       await refetch();
       alert("Subscription has been reactivated");
     } catch (err) {
@@ -139,7 +127,7 @@ export default function SubscriptionPage() {
 
   if (loading) {
     return (
-      <div className="relative container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
+      <div className="container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
           <span className="text-lg font-medium">Loading subscription...</span>
@@ -148,19 +136,6 @@ export default function SubscriptionPage() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        <Card className="border-red-200 dark:border-red-800">
-          <CardContent className="pt-6">
-            <p className="text-red-600 dark:text-red-400">Error: {error}</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  // Wait for data to load before showing anything
   if (!subscriptionData) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl flex items-center justify-center min-h-[400px]">
@@ -169,224 +144,108 @@ export default function SubscriptionPage() {
     );
   }
 
-  const handleSyncSubscription = async () => {
-    setActionLoading(true);
-    try {
-      const response = await fetch("/api/subscription/sync", {
-        method: "POST",
-      });
-
-      if (!response.ok) {
-        const errorData: any = await response.json();
-        throw new Error(errorData.details || "Failed to sync subscription");
-      }
-
-      const data: any = await response.json();
-      await refetch();
-
-      if (data.active) {
-        alert("Subscription found and synced successfully!");
-      } else {
-        alert("No active subscription found on Stripe.");
-      }
-    } catch (err) {
-      alert(
-        `Sync failed: ${err instanceof Error ? err.message : "Unknown error"}`
-      );
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  // Free Trial User
-  if (subscriptionData?.onFreeTrial) {
+  // ── Free Plan View ──────────────────────────────────────────────
+  if (!hasSubscription) {
     return (
-      <div className="relative container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8 animate-fade-in-up">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2 gradient-text">
-            Free Trial
-          </h1>
-          <p className="text-muted-foreground text-sm md:text-base">
-            You're currently on a 14-day free trial of SnackStack.
-          </p>
-        </div>
-
-        <div className="grid gap-6 animate-fade-in-up animate-delay-100">
-          <Card className="border-blue-200 dark:border-blue-800 hover:shadow-lg transition-all duration-300">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
-                    Free Trial Status
-                  </CardTitle>
-                  <CardDescription>Your trial details</CardDescription>
-                </div>
-                <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
-                  {subscriptionData.remainingTrialDays} days remaining
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-4">
-                <p className="text-sm text-muted-foreground mb-2">
-                  Trial ends on:
-                </p>
-                <p className="text-lg font-semibold">
-                  {subscriptionData.freeTrialEndsAt &&
-                    formatDate(subscriptionData.freeTrialEndsAt)}
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-medium">What's included in your trial:</h4>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>
-                    • Up to {noteLimit} notes ({noteCount} used)
-                  </li>
-                  <li>• Basic AI suggestions</li>
-                  <li>• Image uploads (5MB total)</li>
-                  <li>• Basic markdown support</li>
-                </ul>
-              </div>
-
-              <Link href="/app/pricing" className="block">
-                <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                  Upgrade to Premium
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-
-        <SubscriptionEndedDialog
-          open={showEndedDialog}
-          onOpenChange={setShowEndedDialog}
-          isTrial={true}
-          remainingDays={subscriptionData.remainingTrialDays || 0}
-          expiryDate={
-            subscriptionData.freeTrialEndsAt
-              ? new Date(subscriptionData.freeTrialEndsAt)
-              : undefined
-          }
-        />
-      </div>
-    );
-  }
-
-  // No Subscription (Free Plan) - but only show if not loading
-  if (!loading && !subscriptionData?.hasSubscription) {
-    return (
-      <div className="relative container mx-auto px-4 py-8 max-w-4xl">
-        <div className="mb-8 animate-fade-in-up">
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-2 gradient-text">
             Subscription
           </h1>
           <p className="text-muted-foreground text-sm md:text-base">
-            Manage your SnackStack subscription and billing information.
+            Manage your SnackStack plan and billing information.
           </p>
         </div>
 
-        <div className="grid gap-6 animate-fade-in-up animate-delay-100">
-          <Card className="hover:shadow-lg transition-all duration-300">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="h-5 w-5" />
-                    Current Plan
-                  </CardTitle>
-                  <CardDescription>
-                    Your active subscription details
-                  </CardDescription>
-                </div>
-                <Badge
-                  variant="secondary"
-                  className="bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
-                >
+        {/* Plan Status Card */}
+        <Card className="mb-6 border-cyan-200 dark:border-cyan-800">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5" />
                   Free Plan
-                </Badge>
+                </CardTitle>
+                <CardDescription>No time limit — use as long as you like</CardDescription>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Free Plan</h3>
-                  <p className="text-2xl font-bold">
-                    ₹0
-                    <span className="text-sm font-normal text-muted-foreground">
-                      /month
-                    </span>
-                  </p>
+              <Badge className="bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400">
+                Active
+              </Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-gray-100 dark:border-white/10">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <FileText className="h-4 w-4" />
+                  Notes
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <AlertTriangle className="h-4 w-4" />
-                    <span>Limited features access</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Settings className="h-4 w-4" />
-                    <span>Upgrade to unlock all features</span>
-                  </div>
+                <p className="text-2xl font-bold">
+                  {noteCount}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    /{noteLimit}
+                  </span>
+                </p>
+                <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                  <div
+                    className="bg-cyan-500 h-1.5 rounded-full transition-all"
+                    style={{
+                      width: `${Math.min(100, ((noteCount || 0) / (noteLimit || 1)) * 100)}%`,
+                    }}
+                  />
                 </div>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg p-4 border border-gray-100 dark:border-gray-800">
-                <h4 className="font-medium mb-2">Free Plan Limits:</h4>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>• Read-only access to notes</li>
-                  <li>• No AI suggestions</li>
-                  <li>• No image uploads</li>
-                  <li>• Community support only</li>
-                </ul>
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <div className="flex gap-4">
-                  <Link href="/app/pricing" className="flex-1">
-                    <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                      Upgrade to Premium
-                    </Button>
-                  </Link>
-                  <Link href="/app/pricing?trial=true" className="flex-1">
-                    <Button variant="outline" className="w-full">
-                      Start Free Trial
-                    </Button>
-                  </Link>
+              <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-gray-100 dark:border-white/10">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <Sparkles className="h-4 w-4" />
+                  AI Suggestions
                 </div>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSyncSubscription}
-                  disabled={actionLoading}
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  {actionLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Checking Stripe...
-                    </>
-                  ) : (
-                    "Already paid? Check Status"
-                  )}
-                </Button>
+                <p className="text-2xl font-bold">
+                  {aiSuggestionsRemaining}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    /{aiSuggestionsLimit}
+                  </span>
+                </p>
+                <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                  <div
+                    className="bg-purple-500 h-1.5 rounded-full transition-all"
+                    style={{
+                      width: `${Math.min(100, 100 - (((aiSuggestionsRemaining ?? 30) / (aiSuggestionsLimit || 30)) * 100))}%`,
+                    }}
+                  />
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+
+              <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border border-gray-100 dark:border-white/10">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <ImageIcon className="h-4 w-4" />
+                  Image Uploads
+                </div>
+                <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+                  Enabled
+                </p>
+                <p className="text-xs text-muted-foreground mt-1">
+                  Up to {((limits?.maxImageSize ?? 5 * 1024 * 1024) / (1024 * 1024)).toFixed(0)}MB each
+                </p>
+              </div>
+            </div>
+
+            <Link href="/app/pricing">
+              <Button className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                Upgrade to Premium
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
-  // Active Subscription
+  // ── Active Subscription View ────────────────────────────────────
   const subscription = subscriptionData.subscription;
 
   if (!subscription) {
-    console.error(
-      "Subscription data missing despite hasSubscription=true",
-      subscriptionData
-    );
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Card className="border-red-200">
@@ -403,8 +262,8 @@ export default function SubscriptionPage() {
   const planPrice = getPlanPrice(subscription.planType);
 
   return (
-    <div className="relative container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-8 animate-fade-in-up">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-2 gradient-text">
           Subscription Management
         </h1>
@@ -413,9 +272,43 @@ export default function SubscriptionPage() {
         </p>
       </div>
 
-      <div className="grid gap-6 animate-fade-in-up animate-delay-100">
+      <div className="grid gap-6">
+        {/* Usage Stats */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Usage Overview</CardTitle>
+            <CardDescription>Your current usage across all features</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid sm:grid-cols-3 gap-4">
+              <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <FileText className="h-4 w-4" /> Notes
+                </div>
+                <p className="text-2xl font-bold">
+                  {noteCount}<span className="text-sm font-normal text-muted-foreground">/{noteLimit}</span>
+                </p>
+              </div>
+              <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <Sparkles className="h-4 w-4" /> AI Suggestions
+                </div>
+                <p className="text-2xl font-bold">
+                  {aiSuggestionsRemaining}<span className="text-sm font-normal text-muted-foreground"> left</span>
+                </p>
+              </div>
+              <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                  <ImageIcon className="h-4 w-4" /> Image Uploads
+                </div>
+                <p className="text-lg font-semibold text-green-600">Enabled</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Current Plan */}
-        <Card className="hover:shadow-lg transition-all duration-300">
+        <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -423,9 +316,7 @@ export default function SubscriptionPage() {
                   <CreditCard className="h-5 w-5" />
                   Current Plan
                 </CardTitle>
-                <CardDescription>
-                  Your active subscription details
-                </CardDescription>
+                <CardDescription>Your active subscription details</CardDescription>
               </div>
               {getStatusBadge(subscription.status)}
             </div>
@@ -447,17 +338,13 @@ export default function SubscriptionPage() {
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="h-4 w-4" />
                   <span>
-                    Billing period:{" "}
-                    {formatDate(subscription.currentPeriodStart)} -{" "}
+                    Billing period: {formatDate(subscription.currentPeriodStart)} —{" "}
                     {formatDate(subscription.currentPeriodEnd)}
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Settings className="h-4 w-4" />
-                  <span>
-                    Next billing date:{" "}
-                    {formatDate(subscription.currentPeriodEnd)}
-                  </span>
+                  <span>Next billing: {formatDate(subscription.currentPeriodEnd)}</span>
                 </div>
               </div>
             </div>
@@ -471,9 +358,8 @@ export default function SubscriptionPage() {
                       Subscription scheduled for cancellation
                     </p>
                     <p className="text-sm text-yellow-700 dark:text-yellow-500 mt-1">
-                      Your subscription will end on{" "}
-                      {formatDate(subscription.currentPeriodEnd)}. You'll still
-                      have access to premium features until then.
+                      Your subscription will end on {formatDate(subscription.currentPeriodEnd)}.
+                      You'll still have access to premium features until then.
                     </p>
                   </div>
                 </div>
@@ -483,7 +369,7 @@ export default function SubscriptionPage() {
         </Card>
 
         {/* Actions */}
-        <Card className="hover:shadow-lg transition-all duration-300 animate-fade-in-up animate-delay-200">
+        <Card>
           <CardHeader>
             <CardTitle>Manage Subscription</CardTitle>
             <CardDescription>
@@ -503,8 +389,7 @@ export default function SubscriptionPage() {
                 Download Invoice
               </Button>
 
-              {subscription.status === "active" &&
-              !subscription.cancelAtPeriodEnd ? (
+              {subscription.status === "active" && !subscription.cancelAtPeriodEnd ? (
                 <Button
                   variant="destructive"
                   className="w-full"
@@ -522,18 +407,6 @@ export default function SubscriptionPage() {
                   {actionLoading ? "Processing..." : "Reactivate"}
                 </Button>
               ) : null}
-            </div>
-
-            <div className="text-xs text-muted-foreground">
-              <p>
-                Need help? Contact support at{" "}
-                <a
-                  href="mailto:support@snackstack.com"
-                  className="text-primary hover:underline"
-                >
-                  support@snackstack.com
-                </a>
-              </p>
             </div>
           </CardContent>
         </Card>

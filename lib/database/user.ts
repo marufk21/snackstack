@@ -56,7 +56,6 @@ export async function createUser(data: {
       isSubscribed: false,
       lastActiveAt: new Date(),
     },
-    // Don't include relations initially to avoid potential issues
   });
 }
 

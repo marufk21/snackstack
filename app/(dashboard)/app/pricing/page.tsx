@@ -1,92 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
+import { PricingCard } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
-import { stripePriceIds } from "@/config/stripe-client";
+import { pricingTiers } from "@/config/pricing";
 import { useSubscription } from "@/hooks/use-subscription";
 import { Sparkles } from "lucide-react";
 
-const pricingTiers: PricingTier[] = [
-  {
-    id: "free-trial",
-    name: "Free Trial",
-    description: "Try SnackStack free for 14 days",
-    price: {
-      monthly: 0,
-      yearly: 0,
-    },
-    features: [
-      "14-day free trial",
-      "Up to 10 notes",
-      "Basic AI suggestions",
-      "Image uploads (5MB total)",
-      "Basic markdown support",
-      "Community support",
-    ],
-    stripePriceId: null,
-    isTrial: true,
-  },
-  {
-    id: "basic",
-    name: "Basic",
-    description: "Perfect for getting started with SnackStack",
-    price: {
-      monthly: 749,
-      yearly: 5988,
-    },
-    features: [
-      "Up to 50 notes",
-      "Basic AI suggestions",
-      "Image uploads (10MB/month)",
-      "Basic markdown support",
-      "Email support",
-    ],
-    stripePriceId: stripePriceIds.basic,
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    description: "Best for power users and professionals",
-    price: {
-      monthly: 1599,
-      yearly: 12792,
-    },
-    features: [
-      "Unlimited notes",
-      "Advanced AI suggestions",
-      "Unlimited image uploads",
-      "Advanced markdown support",
-      "Real-time collaboration",
-      "Priority support",
-      "Export to PDF/Word",
-      "Custom themes",
-    ],
-    popular: true,
-    stripePriceId: stripePriceIds.pro,
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    description: "For teams and organizations",
-    price: {
-      monthly: 4099,
-      yearly: 32792,
-    },
-    features: [
-      "Everything in Pro",
-      "Team management",
-      "Advanced analytics",
-      "Custom integrations",
-      "SSO authentication",
-      "Dedicated support",
-      "Custom onboarding",
-      "SLA guarantee",
-    ],
-    stripePriceId: stripePriceIds.enterprise,
-  },
-];
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
@@ -111,9 +32,7 @@ export default function PricingPage() {
     await redirectToCheckout(priceId);
   };
 
-  const currentPlanId =
-    subscription?.subscription?.planType ||
-    (subscription?.onFreeTrial ? "free-trial" : null);
+  const currentPlanId = subscription?.subscription?.planType || "free-trial";
 
   return (
     <div className="relative container mx-auto px-4 py-8 md:py-12 max-w-7xl">
@@ -130,10 +49,10 @@ export default function PricingPage() {
           that fits your needs and start creating amazing content today.
         </p>
 
-        {/* Billing Toggle - Commented out for now, only monthly available */}
-        {/* <div className="flex justify-center mb-8">
+        {/* Billing Toggle */}
+        <div className="flex justify-center mb-8">
           <PricingToggle isYearly={isYearly} onToggle={setIsYearly} />
-        </div> */}
+        </div>
       </div>
 
       {/* Error Display */}

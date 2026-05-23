@@ -6,36 +6,37 @@ import {
 } from "@/lib/database/subscription";
 
 /**
- * Feature limits by plan type
+ * Feature limits by plan type.
+ * Free plan has no time limit — it's a permanent free tier.
  */
 export const PLAN_LIMITS = {
   free: {
     maxNotes: 5,
-    maxNotesPerMonth: 10,
-    canUploadImages: false,
-    canUseAI: false,
-    maxImageSize: 0,
+    canUploadImages: true,
+    canUseAI: true,
+    maxImageSize: 5 * 1024 * 1024, // 5MB
+    aiSuggestionsPerMonth: 30,
   },
   basic: {
     maxNotes: 50,
-    maxNotesPerMonth: 100,
     canUploadImages: true,
-    canUseAI: false,
-    maxImageSize: 5 * 1024 * 1024, // 5MB
+    canUseAI: true,
+    maxImageSize: 10 * 1024 * 1024, // 10MB
+    aiSuggestionsPerMonth: 300,
   },
   pro: {
     maxNotes: 500,
-    maxNotesPerMonth: 1000,
     canUploadImages: true,
     canUseAI: true,
     maxImageSize: 20 * 1024 * 1024, // 20MB
+    aiSuggestionsPerMonth: 1500,
   },
   enterprise: {
     maxNotes: Infinity,
-    maxNotesPerMonth: Infinity,
     canUploadImages: true,
     canUseAI: true,
     maxImageSize: 100 * 1024 * 1024, // 100MB
+    aiSuggestionsPerMonth: Infinity,
   },
 } as const;
 
@@ -81,7 +82,7 @@ export async function canAccessFeature(
  */
 export async function hasReachedLimit(
   currentUsage: number,
-  limitType: "maxNotes" | "maxNotesPerMonth"
+  limitType: "maxNotes"
 ): Promise<{ reachedLimit: boolean; limit: number; tier: PlanType | "free" }> {
   const { tier } = await checkUserSubscription();
   const limits = PLAN_LIMITS[tier];

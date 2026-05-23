@@ -77,9 +77,6 @@ export async function POST(req: NextRequest) {
             where: { id: user.id },
             data: {
               isSubscribed: true,
-              // End free trial if user had one
-              isFreeTrialUser: false,
-              freeTrialEndsAt: null,
             },
           });
 

@@ -2,12 +2,17 @@ import { NextResponse } from "next/server";
 import { auth } from "@/config/auth";
 import { PLAN_LIMITS } from "@/lib/utils/subscription-check";
 import { db as prisma } from "@/lib/database/client";
+import {
+  getSubscriptionByUserId,
+  hasActiveSubscription,
+  getUserSubscriptionTier,
+  getUserNoteCount,
+  getSubscriptionLimits,
+  getAISuggestionsRemaining,
+} from "@/lib/database/subscription";
 
 export const dynamic = "force-dynamic";
 
-/**
- * Get current user's subscription status and limits
- */
 export async function GET() {
   const session = await auth();
 
@@ -15,80 +20,71 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Resolve the database user ID from email. The JWT callback stores email
+  // as token.sub for Edge compatibility, so session.user.id may be an email.
+  const dbUser = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { id: true },
+  });
+
+  if (!dbUser) {
+    // User hasn't been created in the database yet — return defaults
+    return NextResponse.json({
+      hasSubscription: false,
+      tier: "free",
+      isActive: false,
+      limits: PLAN_LIMITS.free,
+      noteCount: 0,
+      noteLimit: PLAN_LIMITS.free.maxNotes,
+      remainingNotes: PLAN_LIMITS.free.maxNotes,
+      aiSuggestionsRemaining: PLAN_LIMITS.free.aiSuggestionsPerMonth,
+      aiSuggestionsLimit: PLAN_LIMITS.free.aiSuggestionsPerMonth,
+      subscription: null,
+    });
+  }
+
+  const userId = dbUser.id;
+
   try {
-    // Get user ID using raw SQL
-    const userResult = await prisma.$queryRaw<
-      Array<{ id: string; isSubscribed: boolean }>
-    >`
-      SELECT id, "isSubscribed" FROM "User" WHERE email = ${session.user.email} LIMIT 1
-    `;
+    const [subscription, isActive, tier, noteCount, limits] =
+      await Promise.all([
+        getSubscriptionByUserId(userId),
+        hasActiveSubscription(userId),
+        getUserSubscriptionTier(userId),
+        getUserNoteCount(userId),
+        getSubscriptionLimits(userId),
+      ]);
 
-    if (!userResult || userResult.length === 0) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
+    const aiSuggestionsRemaining = await getAISuggestionsRemaining(
+      userId,
+      tier
+    );
 
-    const userId = userResult[0].id;
-    const isSubscribed = userResult[0].isSubscribed;
+    const planLimits = {
+      ...PLAN_LIMITS[tier],
+      maxNotes: limits.maxNotes,
+    };
 
-    // Get subscription data using raw SQL
-    const subscriptionResult = await prisma.$queryRaw<
-      Array<{
-        status: string;
-        planType: string;
-        currentPeriodEnd: Date;
-        currentPeriodStart: Date;
-        cancelAtPeriodEnd: boolean;
-        stripeCustomerId: string;
-      }>
-    >`
-      SELECT status, "planType", "currentPeriodEnd", "currentPeriodStart", 
-             "cancelAtPeriodEnd", "stripeCustomerId"
-      FROM "Subscription"
-      WHERE "userId" = ${userId}
-      LIMIT 1
-    `;
-
-    const subscriptionData =
-      subscriptionResult && subscriptionResult.length > 0
-        ? subscriptionResult[0]
-        : null;
-
-    // Determine if subscription is active
-    const now = new Date();
-    const isActive = subscriptionData
-      ? (subscriptionData.status === "active" ||
-          subscriptionData.status === "trialing") &&
-        subscriptionData.currentPeriodEnd > now
-      : false;
-
-    // Determine tier
-    let tier: "free" | "basic" | "pro" | "enterprise" = "free";
-    if (subscriptionData && isActive) {
-      tier = subscriptionData.planType as any;
-    }
-
-    const limits = PLAN_LIMITS[tier];
+    const remainingNotes = Math.max(0, limits.maxNotes - noteCount);
 
     return NextResponse.json({
       hasSubscription: isActive,
       tier,
       isActive,
-      limits,
-      onFreeTrial: false, // We'll implement this later if needed
-      remainingTrialDays: 0,
-      freeTrialEndsAt: null,
-      noteCount: 0, // We'll implement this later if needed
+      limits: planLimits,
+      noteCount,
       noteLimit: limits.maxNotes,
-      remainingNotes: limits.maxNotes,
-      subscription: subscriptionData
+      remainingNotes,
+      aiSuggestionsRemaining,
+      aiSuggestionsLimit: PLAN_LIMITS[tier].aiSuggestionsPerMonth,
+      subscription: subscription
         ? {
-            status: subscriptionData.status,
-            planType: subscriptionData.planType,
-            currentPeriodEnd: subscriptionData.currentPeriodEnd.toISOString(),
-            currentPeriodStart:
-              subscriptionData.currentPeriodStart.toISOString(),
-            cancelAtPeriodEnd: subscriptionData.cancelAtPeriodEnd,
-            stripeCustomerId: subscriptionData.stripeCustomerId,
+            status: subscription.status,
+            planType: subscription.planType,
+            currentPeriodEnd: subscription.currentPeriodEnd.toISOString(),
+            currentPeriodStart: subscription.currentPeriodStart.toISOString(),
+            cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+            stripeCustomerId: subscription.stripeCustomerId,
           }
         : null,
     });

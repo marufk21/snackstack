@@ -15,12 +15,13 @@ import {
   Loader2,
   ImageIcon,
   Wand2,
-  Type,
   Sparkles,
   Trash2,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useImageUpload } from "@/hooks/use-image-upload";
+import { useSubscription } from "@/hooks/use-subscription";
 import { m, AnimatePresence } from "framer-motion";
 
 interface NoteViewModalProps {
@@ -41,7 +42,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeAiAction, setActiveAiAction] = useState<
-    "improve" | "continue" | "summarize" | null
+    "improve" | "summarize" | "expand" | null
   >(null);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -49,6 +50,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   const { addNotification } = useAppStore();
   const queryClient = useQueryClient();
   const { uploadImage, isUploading } = useImageUpload();
+  const { limits } = useSubscription();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -99,7 +101,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
 
   // AI suggestion mutation
   const aiSuggestionMutation = useMutation({
-    mutationFn: async (type: "improve" | "continue" | "summarize") => {
+    mutationFn: async (type: "improve" | "summarize" | "expand") => {
       return generateAiSuggestion({ content, type });
     },
     onMutate: (variables) => {
@@ -113,7 +115,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
           setContent(suggestion);
           setIsDirty(true);
           showNotification(
-            variables === "improve" ? "Content improved!" : "Content continued!"
+            variables === "improve" ? "Content improved!" : "Content expanded!"
           );
         }
       }
@@ -170,8 +172,8 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
       return;
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    // Validate file size based on plan limit
+    const maxSize = limits.maxImageSize || 5 * 1024 * 1024;
     if (file.size > maxSize) {
       showNotification("Image size must be less than 5MB", "error");
       return;
@@ -197,7 +199,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
     }
   };
 
-  const handleAiAction = async (type: "improve" | "continue" | "summarize") => {
+  const handleAiAction = async (type: "improve" | "summarize" | "expand") => {
     if (!content.trim()) {
       showNotification("Please write some content first", "warning");
       return;
@@ -308,19 +310,30 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
               <div className="flex items-center justify-between">
                 {/* Left Actions */}
                 <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploading}
-                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                    title="Add image"
-                  >
-                    {isUploading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
+                  {limits.canUploadImages ? (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                      title="Add image"
+                    >
+                      {isUploading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <ImageIcon className="w-4 h-4" />
+                      )}
+                      <span className="text-sm font-medium">Image</span>
+                    </button>
+                  ) : (
+                    <button
+                      disabled
+                      className="h-9 px-3 text-zinc-400 dark:text-zinc-600 rounded flex items-center gap-2 cursor-not-allowed opacity-50"
+                      title="Upgrade to Basic or higher to upload images"
+                    >
                       <ImageIcon className="w-4 h-4" />
-                    )}
-                    <span className="text-sm font-medium">Image</span>
-                  </button>
+                      <span className="text-sm font-medium">Image</span>
+                    </button>
+                  )}
 
                   <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
 
@@ -339,20 +352,6 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                   </button>
 
                   <button
-                    onClick={() => handleAiAction("continue")}
-                    disabled={activeAiAction !== null}
-                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                    title="Continue writing"
-                  >
-                    {activeAiAction === "continue" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Type className="w-4 h-4" />
-                    )}
-                    <span className="text-sm font-medium">Continue</span>
-                  </button>
-
-                  <button
                     onClick={() => handleAiAction("summarize")}
                     disabled={activeAiAction !== null}
                     className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
@@ -364,6 +363,20 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                       <Sparkles className="w-4 h-4" />
                     )}
                     <span className="text-sm font-medium">Summarize</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleAiAction("expand")}
+                    disabled={activeAiAction !== null}
+                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    title="Expand"
+                  >
+                    {activeAiAction === "expand" ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <BookOpen className="w-4 h-4" />
+                    )}
+                    <span className="text-sm font-medium">Expand</span>
                   </button>
                 </div>
 

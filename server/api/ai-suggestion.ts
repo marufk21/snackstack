@@ -2,7 +2,7 @@ import { apiClient } from "../axios";
 
 export interface AiSuggestionData {
   content: string;
-  type: "improve" | "continue" | "summarize" | "expand";
+  type: "improve" | "summarize" | "expand";
 }
 
 export interface AiSuggestionResponse {

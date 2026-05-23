@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const session = await auth();
     const user = session?.user;
 
-    if (!user?.id || !user?.email) {
+    if (!user?.email) {
       return NextResponse.json(
         { error: "Authentication required" },
         { status: 401 }
@@ -23,14 +23,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Resolve the actual database user ID from email
+    const { getOrCreateUserByEmail } = await import("@/lib/database/user");
+    const dbUser = await getOrCreateUserByEmail(user.email, user.name);
+
     // Check if user already has an active subscription
     const { hasActiveSubscription, getSubscriptionByUserId } = await import(
       "@/lib/database/subscription"
     );
-    const isSubscribed = await hasActiveSubscription(user.id);
+    const isSubscribed = await hasActiveSubscription(dbUser.id);
 
     if (isSubscribed) {
-      const subscription = await getSubscriptionByUserId(user.id);
+      const subscription = await getSubscriptionByUserId(dbUser.id);
 
       if (subscription?.stripeCustomerId) {
         // Create a billing portal session for managing subscription
@@ -56,9 +60,9 @@ export async function POST(req: NextRequest) {
       ],
       mode: "subscription",
       customer_email: user.email,
-      client_reference_id: user.id,
+      client_reference_id: dbUser.id,
       metadata: {
-        userId: user.id,
+        userId: dbUser.id,
         userEmail: user.email,
       },
       success_url: `${
@@ -71,7 +75,7 @@ export async function POST(req: NextRequest) {
       billing_address_collection: "required",
       subscription_data: {
         metadata: {
-          userId: user.id,
+          userId: dbUser.id,
         },
       },
     });

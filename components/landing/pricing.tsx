@@ -1,94 +1,15 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { PricingCard, PricingTier } from "@/components/ui/pricing-card";
+import { PricingCard } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
-import { stripePriceIds } from "@/config/stripe-client";
+import { pricingTiers } from "@/config/pricing";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import PageWrapper from "./page-wrapper";
 import { useSession } from "next-auth/react";
 
-const pricingTiers: PricingTier[] = [
-  {
-    id: "free-trial",
-    name: "Free Trial",
-    description: "Try SnackStack free for 14 days",
-    price: {
-      monthly: 0,
-      yearly: 0,
-    },
-    features: [
-      "14-day free trial",
-      "Up to 10 notes",
-      "Basic AI suggestions",
-      "Image uploads (5MB total)",
-      "Basic markdown support",
-      "Community support",
-    ],
-    stripePriceId: null, // Free trial doesn't use Stripe
-    isTrial: true,
-  },
-  {
-    id: "basic",
-    name: "Basic",
-    description: "Perfect for getting started with SnackStack",
-    price: {
-      monthly: 749, // ₹749 (approx $9 × 83)
-      yearly: 5988, // ₹5,988 (20% discount)
-    },
-    features: [
-      "Up to 50 notes",
-      "Basic AI suggestions",
-      "Image uploads (10MB/month)",
-      "Basic markdown support",
-      "Email support",
-    ],
-    stripePriceId: stripePriceIds.basic,
-  },
-  {
-    id: "pro",
-    name: "Pro",
-    description: "Best for power users and professionals",
-    price: {
-      monthly: 1599, // ₹1,599 (approx $19 × 83)
-      yearly: 12792, // ₹12,792 (20% discount)
-    },
-    features: [
-      "Unlimited notes",
-      "Advanced AI suggestions",
-      "Unlimited image uploads",
-      "Advanced markdown support",
-      "Real-time collaboration",
-      "Priority support",
-      "Export to PDF/Word",
-      "Custom themes",
-    ],
-    popular: true,
-    stripePriceId: stripePriceIds.pro,
-  },
-  {
-    id: "enterprise",
-    name: "Enterprise",
-    description: "For teams and organizations",
-    price: {
-      monthly: 4099, // ₹4,099 (approx $49 × 83)
-      yearly: 32792, // ₹32,792 (20% discount)
-    },
-    features: [
-      "Everything in Pro",
-      "Team management",
-      "Advanced analytics",
-      "Custom integrations",
-      "SSO authentication",
-      "Dedicated support",
-      "Custom onboarding",
-      "SLA guarantee",
-    ],
-    stripePriceId: stripePriceIds.enterprise,
-  },
-];
 
 const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
@@ -177,9 +98,7 @@ const Pricing = () => {
     }
 
     if (isTrial) {
-      // For Free Trial, redirect to signup/dashboard without Stripe
-      // TODO: Implement Free Trial signup flow
-      window.location.href = '/sign-in?trial=true';
+      window.location.href = "/sign-in";
       return;
     }
     

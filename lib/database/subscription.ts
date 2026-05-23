@@ -306,151 +306,74 @@ export async function markExpiredSubscriptionsAsCanceled() {
 }
 
 /**
- * Start a free trial for a user
+ * Check if user has access. The free plan has no time limit, so
+ * every user has access. Paid subscribers get higher limits.
  */
-export async function startFreeTrial(userId: string) {
-  try {
-    const trialDays = 14;
-    const freeTrialEndsAt = new Date();
-    freeTrialEndsAt.setDate(freeTrialEndsAt.getDate() + trialDays);
-
-    return await prisma.user.update({
-      where: { id: userId },
-      data: {
-        isFreeTrialUser: true,
-        freeTrialEndsAt,
-      } as any,
-    });
-  } catch (error) {
-    console.error(
-      "Failed to start free trial. Database migration may not be complete:",
-      error
-    );
-    throw new Error(
-      "Free Trial feature not available yet. Please run database migration."
-    );
-  }
+export async function hasAccess(_userId: string): Promise<boolean> {
+  return true;
 }
 
-/**
- * Check if a user is on an active free trial
- */
-export async function isUserOnFreeTrial(userId: string): Promise<boolean> {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        isFreeTrialUser: true,
-        freeTrialEndsAt: true,
-      },
-    });
-
-    if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
-      return false;
-    }
-
-    const now = new Date();
-    return user.freeTrialEndsAt > now;
-  } catch (error) {
-    // If fields don't exist yet (migration not run), return false
-    console.warn(
-      "Free Trial fields not available yet. Run database migration."
-    );
-    return false;
-  }
-}
+// --- AI suggestion tracking ------------------------------------------------
 
 /**
- * Get remaining trial days for a user
+ * Get remaining AI suggestions for a user in the current billing cycle.
  */
-export async function getRemainingTrialDays(userId: string): Promise<number> {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        isFreeTrialUser: true,
-        freeTrialEndsAt: true,
-      } as any,
-    });
+export async function getAISuggestionsRemaining(
+  userId: string,
+  tier: PlanType | "free"
+): Promise<number> {
+  const { PLAN_LIMITS } = await import("@/lib/utils/subscription-check");
+  const limit = PLAN_LIMITS[tier].aiSuggestionsPerMonth;
 
-    if (!user || !user.isFreeTrialUser || !user.freeTrialEndsAt) {
-      return 0;
-    }
+  if (limit === Infinity) return Infinity;
 
-    const now = new Date();
-    const freeTrialEndsAt = (user as any).freeTrialEndsAt;
-    const diffTime = freeTrialEndsAt.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    return Math.max(0, diffDays);
-  } catch (error) {
-    console.warn(
-      "Free Trial fields not available yet. Run database migration."
-    );
-    return 0;
-  }
-}
-
-/**
- * End a user's free trial
- */
-export async function endFreeTrial(userId: string) {
-  return await prisma.user.update({
+  const user = await prisma.user.findUnique({
     where: { id: userId },
-    data: {
-      isFreeTrialUser: false,
-      freeTrialEndsAt: null,
-    },
+    select: { aiSuggestionsCount: true, aiSuggestionsResetAt: true },
   });
+
+  const now = new Date();
+  const used = user?.aiSuggestionsCount ?? 0;
+  const resetAt = user?.aiSuggestionsResetAt;
+
+  // Reset if the cycle has passed
+  if (resetAt && now >= resetAt) {
+    return limit;
+  }
+
+  return Math.max(0, limit - used);
 }
 
 /**
- * Check if user has access (either subscribed or on free trial)
+ * Increment the AI suggestions counter for a user.
  */
-export async function hasAccess(userId: string): Promise<boolean> {
-  const [hasSubscription, onFreeTrial] = await Promise.all([
-    hasActiveSubscription(userId),
-    isUserOnFreeTrial(userId),
-  ]);
-
-  return hasSubscription || onFreeTrial;
-}
-
-/**
- * Get all expired free trials
- */
-export async function getExpiredFreeTrials() {
+export async function incrementAISuggestionsCount(
+  userId: string,
+  tier: PlanType | "free"
+): Promise<number> {
   const now = new Date();
 
-  return await prisma.user.findMany({
-    where: {
-      isFreeTrialUser: true,
-      freeTrialEndsAt: {
-        lt: now,
-      },
-    },
+  // Check if we need to reset first
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { aiSuggestionsResetAt: true },
   });
-}
 
-/**
- * Mark expired free trials as ended
- */
-export async function markExpiredFreeTrialsAsEnded() {
-  const expiredTrials = await getExpiredFreeTrials();
+  const shouldReset = user?.aiSuggestionsResetAt && now >= user.aiSuggestionsResetAt;
+  const nextReset = new Date();
+  nextReset.setMonth(nextReset.getMonth() + 1);
 
-  const results = await Promise.allSettled(
-    expiredTrials.map((user) => endFreeTrial(user.id))
-  );
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      aiSuggestionsCount: shouldReset ? 1 : { increment: 1 } as any,
+      aiSuggestionsResetAt: shouldReset ? nextReset : (user?.aiSuggestionsResetAt ?? nextReset),
+    } as any,
+    select: { aiSuggestionsCount: true },
+  });
 
-  const successful = results.filter((r) => r.status === "fulfilled").length;
-  const failed = results.filter((r) => r.status === "rejected").length;
-
-  return {
-    total: expiredTrials.length,
-    successful,
-    failed,
-    expiredTrials,
-  };
+  const { PLAN_LIMITS } = await import("@/lib/utils/subscription-check");
+  return PLAN_LIMITS[tier].aiSuggestionsPerMonth - (updated as any).aiSuggestionsCount;
 }
 
 /**
@@ -472,30 +395,18 @@ export async function getUserNoteCount(userId: string): Promise<number> {
 }
 
 /**
- * Get subscription limits for a user
+ * Get subscription limits for a user based on their plan tier.
  */
 export async function getSubscriptionLimits(userId: string): Promise<{
   maxNotes: number;
   tier: PlanType | "free";
-  onFreeTrial: boolean;
 }> {
-  const [tier, onFreeTrial] = await Promise.all([
-    getUserSubscriptionTier(userId),
-    isUserOnFreeTrial(userId),
-  ]);
-
-  // Define limits based on tier
-  const limits: Record<PlanType | "free", number> = {
-    free: onFreeTrial ? 5 : 3, // Everyone gets 3 notes free, trial gets 5
-    basic: 50,
-    pro: 500,
-    enterprise: Infinity,
-  };
+  const { PLAN_LIMITS } = await import("@/lib/utils/subscription-check");
+  const tier = await getUserSubscriptionTier(userId);
 
   return {
-    maxNotes: limits[tier],
+    maxNotes: PLAN_LIMITS[tier].maxNotes,
     tier,
-    onFreeTrial,
   };
 }
 
@@ -526,7 +437,7 @@ export async function canCreateNote(userId: string): Promise<{
   if (!hasUserAccess) {
     return {
       canCreate: false,
-      reason: "You need an active subscription or free trial to create notes.",
+      reason: `You've reached your ${limits.tier} plan limit of ${limits.maxNotes} notes. Upgrade to create more.`,
       currentCount: noteCount,
       maxNotes: limits.maxNotes,
       tier: limits.tier,
@@ -579,6 +490,11 @@ export async function incrementNoteCount(userId: string): Promise<number> {
  */
 export async function decrementNoteCount(userId: string): Promise<number> {
   try {
+    const currentCount = await getUserNoteCount(userId);
+    if (currentCount <= 0) {
+      return 0;
+    }
+
     const user = await prisma.user.update({
       where: { id: userId },
       data: {

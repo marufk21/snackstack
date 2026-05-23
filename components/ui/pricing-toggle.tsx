@@ -36,7 +36,7 @@ export function PricingToggle({ isYearly, onToggle }: PricingToggleProps) {
       >
         Yearly
         <span className="ml-2 text-xs bg-gradient-to-r from-cyan-600 to-teal-600 text-white px-2 py-0.5 rounded-full font-bold">
-          -20%
+          -33%
         </span>
       </Button>
     </div>
