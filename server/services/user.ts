@@ -1,8 +1,5 @@
-import { db as prisma } from "./client";
+import { db as prisma } from "@/server/db/client";
 
-/**
- * Get user by email
- */
 export async function getUserByEmail(email: string) {
   return await prisma.user.findUnique({
     where: { email },
@@ -19,9 +16,6 @@ export async function getUserByEmail(email: string) {
   });
 }
 
-/**
- * Get user by ID
- */
 export async function getUserById(id: string) {
   return await prisma.user.findUnique({
     where: { id },
@@ -40,9 +34,6 @@ export async function getUserById(id: string) {
   });
 }
 
-/**
- * Create a new user (typically called by NextAuth adapter)
- */
 export async function createUser(data: {
   name?: string | null;
   email: string;
@@ -59,15 +50,11 @@ export async function createUser(data: {
   });
 }
 
-/**
- * Get or create user by email
- */
 export async function getOrCreateUserByEmail(
   email: string,
   name?: string | null
 ) {
   try {
-    // First, try to get existing user
     let user = await getUserByEmail(email);
 
     if (user) {
@@ -75,7 +62,6 @@ export async function getOrCreateUserByEmail(
       return user;
     }
 
-    // User doesn't exist, create them
     console.log(`Creating new user for email: ${email}`);
     const userName = name || email.split("@")[0] || "User";
 
@@ -87,17 +73,15 @@ export async function getOrCreateUserByEmail(
     console.log(`✅ User created: ${user.id} (${user.email})`);
     return user;
   } catch (error: any) {
-    // Log the full error for debugging
     console.error("❌ Error in getOrCreateUserByEmail:", {
       email,
       name,
       error: error?.message,
       code: error?.code,
       meta: error?.meta,
-      stack: error?.stack?.split("\n").slice(0, 5), // First 5 lines of stack
+      stack: error?.stack?.split("\n").slice(0, 5),
     });
 
-    // Re-throw with more context
     const enhancedError = new Error(
       `Failed to get or create user: ${error?.message || "Unknown error"}`
     );
@@ -107,9 +91,6 @@ export async function getOrCreateUserByEmail(
   }
 }
 
-/**
- * Update user
- */
 export async function updateUser(
   id: string,
   data: {
@@ -136,9 +117,6 @@ export async function updateUser(
   });
 }
 
-/**
- * Update user's subscription status
- */
 export async function updateUserSubscriptionStatus(
   userId: string,
   isSubscribed: boolean

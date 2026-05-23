@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import { PricingCard } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
-import { pricingTiers } from "@/config/pricing";
+import { pricingTiers } from "@/lib/pricing";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import PageWrapper from "./page-wrapper";

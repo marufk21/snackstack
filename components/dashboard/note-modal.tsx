@@ -15,7 +15,7 @@ import {
   Trash2,
   BookOpen,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { useImageUpload } from "@/hooks/use-image-upload";
 import { useSubscription } from "@/hooks/use-subscription";
 import { m, AnimatePresence } from "framer-motion";

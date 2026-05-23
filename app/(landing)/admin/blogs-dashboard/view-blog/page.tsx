@@ -9,8 +9,8 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { ArrowLeftIcon } from "lucide-react";
-import { getBlogById } from "@/lib/appwrite/services";
-import { Blog } from "@/lib/appwrite/config";
+import { getBlogById } from "@/server/integrations/appwrite/services";
+import { Blog } from "@/server/integrations/appwrite/config";
 import BlogContentView from "@/components/landing/blog-content-view";
 import { motion } from "framer-motion";
 import { Loader } from "@/components/ui/loader";

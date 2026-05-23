@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/config/auth";
-import { stripe } from "@/config/stripe";
+import { auth } from "@/server/auth/config";
+import { stripe } from "@/server/integrations/stripe/config";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,12 +24,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Resolve the actual database user ID from email
-    const { getOrCreateUserByEmail } = await import("@/lib/database/user");
+    const { getOrCreateUserByEmail } = await import("@/server/services/user");
     const dbUser = await getOrCreateUserByEmail(user.email, user.name);
 
     // Check if user already has an active subscription
     const { hasActiveSubscription, getSubscriptionByUserId } = await import(
-      "@/lib/database/subscription"
+      "@/server/services/subscription"
     );
     const isSubscribed = await hasActiveSubscription(dbUser.id);
 

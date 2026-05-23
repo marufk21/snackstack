@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useAppStore } from "@/stores/use-app-store";
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 
 type NotificationType = "success" | "error" | "warning" | "info";
 

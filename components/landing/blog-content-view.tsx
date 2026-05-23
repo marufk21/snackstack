@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Blog } from "@/lib/appwrite/config";
+import { Blog } from "@/server/integrations/appwrite/config";
 
 interface BlogContentViewProps {
   blog: Blog;

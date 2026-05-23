@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/config/auth";
-import { stripe } from "@/config/stripe";
-import { db as prisma } from "@/lib/database/client";
+import { auth } from "@/server/auth/config";
+import { stripe } from "@/server/integrations/stripe/config";
+import { db as prisma } from "@/server/db/client";
 
 export async function POST(req: NextRequest) {
   console.log("🔄 Direct SQL Sync API called");
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     const productId = firstItem.price.product;
 
     const { getPlanTypeFromPriceId } = await import(
-      "@/lib/database/subscription"
+      "@/server/services/subscription"
     );
     const planType = getPlanTypeFromPriceId(priceId);
 

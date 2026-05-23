@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getBlogs } from "@/lib/appwrite/services";
+import { getBlogs } from "@/server/integrations/appwrite/services";
 
 // Helper function to generate SEO-friendly slug from title
 function generateSlug(title: string): string {

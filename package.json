@@ -7,7 +7,7 @@
     "build": "next build --turbopack",
     "start": "next start",
     "test": "jest",
-    "test:e2e": "playwright test -c __tests__/e2e/playwright.config.ts",
+    "test:e2e": "playwright test -c __tests__/playwright.config.ts",
     "db:seed": "ts-node server/db/seed.ts",
     "db:reset": "prisma migrate reset --force && pnpm run db:seed",
     "postinstall": "prisma generate --schema=server/db/schema.prisma"

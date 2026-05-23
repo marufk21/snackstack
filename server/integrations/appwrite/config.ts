@@ -1,20 +1,17 @@
-import conf from "@/config/appwrite";
-import { Client, ID, Databases, Storage, Query, Models } from "appwrite";
+import { Client, Databases, Storage, ID, Models, Query } from "appwrite";
 
-// Initialize Appwrite client
-const client = new Client()
-  .setEndpoint(conf.appwriteUrl)
-  .setProject(conf.appwriteProjectId);
+// Appwrite environment configuration
+const conf = {
+  appwriteUrl: String(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT),
+  appwriteProjectId: String(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID),
+  appwriteDatabaseId: String(process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID),
+  appwriteCollectionId: String(process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID),
+  appwriteBucketId: String(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID),
+};
 
-// Initialize Appwrite services
-export const databases = new Databases(client);
-export const storage = new Storage(client);
+export default conf;
 
-// Database and collection IDs
-export const DATABASE_ID = conf.appwriteDatabaseId;
-export const BLOGS_COLLECTION_ID = conf.appwriteCollectionId;
-
-// Define blog type
+// Blog type definition
 export interface Blog {
   id: string;
   title: string;
@@ -26,7 +23,65 @@ export interface Blog {
   status: string;
 }
 
-// Helper function to create a new blog document
+// Initialize Appwrite client (only on client side)
+let _client: Client | null = null;
+let _databases: Databases | null = null;
+let _storage: Storage | null = null;
+
+export const getAppwriteClient = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  if (!_client) {
+    if (!conf.appwriteUrl || !conf.appwriteProjectId) {
+      throw new Error(
+        "NEXT_PUBLIC_APPWRITE_ENDPOINT and NEXT_PUBLIC_APPWRITE_PROJECT_ID must be set"
+      );
+    }
+    _client = new Client();
+    _client.setEndpoint(conf.appwriteUrl).setProject(conf.appwriteProjectId);
+  }
+  return _client;
+};
+
+export const getAppwriteDatabases = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  if (!_databases) {
+    const client = getAppwriteClient();
+    if (!client) return null;
+    _databases = new Databases(client);
+  }
+  return _databases;
+};
+
+export const getAppwriteStorage = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  if (!_storage) {
+    const client = getAppwriteClient();
+    if (!client) return null;
+    _storage = new Storage(client);
+  }
+  return _storage;
+};
+
+// Shared client instances for server-side initialization
+const sharedClient = new Client()
+  .setEndpoint(conf.appwriteUrl)
+  .setProject(conf.appwriteProjectId);
+
+export const databases = new Databases(sharedClient);
+export const storage = new Storage(sharedClient);
+
+export const DATABASE_ID = conf.appwriteDatabaseId;
+export const BLOGS_COLLECTION_ID = conf.appwriteCollectionId;
+
 export const createBlogDocument = (blog: Omit<Blog, "id" | "date">) => {
   return {
     title: blog.title,
@@ -43,7 +98,7 @@ export const createBlogDocument = (blog: Omit<Blog, "id" | "date">) => {
   };
 };
 
-// Define interfaces for better type safety
+// Service class for blog operations
 interface PostData {
   title: string;
   slug: string;
@@ -172,7 +227,6 @@ export class Service {
     }
   }
 
-  // File upload service
   async uploadFile(file: File): Promise<Models.File | false> {
     try {
       return await this.bucket.createFile(
@@ -202,4 +256,4 @@ export class Service {
 }
 
 const service = new Service();
-export default service;
+export { service };

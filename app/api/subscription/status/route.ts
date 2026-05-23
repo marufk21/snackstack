@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/config/auth";
-import { PLAN_LIMITS } from "@/lib/utils/subscription-check";
-import { db as prisma } from "@/lib/database/client";
+import { auth } from "@/server/auth/config";
+import { PLAN_LIMITS } from "@/server/utils/subscription-check";
+import { db as prisma } from "@/server/db/client";
 import {
   getSubscriptionByUserId,
   hasActiveSubscription,
@@ -9,7 +9,7 @@ import {
   getUserNoteCount,
   getSubscriptionLimits,
   getAISuggestionsRemaining,
-} from "@/lib/database/subscription";
+} from "@/server/services/subscription";
 
 export const dynamic = "force-dynamic";
 

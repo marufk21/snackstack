@@ -1,9 +1,9 @@
-import { auth } from "@/config/auth";
+import { auth } from "@/server/auth/config";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/database/client";
-import { generateUniqueSlug } from "@/lib/utils/notes";
-import { getOrCreateUserByEmail } from "@/lib/database/user";
+import { db } from "@/server/db/client";
+import { generateUniqueSlug } from "@/server/services/notes";
+import { getOrCreateUserByEmail } from "@/server/services/user";
 
 // Explicitly use Node.js runtime for database operations
 export const runtime = "nodejs";
@@ -276,7 +276,7 @@ export async function DELETE(
       });
 
       // Decrement user's note count if the function exists
-      const { decrementNoteCount } = await import("@/lib/database/subscription");
+      const { decrementNoteCount } = await import("@/server/services/subscription");
       await decrementNoteCount(dbUserId!);
     });
 

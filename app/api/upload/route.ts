@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadToCloudinary } from "@/lib/server/cloudinary";
-import { protectApiRoute } from "@/lib/utils/api-protection";
+import { uploadToCloudinary } from "@/server/integrations/cloudinary/upload";
+import { protectApiRoute } from "@/server/utils/api-protection";
 
 export async function POST(request: NextRequest) {
   try {

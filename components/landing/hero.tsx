@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 import MistBackground from "@/components/ui/mist-background";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/cn";
 import { useGSAP } from "@/hooks/use-gsap";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

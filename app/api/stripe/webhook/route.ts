@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { stripe } from "@/config/stripe";
+import { stripe } from "@/server/integrations/stripe/config";
 import Stripe from "stripe";
 import {
   upsertSubscriptionFromStripe,
   updateSubscriptionByStripeId,
   getSubscriptionByStripeId,
-} from "@/lib/database/subscription";
-import { getOrCreateUserByEmail } from "@/lib/database/user";
-import { db as prisma } from "@/lib/database/client";
+} from "@/server/services/subscription";
+import { getOrCreateUserByEmail } from "@/server/services/user";
+import { db as prisma } from "@/server/db/client";
 
 export async function POST(req: NextRequest) {
   const body = await req.text();

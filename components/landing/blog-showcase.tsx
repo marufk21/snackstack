@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Blog } from "@/lib/appwrite/config";
-import { cn } from "@/lib/utils";
+import { Blog } from "@/server/integrations/appwrite/config";
+import { cn } from "@/lib/cn";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Helper function to generate SEO-friendly slug from title

@@ -1,5 +1,5 @@
-import { getBlogs } from "@/lib/appwrite/services";
-import { Blog } from "@/lib/appwrite/config";
+import { getBlogs } from "@/server/integrations/appwrite/services";
+import { Blog } from "@/server/integrations/appwrite/config";
 import Blogs from "@/components/landing/blog-showcase";
 import { Metadata } from "next";
 

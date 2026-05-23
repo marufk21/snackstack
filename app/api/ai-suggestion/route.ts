@@ -1,16 +1,16 @@
 import { z } from "zod";
-import { auth } from "@/config/auth";
+import { auth } from "@/server/auth/config";
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import {
   aiSuggestionRateLimit,
   getUserIdentifier,
-} from "@/lib/utils/rate-limit";
+} from "@/server/utils/rate-limit";
 import {
   getUserSubscriptionTier,
   getAISuggestionsRemaining,
   incrementAISuggestionsCount,
-} from "@/lib/database/subscription";
+} from "@/server/services/subscription";
 
 const getGemini = () => {
   if (!process.env.GEMINI_API_KEY) {

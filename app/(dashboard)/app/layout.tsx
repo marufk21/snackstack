@@ -43,7 +43,7 @@ export default function NotesLayout({
         <DashboardBackground />
 
         {/* Enhanced Header */}
-        <header className="sticky top-0 flex h-14 md:h-16 shrink-0 items-center gap-2 border-b border-cyan-300/40 dark:border-white/5 bg-white/80 dark:bg-background/80 backdrop-blur-xl px-3 md:px-4 z-50 transition-all duration-300 shadow-md shadow-cyan-500/10">
+        <header className="sticky top-0 flex h-14 md:h-16 shrink-0 items-center gap-2 border-b border-cyan-200/30 dark:border-white/[0.06] bg-white/80 dark:bg-background/80 backdrop-blur-xl px-3 md:px-4 z-50 transition-all duration-300 shadow-md shadow-cyan-500/10">
           <SidebarTrigger aria-label="Toggle sidebar" />
           <div className="flex items-center gap-2">
             <DashboardHeaderTitle />

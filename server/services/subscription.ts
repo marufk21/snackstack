@@ -1,4 +1,4 @@
-import { db as prisma } from "./client";
+import { db as prisma } from "@/server/db/client";
 import Stripe from "stripe";
 
 export type SubscriptionStatus =
@@ -40,11 +40,7 @@ interface UpdateSubscriptionData {
   trialEnd?: Date | null;
 }
 
-/**
- * Create a new subscription in the database
- */
 export async function createSubscription(data: CreateSubscriptionData) {
-  // Create subscription and update user's isSubscribed flag in a transaction
   return await prisma.$transaction(async (tx) => {
     const subscription = await tx.subscription.create({
       data: {
@@ -67,7 +63,6 @@ export async function createSubscription(data: CreateSubscriptionData) {
       },
     });
 
-    // Update user's subscription status
     const isActive = data.status === "active" || data.status === "trialing";
     await tx.user.update({
       where: { id: data.userId },
@@ -78,9 +73,6 @@ export async function createSubscription(data: CreateSubscriptionData) {
   });
 }
 
-/**
- * Update an existing subscription by Stripe subscription ID
- */
 export async function updateSubscriptionByStripeId(
   stripeSubscriptionId: string,
   data: UpdateSubscriptionData
@@ -91,7 +83,6 @@ export async function updateSubscriptionByStripeId(
       data,
     });
 
-    // If status was updated, sync user's isSubscribed flag
     if (data.status) {
       const isActive = data.status === "active" || data.status === "trialing";
       await tx.user.update({
@@ -104,27 +95,18 @@ export async function updateSubscriptionByStripeId(
   });
 }
 
-/**
- * Get subscription by Stripe subscription ID
- */
 export async function getSubscriptionByStripeId(stripeSubscriptionId: string) {
   return await prisma.subscription.findUnique({
     where: { stripeSubscriptionId },
   });
 }
 
-/**
- * Get subscription by database user ID
- */
 export async function getSubscriptionByUserId(userId: string) {
   return await prisma.subscription.findUnique({
     where: { userId },
   });
 }
 
-/**
- * Delete a subscription by Stripe subscription ID
- */
 export async function deleteSubscriptionByStripeId(
   stripeSubscriptionId: string
 ) {
@@ -133,9 +115,6 @@ export async function deleteSubscriptionByStripeId(
   });
 }
 
-/**
- * Check if a user has an active subscription
- */
 export async function hasActiveSubscription(userId: string): Promise<boolean> {
   const subscription = await getSubscriptionByUserId(userId);
 
@@ -143,7 +122,6 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
     return false;
   }
 
-  // Check if subscription is active and not expired
   const now = new Date();
   const isActive =
     subscription.status === "active" || subscription.status === "trialing";
@@ -152,9 +130,6 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
   return isActive && notExpired;
 }
 
-/**
- * Get user's subscription tier
- */
 export async function getUserSubscriptionTier(
   userId: string
 ): Promise<PlanType | "free"> {
@@ -167,11 +142,7 @@ export async function getUserSubscriptionTier(
   return subscription.planType as PlanType;
 }
 
-/**
- * Map Stripe price ID to plan type
- */
 export function getPlanTypeFromPriceId(priceId: string): PlanType {
-  // Check against all possible price IDs (Monthly and Yearly)
   const basicMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY;
   const basicYearly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY;
   const proMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY;
@@ -186,14 +157,10 @@ export function getPlanTypeFromPriceId(priceId: string): PlanType {
   if (priceId === enterpriseMonthly || priceId === enterpriseYearly)
     return "enterprise";
 
-  // Default to basic if unknown
   console.warn(`Unknown price ID: ${priceId}, defaulting to basic`);
   return "basic";
 }
 
-/**
- * Create or update subscription from Stripe subscription object
- */
 export async function upsertSubscriptionFromStripe(
   stripeSubscription: Stripe.Subscription,
   userId: string
@@ -234,7 +201,6 @@ export async function upsertSubscriptionFromStripe(
 
   console.log(`   Prepared status for DB: ${subscriptionData.status}`);
 
-  // Try to update existing subscription first
   const existing = await getSubscriptionByStripeId(stripeSubscription.id);
 
   if (existing) {
@@ -260,9 +226,6 @@ export async function upsertSubscriptionFromStripe(
   return result;
 }
 
-/**
- * Get all expired subscriptions that are still marked as active
- */
 export async function getExpiredActiveSubscriptions() {
   const now = new Date();
 
@@ -279,9 +242,6 @@ export async function getExpiredActiveSubscriptions() {
   });
 }
 
-/**
- * Mark expired subscriptions as canceled
- */
 export async function markExpiredSubscriptionsAsCanceled() {
   const expiredSubscriptions = await getExpiredActiveSubscriptions();
 
@@ -305,24 +265,17 @@ export async function markExpiredSubscriptionsAsCanceled() {
   };
 }
 
-/**
- * Check if user has access. The free plan has no time limit, so
- * every user has access. Paid subscribers get higher limits.
- */
 export async function hasAccess(_userId: string): Promise<boolean> {
   return true;
 }
 
 // --- AI suggestion tracking ------------------------------------------------
 
-/**
- * Get remaining AI suggestions for a user in the current billing cycle.
- */
 export async function getAISuggestionsRemaining(
   userId: string,
   tier: PlanType | "free"
 ): Promise<number> {
-  const { PLAN_LIMITS } = await import("@/lib/utils/subscription-check");
+  const { PLAN_LIMITS } = await import("@/server/utils/subscription-check");
   const limit = PLAN_LIMITS[tier].aiSuggestionsPerMonth;
 
   if (limit === Infinity) return Infinity;
@@ -336,7 +289,6 @@ export async function getAISuggestionsRemaining(
   const used = user?.aiSuggestionsCount ?? 0;
   const resetAt = user?.aiSuggestionsResetAt;
 
-  // Reset if the cycle has passed
   if (resetAt && now >= resetAt) {
     return limit;
   }
@@ -344,16 +296,12 @@ export async function getAISuggestionsRemaining(
   return Math.max(0, limit - used);
 }
 
-/**
- * Increment the AI suggestions counter for a user.
- */
 export async function incrementAISuggestionsCount(
   userId: string,
   tier: PlanType | "free"
 ): Promise<number> {
   const now = new Date();
 
-  // Check if we need to reset first
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { aiSuggestionsResetAt: true },
@@ -372,13 +320,10 @@ export async function incrementAISuggestionsCount(
     select: { aiSuggestionsCount: true },
   });
 
-  const { PLAN_LIMITS } = await import("@/lib/utils/subscription-check");
+  const { PLAN_LIMITS } = await import("@/server/utils/subscription-check");
   return PLAN_LIMITS[tier].aiSuggestionsPerMonth - (updated as any).aiSuggestionsCount;
 }
 
-/**
- * Get user's current note count
- */
 export async function getUserNoteCount(userId: string): Promise<number> {
   try {
     const user = await prisma.user.findUnique({
@@ -388,20 +333,16 @@ export async function getUserNoteCount(userId: string): Promise<number> {
 
     return (user as any)?.noteCount || 0;
   } catch (error) {
-    // If noteCount field doesn't exist yet, return 0
     console.warn("noteCount field not available, returning 0");
     return 0;
   }
 }
 
-/**
- * Get subscription limits for a user based on their plan tier.
- */
 export async function getSubscriptionLimits(userId: string): Promise<{
   maxNotes: number;
   tier: PlanType | "free";
 }> {
-  const { PLAN_LIMITS } = await import("@/lib/utils/subscription-check");
+  const { PLAN_LIMITS } = await import("@/server/utils/subscription-check");
   const tier = await getUserSubscriptionTier(userId);
 
   return {
@@ -410,9 +351,6 @@ export async function getSubscriptionLimits(userId: string): Promise<{
   };
 }
 
-/**
- * Check if user can create a note
- */
 export async function canCreateNote(userId: string): Promise<{
   canCreate: boolean;
   reason?: string;
@@ -433,7 +371,6 @@ export async function canCreateNote(userId: string): Promise<{
     limits,
   });
 
-  // Check if user has access (subscription or trial)
   if (!hasUserAccess) {
     return {
       canCreate: false,
@@ -444,7 +381,6 @@ export async function canCreateNote(userId: string): Promise<{
     };
   }
 
-  // Check if user has reached their limit
   if (noteCount >= limits.maxNotes) {
     return {
       canCreate: false,
@@ -463,9 +399,6 @@ export async function canCreateNote(userId: string): Promise<{
   };
 }
 
-/**
- * Increment user's note count
- */
 export async function incrementNoteCount(userId: string): Promise<number> {
   try {
     const user = await prisma.user.update({
@@ -485,9 +418,6 @@ export async function incrementNoteCount(userId: string): Promise<number> {
   }
 }
 
-/**
- * Decrement user's note count (when deleting a note)
- */
 export async function decrementNoteCount(userId: string): Promise<number> {
   try {
     const currentCount = await getUserNoteCount(userId);

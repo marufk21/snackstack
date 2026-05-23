@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/config/auth";
-import { stripe } from "@/config/stripe";
-import { getSubscriptionByUserId } from "@/lib/database/subscription";
+import { auth } from "@/server/auth/config";
+import { stripe } from "@/server/integrations/stripe/config";
+import { getSubscriptionByUserId } from "@/server/services/subscription";
 
 export async function POST(req: NextRequest) {
   try {

@@ -39,8 +39,8 @@ import { PostHogProvider } from "@/providers/posthog-provider";
 import { LenisProvider } from "@/providers/lenis-provider";
 import { FramerProvider } from "@/providers/framer-provider";
 import { NotificationContainer } from "@/components/ui/notification";
-import { RedirectHandler } from "@/components/auth/redirect-handler";
-import ErrorBoundary from "@/components/auth/error-boundary";
+import { RedirectHandler } from "@/components/shared/redirect-handler";
+import ErrorBoundary from "@/components/shared/error-boundary";
 
 // ======================
 //  SITE CONFIGURATION
@@ -51,7 +51,7 @@ const siteConfig = {
   description:
     "Transform your development workflow with SnackStack. AI-powered note-taking, blog management, and cutting-edge SaaS platform built with Next.js 15, React 19, and TypeScript.",
   url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
-  ogImage: "/og-image.png",
+  ogImage: "/og.png",
   keywords: [
     "AI-powered notes",
     "web development",

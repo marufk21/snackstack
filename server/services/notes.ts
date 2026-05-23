@@ -1,7 +1,6 @@
 import "server-only";
-import { db } from "@/lib/database/client";
+import { db } from "@/server/db/client";
 
-// Helper function to generate slug
 export function generateSlug(title: string): string {
   const baseSlug = title
     .toLowerCase()
@@ -14,7 +13,6 @@ export function generateSlug(title: string): string {
   return baseSlug || "untitled";
 }
 
-// Helper function to ensure unique slug
 export async function generateUniqueSlug(
   title: string,
   excludeId?: string
@@ -38,5 +36,3 @@ export async function generateUniqueSlug(
     counter++;
   }
 }
-
-

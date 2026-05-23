@@ -21,8 +21,8 @@ import {
   Calendar,
   User,
 } from "lucide-react";
-import { Blog } from "@/lib/appwrite/config";
-import { getBlogs, deleteBlog } from "@/lib/appwrite/services";
+import { Blog } from "@/server/integrations/appwrite/config";
+import { getBlogs, deleteBlog } from "@/server/integrations/appwrite/services";
 import { DeleteModal } from "@/components/landing/modal-delete";
 import { m, AnimatePresence } from "framer-motion";
 import { Loader } from "@/components/ui/loader";

@@ -1,48 +1,41 @@
-import { auth } from "@/config/auth";
+import { auth } from "@/server/auth/config";
 import {
   hasActiveSubscription,
   getUserSubscriptionTier,
   PlanType,
-} from "@/lib/database/subscription";
+} from "@/server/services/subscription";
 
-/**
- * Feature limits by plan type.
- * Free plan has no time limit — it's a permanent free tier.
- */
 export const PLAN_LIMITS = {
   free: {
     maxNotes: 5,
     canUploadImages: true,
     canUseAI: true,
-    maxImageSize: 5 * 1024 * 1024, // 5MB
+    maxImageSize: 5 * 1024 * 1024,
     aiSuggestionsPerMonth: 30,
   },
   basic: {
     maxNotes: 50,
     canUploadImages: true,
     canUseAI: true,
-    maxImageSize: 10 * 1024 * 1024, // 10MB
+    maxImageSize: 10 * 1024 * 1024,
     aiSuggestionsPerMonth: 300,
   },
   pro: {
     maxNotes: 500,
     canUploadImages: true,
     canUseAI: true,
-    maxImageSize: 20 * 1024 * 1024, // 20MB
+    maxImageSize: 20 * 1024 * 1024,
     aiSuggestionsPerMonth: 1500,
   },
   enterprise: {
     maxNotes: Infinity,
     canUploadImages: true,
     canUseAI: true,
-    maxImageSize: 100 * 1024 * 1024, // 100MB
+    maxImageSize: 100 * 1024 * 1024,
     aiSuggestionsPerMonth: Infinity,
   },
 } as const;
 
-/**
- * Check if user has an active subscription
- */
 export async function checkUserSubscription() {
   const session = await auth();
 
@@ -65,9 +58,6 @@ export async function checkUserSubscription() {
   };
 }
 
-/**
- * Check if user can access a specific feature
- */
 export async function canAccessFeature(
   feature: keyof typeof PLAN_LIMITS.free
 ): Promise<boolean> {
@@ -77,9 +67,6 @@ export async function canAccessFeature(
   return limits[feature] as boolean;
 }
 
-/**
- * Check if user has reached their usage limit
- */
 export async function hasReachedLimit(
   currentUsage: number,
   limitType: "maxNotes"
@@ -95,17 +82,11 @@ export async function hasReachedLimit(
   };
 }
 
-/**
- * Get user's plan limits
- */
 export async function getUserLimits() {
   const { tier } = await checkUserSubscription();
   return PLAN_LIMITS[tier];
 }
 
-/**
- * Require active subscription - throws error if no subscription
- */
 export async function requireSubscription(minTier?: PlanType) {
   const session = await auth();
 
@@ -133,9 +114,6 @@ export async function requireSubscription(minTier?: PlanType) {
   return true;
 }
 
-/**
- * Check if tier is sufficient for requirement
- */
 export function isTierSufficient(
   currentTier: PlanType | "free",
   requiredTier: PlanType | "free"

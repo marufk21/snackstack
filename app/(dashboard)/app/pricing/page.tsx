@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { PricingCard } from "@/components/ui/pricing-card";
 import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
-import { pricingTiers } from "@/config/pricing";
+import { pricingTiers } from "@/lib/pricing";
 import { useSubscription } from "@/hooks/use-subscription";
 import { Sparkles } from "lucide-react";
 

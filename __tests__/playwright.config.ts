@@ -1,10 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  // Playwright resolves these relative to this config file.
-  testDir: ".",
+  testDir: "e2e",
   testMatch: "**/*.spec.ts",
-  outputDir: "test-results",
+  outputDir: "e2e/test-results",
   timeout: 30_000,
   expect: {
     timeout: 5_000,

@@ -1,5 +1,5 @@
 import { PricingTier } from "@/components/ui/pricing-card";
-import { stripePriceIds } from "@/config/stripe-client";
+import { stripePriceIds } from "@/lib/stripe-client";
 
 export const pricingTiers: PricingTier[] = [
   {

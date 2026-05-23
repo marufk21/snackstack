@@ -1,6 +1,6 @@
 // Environment validation
 const validateEnvironment = () => {
-  const requiredEnvVars = ["DATABASE_URL", "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"];
+  const requiredEnvVars = ["DATABASE_URL"];
 
   const missingVars = requiredEnvVars.filter(
     (varName) => !process.env[varName]

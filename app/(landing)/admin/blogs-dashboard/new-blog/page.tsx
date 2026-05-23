@@ -14,11 +14,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeftIcon, UploadCloud, ChevronDown } from "lucide-react";
-import { createBlog } from "@/lib/appwrite/services";
+import { createBlog } from "@/server/integrations/appwrite/services";
 import Image from "next/image";
-import { storage } from "@/lib/appwrite/config";
+import { storage } from "@/server/integrations/appwrite/config";
 import { ID } from "appwrite";
-import conf from "@/config/appwrite";
+import conf from "@/server/integrations/appwrite/config";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Loader } from "@/components/ui/loader";

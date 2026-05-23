@@ -1,7 +1,7 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/config/auth";
-import { stripe } from "@/config/stripe";
-import { db as prisma } from "@/lib/database/client";
+import { auth } from "@/server/auth/config";
+import { stripe } from "@/server/integrations/stripe/config";
+import { db as prisma } from "@/server/db/client";
 
 export const dynamic = "force-dynamic";
 

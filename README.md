@@ -178,81 +178,61 @@ pnpm db:reset     # Reset and reseed
 
 ```
 snackstack/
-├── app/                          # Next.js 15 App Router
-│   ├── (auth)/                  # Authentication routes
-│   │   ├── sign-in/             # Sign-in page
-│   │   └── sign-up/             # Sign-up page
-│   ├── (dashboard)/             # Protected dashboard routes
-│   │   └── app/                 # Main app
-│   │       ├── admin/           # Admin panel
-│   │       ├── pricing/         # Pricing page
-│   │       ├── subscription/    # Subscription management
-│   │       ├── layout.tsx       # Dashboard layout
-│   │       └── page.tsx         # Dashboard home
-│   ├── (landing)/               # Public landing pages
-│   │   ├── admin/               # Admin dashboard
-│   │   │   └── blogs-dashboard/ # Blog management
-│   │   ├── blogs/               # Public blog pages
-│   │   ├── layout.tsx           # Landing layout
-│   │   └── page.tsx             # Landing home
-│   ├── api/                     # API Routes
-│   │   ├── ai-suggestion/       # AI suggestions
+├── app/                          # Next.js App Router (routes only)
+│   ├── (auth)/sign-in/          # Sign-in page
+│   ├── (dashboard)/app/         # Protected dashboard (/app/*)
+│   │   ├── admin/               # Debug/sync admin pages
+│   │   ├── pricing/             # Pricing page
+│   │   └── subscription/        # Subscription management
+│   ├── (landing)/               # Public pages
+│   │   ├── admin/blogs-dashboard/# Blog admin (new, edit, view)
+│   │   └── blogs/               # Public blog listing & details
+│   ├── api/                     # API route handlers
+│   │   ├── ai-suggestion/       # Gemini AI suggestions
 │   │   ├── auth/                # NextAuth handlers
-│   │   ├── cron/                # Scheduled jobs
-│   │   ├── folders/             # Folder management
+│   │   ├── cron/                # Scheduled subscription checks
 │   │   ├── notes/               # Notes CRUD
-│   │   ├── stripe/              # Stripe webhooks
-│   │   ├── subscription/        # Subscription API
-│   │   └── upload/              # File uploads
+│   │   ├── stripe/              # Stripe checkout, portal, webhooks
+│   │   ├── subscription/        # Subscription lifecycle
+│   │   └── upload/              # Cloudinary file uploads
 │   ├── globals.css              # Global styles
-│   ├── layout.tsx               # Root layout
-│   ├── not-found.tsx            # 404 page
-│   ├── robots.ts                # Robots.txt
-│   └── sitemap.ts               # Sitemap generation
+│   ├── layout.tsx               # Root layout + metadata
+│   └── not-found.tsx            # 404 page
 │
-├── components/                   # React Components
-│   ├── auth/                    # Auth components
-│   ├── dashboard/               # Dashboard components
-│   ├── landing/                 # Landing components
-│   ├── subscription/            # Subscription components
-│   └── ui/                      # UI components (25+ files)
+├── components/
+│   ├── ui/                      # Reusable primitives (shadcn/ui + custom)
+│   ├── shared/                  # App-level components (auth, error-boundary)
+│   ├── landing/                 # Landing page sections
+│   └── dashboard/               # Dashboard feature components
 │
-├── config/                       # Configuration
-│   ├── auth.ts                  # NextAuth config
-│   ├── database.ts              # Database config
-│   ├── stripe.ts                # Stripe config
-│   └── appwrite.ts              # Appwrite config
+├── server/                       # Backend code
+│   ├── api/                     # Client-side Axios API wrappers
+│   ├── auth/                    # NextAuth v5 configuration
+│   ├── db/                      # Prisma schema, client, seed, config
+│   ├── integrations/            # Third-party services
+│   │   ├── appwrite/            # Appwrite blog CMS
+│   │   ├── cloudinary/          # Cloudinary image upload
+│   │   └── stripe/              # Stripe payments
+│   ├── services/                # Business logic (user, subscription, notes)
+│   └── utils/                   # Server utilities (rate-limit, api-protection, plan-limits)
 │
-├── server/                       # Server-side code
-│   ├── db/                      # Database
-│   │   └── schema.prisma        # Prisma schema
-│   └── lib/                     # Server libraries
-│       └── generated/prisma/    # Generated Prisma client
+├── lib/                          # Client-side utilities & configs
+│   ├── cn.ts                    # Tailwind class merge utility
+│   ├── query-client.ts          # TanStack Query config
+│   ├── stripe-client.ts         # Client-safe Stripe config
+│   ├── pricing.ts               # Pricing tier definitions
+│   └── app-config.ts            # App configuration & env validation
 │
-├── providers/                    # React Providers
-│   ├── query-provider.tsx       # TanStack Query
-│   └── posthog-provider.tsx     # PostHog analytics
+├── hooks/                        # Shared React hooks
+├── providers/                    # React context providers (Query, PostHog, Theme, Lenis, Framer)
+├── stores/                       # Zustand store (theme, user, sidebar)
+├── types/                        # TypeScript type declarations
+├── __tests__/                    # Jest + Playwright test suites
+├── public/                       # Static assets (images, icons, manifest)
 │
-├── stores/                       # Zustand stores
-│   └── use-app-store.ts         # Global state
-│
-├── lib/                          # Utilities
-│   ├── utils.ts                 # Helper functions
-│   ├── appwrite/                # Appwrite utilities
-│   └── validations/             # Zod schemas
-│
-├── hooks/                        # Custom React hooks
-├── types/                        # TypeScript types
-├── __tests__/                    # Test suites
-│   ├── unit/                     # Unit tests (Jest + RTL)
-│   ├── integration/              # Integration tests (Jest + MSW)
-│   └── e2e/                      # E2E tests (Playwright)
-├── public/                       # Static assets
-│
-├── middleware.ts                 # Route protection
-├── next.config.ts                # Next.js config
-├── package.json                  # Dependencies
-└── tsconfig.json                 # TypeScript config
+├── middleware.ts                 # Auth route protection
+├── next.config.ts                # Next.js + Turbopack config
+└── package.json
 ```
 
 ## 🚀 Deployment

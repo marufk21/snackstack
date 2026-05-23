@@ -1,14 +1,11 @@
-import { auth } from "@/config/auth";
+import { auth } from "@/server/auth/config";
 import { NextResponse } from "next/server";
 import {
   hasActiveSubscription,
   getUserSubscriptionTier,
   PlanType,
-} from "@/lib/database/subscription";
+} from "@/server/services/subscription";
 
-/**
- * Protect API route - requires authentication
- */
 export async function protectApiRoute() {
   const session = await auth();
 
@@ -28,9 +25,6 @@ export async function protectApiRoute() {
   };
 }
 
-/**
- * Protect API route with subscription requirement
- */
 export async function protectSubscriptionRoute(minTier?: PlanType) {
   const session = await auth();
 
@@ -97,13 +91,11 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
   } catch (error) {
     console.error("Error checking subscription in API route:", error);
 
-    // Provide more detailed error information
     const errorMessage =
       error instanceof Error ? error.message : "Unknown error";
     const errorDetails =
       process.env.NODE_ENV === "development" ? errorMessage : undefined;
 
-    // In development, allow access if there's a database error
     if (process.env.NODE_ENV === "development") {
       console.warn(
         `⚠️ Database error in protectSubscriptionRoute - allowing access in development mode: ${errorMessage}`
@@ -115,7 +107,6 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
       };
     }
 
-    // In production, return error
     return {
       error: NextResponse.json(
         {
@@ -131,14 +122,3 @@ export async function protectSubscriptionRoute(minTier?: PlanType) {
     };
   }
 }
-
-/**
- * Usage example:
- *
- * export async function POST(req: NextRequest) {
- *   const { error, user, subscription } = await protectSubscriptionRoute("pro");
- *   if (error) return error;
- *
- *   // Your protected route logic here
- * }
- */

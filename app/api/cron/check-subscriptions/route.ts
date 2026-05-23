@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { markExpiredSubscriptionsAsCanceled } from "@/lib/database/subscription";
+import { markExpiredSubscriptionsAsCanceled } from "@/server/services/subscription";
 
 // Force dynamic rendering to prevent caching issues with cron jobs
 export const dynamic = "force-dynamic";

@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { getBlogs } from "@/lib/appwrite/services";
+import { getBlogs } from "@/server/integrations/appwrite/services";
 import { notFound } from "next/navigation";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 import BlogContentView from "@/components/landing/blog-content-view";
-import { Blog } from "@/lib/appwrite/config";
+import { Blog } from "@/server/integrations/appwrite/config";
 import { Button } from "@/components/ui/button";
 import { Metadata } from "next";
 

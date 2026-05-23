@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "en_US",
       images: [
         {
-          url: "/og-image.png",
+          url: "/og.png",
           width: 1200,
           height: 630,
           alt: "SnackStack - AI-Powered Notes",
@@ -56,7 +56,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "SnackStack - AI-Powered Notes & Blog Management",
       description:
         "Transform your development workflow with SnackStack. AI-powered note-taking and blog management platform.",
-      images: ["/og-image.png"],
+      images: ["/og.png"],
     },
     robots: {
       index: true,

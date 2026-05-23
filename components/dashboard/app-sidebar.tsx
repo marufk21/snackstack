@@ -6,13 +6,10 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Home,
-  FilePlus,
   CreditCard,
   CheckCircle,
   LogOut,
   User,
-  Menu,
-  PanelLeft,
 } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,14 +31,12 @@ import {
 import { Button } from "@/components/ui/button";
 import ThemeToggleButton from "@/components/ui/theme-toggle-button";
 
-// Navigation items for the app
 const navigationItems = [
   {
     title: "My Notes",
     url: "/app",
     icon: Home,
   },
-
   {
     title: "My Subscription",
     url: "/app/subscription",
@@ -72,9 +67,10 @@ export function AppSidebar() {
           "--sidebar-width-icon": "3rem",
         } as React.CSSProperties
       }
-      className="border-r border-sidebar-border bg-sidebar/95 dark:bg-sidebar/90 backdrop-blur-2xl text-sidebar-foreground shadow-xl shadow-cyan-500/5"
+      className="border-r border-cyan-200/40 dark:border-white/[0.06] bg-white/70 dark:bg-black/40 backdrop-blur-2xl shadow-2xl shadow-cyan-500/[0.03] dark:shadow-black/20"
     >
-      <SidebarHeader className="border-b border-sidebar-border h-14 md:h-16 flex items-center">
+      {/* Logo Header */}
+      <SidebarHeader className="border-b border-cyan-200/30 dark:border-white/[0.05] h-14 md:h-16 flex items-center">
         <div className="flex items-center gap-4 px-2 overflow-hidden w-full group-data-[collapsible=icon]:justify-center">
           <div className="relative flex items-center justify-center w-8 h-8 shrink-0 mt-2">
             <Image
@@ -150,7 +146,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarSeparator className="bg-cyan-300/40 dark:bg-white/5" />
+        <SidebarSeparator className="bg-cyan-200/30 dark:bg-white/[0.05]" />
 
         <SidebarGroup>
           <SidebarGroupLabel className="text-zinc-500 dark:text-zinc-600">
@@ -171,7 +167,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border mt-auto">
+      <SidebarFooter className="border-t border-cyan-200/30 dark:border-white/[0.05] mt-auto">
         <div className="p-2 space-y-2">
           {!session ? (
             <Link

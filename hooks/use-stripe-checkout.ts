@@ -1,6 +1,6 @@
 import { useState } from "react";
 // import { loadStripe } from "@stripe/stripe-js"; // Removed for dynamic import
-import { getStripePublishableKey } from "@/config/stripe-client";
+import { getStripePublishableKey } from "@/lib/stripe-client";
 
 export function useStripeCheckout() {
   const [loading, setLoading] = useState(false);

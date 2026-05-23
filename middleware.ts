@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
 
   // Only load auth if we need to check authentication
   if (isProtectedRoute || isAuthRoute || isRoot || isAdmin) {
-    const { auth } = await import("@/config/auth");
+    const { auth } = await import("@/server/auth/config");
     return auth((req) => {
       const session = req.auth;
       const { pathname } = req.nextUrl;

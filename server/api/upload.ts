@@ -1,4 +1,4 @@
-import { apiClient } from "../axios/config";
+import { apiClient } from "@/server/api/client";
 
 export interface UploadResponse {
   success: boolean;
