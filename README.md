@@ -2,10 +2,11 @@
 
 AI-powered notes and blogging platform built with Next.js 15, featuring subscription management, rich text editing, and modern SaaS architecture.
 
-![Next.js](https://img.shields.io/badge/Next.js-15.5.0-black?style=flat-square&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.9-black?style=flat-square&logo=next.js)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?style=flat-square&logo=tailwind-css)
 ![Prisma](https://img.shields.io/badge/Prisma-6.15-2D3748?style=flat-square&logo=prisma)
+![React](https://img.shields.io/badge/React-19.1-61DAFB?style=flat-square&logo=react)
 
 ## 🔗 Live Demo
 
@@ -28,29 +29,35 @@ AI-powered notes and blogging platform built with Next.js 15, featuring subscrip
 ## ✨ Features
 
 - 🧠 **AI-Powered Notes** - Intelligent content suggestions with Google Gemini API
-- 📝 **Rich Text Editor** - CKEditor & TipTap with markdown support
+- 📝 **Rich Text Editor** - TipTap with markdown support and syntax highlighting
 - 📚 **Blog Management** - Full admin dashboard for blog posts
-- 💳 **Stripe Payments** - Subscription management and billing
-- 🔐 **Authentication** - Google OAuth via NextAuth.js v5
+- 💳 **Stripe Payments** - Subscription management with trial periods and billing
+- 🔐 **Authentication** - Google OAuth via NextAuth.js v5 with Prisma adapter
 - 📊 **Analytics** - PostHog integration for user tracking
 - 🗄️ **Database** - PostgreSQL with Prisma ORM
-- 📁 **File Storage** - Appwrite for images and media
-- 🌓 **Dark Mode** - System-aware theme switching
-- 📱 **Responsive** - Mobile-first design
+- 📁 **File Storage** - Cloudinary and Appwrite for images and media
+- 🌓 **Dark Mode** - System-aware theme switching with next-themes
+- 🎨 **3D & Animation** - Three.js scenes with GSAP, Lenis smooth scroll, and Framer Motion
+- 📱 **Responsive** - Mobile-first design with Tailwind CSS
+- 🧪 **Testing** - Jest + React Testing Library for unit/integration, Playwright for E2E
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 15.5.0 with App Router & React 19
-- **Language:** TypeScript 5.0
-- **Styling:** Tailwind CSS v4.1, Radix UI
+- **Framework:** Next.js 15.5 with App Router & React 19
+- **Language:** TypeScript 5
+- **Styling:** Tailwind CSS v4, Radix UI, Framer Motion
 - **Database:** PostgreSQL with Prisma ORM
 - **Auth:** NextAuth.js v5 with Google OAuth
-- **Payments:** Stripe
-- **Storage:** Appwrite
+- **Payments:** Stripe with subscription tiers and trials
+- **Storage:** Cloudinary, Appwrite
 - **AI:** Google Gemini API
 - **Analytics:** PostHog
 - **State:** Zustand, TanStack Query
-- **Editors:** CKEditor 5, TipTap
+- **Editor:** TipTap with markdown, code highlighting, images, and links
+- **3D:** Three.js, React Three Fiber, postprocessing
+- **Animation:** GSAP, Lenis smooth scroll
+- **Testing:** Jest, React Testing Library, Playwright, MSW
+- **Validation:** Zod
 
 ## 📋 Prerequisites
 
@@ -66,7 +73,7 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/snackstack.git
+git clone https://github.com/marufk21/snackstack.git
 cd snackstack
 ```
 
@@ -93,6 +100,9 @@ AUTH_SECRET="your_auth_secret_key"
 AUTH_GOOGLE_ID="your_google_oauth_client_id"
 AUTH_GOOGLE_SECRET="your_google_oauth_client_secret"
 NEXTAUTH_URL="http://localhost:3000"
+
+# Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your_cloud_name"
 
 # Appwrite
 NEXT_PUBLIC_APPWRITE_ENDPOINT="https://cloud.appwrite.io/v1"
@@ -122,10 +132,11 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 1. **Database**: Use [Supabase](https://supabase.com/), [Neon](https://neon.tech/), or local PostgreSQL
 2. **Google OAuth**: Get credentials from [Google Cloud Console](https://console.cloud.google.com/)
-3. **Appwrite**: Create account at [appwrite.io](https://appwrite.io/) and set up project
-4. **Stripe**: Get API keys from [Stripe Dashboard](https://stripe.com/)
-5. **Gemini API**: Get key from [Google AI Studio](https://ai.google.dev/)
-6. **PostHog**: Sign up at [posthog.com](https://posthog.com/)
+3. **Cloudinary**: Create account at [cloudinary.com](https://cloudinary.com/) for media storage
+4. **Appwrite**: Create account at [appwrite.io](https://appwrite.io/) and set up project
+5. **Stripe**: Get API keys from [Stripe Dashboard](https://stripe.com/)
+6. **Gemini API**: Get key from [Google AI Studio](https://ai.google.dev/)
+7. **PostHog**: Sign up at [posthog.com](https://posthog.com/)
 
 ### 3. Set up the database
 
@@ -147,9 +158,13 @@ Open [http://localhost:3000](http://localhost:3000) to see your application.
 
 ```bash
 # Development
-pnpm dev          # Start development server
-pnpm build        # Build for production
+pnpm dev          # Start development server (Turbopack)
+pnpm build        # Build for production (Turbopack)
 pnpm start        # Start production server
+
+# Testing
+pnpm test         # Run Jest unit & integration tests
+pnpm test:e2e     # Run Playwright E2E tests
 
 # Database
 pnpm prisma generate --schema=server/db/schema.prisma
@@ -228,6 +243,10 @@ snackstack/
 │
 ├── hooks/                        # Custom React hooks
 ├── types/                        # TypeScript types
+├── __tests__/                    # Test suites
+│   ├── unit/                     # Unit tests (Jest + RTL)
+│   ├── integration/              # Integration tests (Jest + MSW)
+│   └── e2e/                      # E2E tests (Playwright)
 ├── public/                       # Static assets
 │
 ├── middleware.ts                 # Route protection
