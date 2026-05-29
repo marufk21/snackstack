@@ -11,14 +11,15 @@ import {
   Loader2,
   ImageIcon,
   Wand2,
-  Sparkles,
   Trash2,
   BookOpen,
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useImageUpload } from "@/hooks/use-image-upload";
 import { useSubscription } from "@/hooks/use-subscription";
 import { m, AnimatePresence } from "framer-motion";
+import { AiChatPanel } from "@/components/dashboard/ai-chat-panel";
 
 interface NoteViewModalProps {
   note: Note | null;
@@ -38,10 +39,11 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [activeAiAction, setActiveAiAction] = useState<
-    "improve" | "summarize" | "expand" | null
+    "improve" | "expand" | null
   >(null);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isAiChatOpen, setIsAiChatOpen] = useState(false);
 
   const { addNotification } = useAppStore();
   const queryClient = useQueryClient();
@@ -57,12 +59,14 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
       setContent(note.content);
       setImageUrl(note.imageUrl || null);
       setIsDirty(false);
+      setIsAiChatOpen(false); // close AI chat when switching notes
+      setShowDeleteConfirm(false); // dismiss any pending delete dialog
     }
   }, [note]);
 
   const showNotification = (
     message: string,
-    type: Notification["type"] = "success"
+    type: Notification["type"] = "success",
   ) => {
     setNotification({ message, type });
     setTimeout(() => setNotification(null), 3000);
@@ -97,7 +101,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
 
   // AI suggestion mutation
   const aiSuggestionMutation = useMutation({
-    mutationFn: async (type: "improve" | "summarize" | "expand") => {
+    mutationFn: async (type: "improve" | "expand") => {
       return generateAiSuggestion({ content, type });
     },
     onMutate: (variables) => {
@@ -105,20 +109,18 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
     },
     onSuccess: (suggestion, variables) => {
       if (suggestion) {
-        if (variables === "summarize") {
-          showNotification("Summary: " + suggestion.substring(0, 100) + "...");
-        } else {
-          setContent(suggestion);
-          setIsDirty(true);
-          showNotification(
-            variables === "improve" ? "Content improved!" : "Content expanded!"
-          );
-        }
+        setContent(suggestion);
+        setIsDirty(true);
+        showNotification(
+          variables === "improve" ? "Content improved!" : "Content expanded!",
+        );
       }
     },
     onError: (error) => {
       console.error("Error generating AI suggestion:", error);
-      showNotification("Failed to generate AI suggestion", "error");
+      const message =
+        error instanceof Error ? error.message : "Failed to generate AI suggestion";
+      showNotification(message, "error");
     },
     onSettled: () => {
       setActiveAiAction(null);
@@ -195,7 +197,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
     }
   };
 
-  const handleAiAction = async (type: "improve" | "summarize" | "expand") => {
+  const handleAiAction = async (type: "improve" | "expand") => {
     if (!content.trim()) {
       showNotification("Please write some content first", "warning");
       return;
@@ -232,15 +234,34 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             if (e.target === e.currentTarget) onClose();
           }}
         >
-          <m.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-3xl h-[90vh] bg-white dark:bg-zinc-900 rounded-xl shadow-2xl overflow-hidden flex flex-col"
+          {/* Wrapper: modal + AI chat panel side by side */}
+          <div
+            className="flex items-stretch justify-center w-full max-w-[calc(768px+360px)]"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Single Scrollable Container */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            <m.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className={cn(
+                "relative flex-1 max-w-3xl h-[90vh] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden flex flex-col",
+                isAiChatOpen
+                  ? "rounded-l-xl rounded-r-none"
+                  : "rounded-xl",
+              )}
+            >
+            {/* Top-right Close Button */}
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 z-40 h-8 w-8 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 flex items-center justify-center transition-colors shadow-sm"
+              title="Close"
+            >
+              <X className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
+            </button>
+
+            {/* Main Content Area */}
+            <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col relative">
               {/* Cover Image */}
               {imageUrl && (
                 <div className="relative w-full h-48 group">
@@ -273,7 +294,6 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     setIsDirty(true);
                     autoResize(e);
                   }}
-                  onInput={autoResize}
                   placeholder="Title"
                   rows={1}
                   className="w-full resize-none bg-transparent text-xl font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 border-none focus:ring-0 p-0 leading-snug outline-none"
@@ -289,7 +309,6 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     setIsDirty(true);
                     autoResize(e);
                   }}
-                  onInput={autoResize}
                   placeholder="Take a note..."
                   rows={12}
                   className="w-full resize-none bg-transparent text-base text-zinc-700 dark:text-zinc-300 placeholder:text-zinc-400 dark:placeholder:text-zinc-600 border-none focus:ring-0 p-0 leading-relaxed outline-none"
@@ -302,7 +321,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             </div>
 
             {/* Floating Toolbar - Bottom */}
-            <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800">
+            <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border-t border-zinc-200 dark:border-zinc-800 z-10">
               <div className="flex items-center justify-between">
                 {/* Left Actions */}
                 <div className="flex items-center gap-1">
@@ -330,9 +349,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                       <span className="text-sm font-medium">Image</span>
                     </button>
                   )}
-
                   <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
-
                   <button
                     onClick={() => handleAiAction("improve")}
                     disabled={activeAiAction !== null}
@@ -346,21 +363,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     )}
                     <span className="text-sm font-medium">Improve</span>
                   </button>
-
-                  <button
-                    onClick={() => handleAiAction("summarize")}
-                    disabled={activeAiAction !== null}
-                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
-                    title="Summarize"
-                  >
-                    {activeAiAction === "summarize" ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Sparkles className="w-4 h-4" />
-                    )}
-                    <span className="text-sm font-medium">Summarize</span>
-                  </button>
-
+                  <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
                   <button
                     onClick={() => handleAiAction("expand")}
                     disabled={activeAiAction !== null}
@@ -373,6 +376,20 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                       <BookOpen className="w-4 h-4" />
                     )}
                     <span className="text-sm font-medium">Expand</span>
+                  </button>
+                  <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
+                  <button
+                    onClick={() => setIsAiChatOpen(!isAiChatOpen)}
+                    className={cn(
+                      "h-9 px-3 rounded flex items-center gap-2 transition-colors",
+                      isAiChatOpen
+                        ? "dark:text-blue-400"
+                        : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
+                    )}
+                    title="Open AI Chat"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span className="text-sm font-medium">Chat</span>
                   </button>
                 </div>
 
@@ -393,39 +410,36 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                   >
                     Close
                   </button>
-                  {isDirty && (
-                    <button
-                      onClick={handleSave}
-                      disabled={isSaving}
-                      className="h-9 px-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
-                    >
-                      {isSaving ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                          Done
-                        </>
-                      )}
-                    </button>
-                  )}
+                  <button
+                    onClick={handleSave}
+                    disabled={isSaving || !isDirty}
+                    className="h-9 px-4 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5 disabled:opacity-50"
+                  >
+                    {isSaving ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        Done
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
 
-            {/* Hidden File Input */}
             <input
               type="file"
               ref={fileInputRef}
@@ -509,6 +523,25 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
               )}
             </AnimatePresence>
           </m.div>
+
+          {/* AI Chat Panel — outside modal, slides in from right */}
+          <div
+            className={cn(
+              "h-[90vh] bg-white dark:bg-zinc-900 rounded-r-xl shadow-2xl overflow-hidden transition-all duration-300 ease-in-out flex-shrink-0",
+              isAiChatOpen ? "w-[360px] ml-0" : "w-0 ml-0 opacity-0 pointer-events-none",
+            )}
+          >
+            <AiChatPanel
+              isOpen={isAiChatOpen}
+              onToggle={() => setIsAiChatOpen(!isAiChatOpen)}
+              noteId={note?.id}
+              noteTitle={title}
+              noteContent={content}
+            />
+          </div>
+
+          </div>
+          {/* End wrapper */}
         </m.div>
       )}
     </AnimatePresence>

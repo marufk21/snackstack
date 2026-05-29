@@ -17,7 +17,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
-import { WelcomeHeader } from "@/components/ui/welcome-header";
 import { NoteCard } from "@/components/dashboard/note-card";
 import { Plus, Loader2, FileText, Sparkles } from "lucide-react";
 
@@ -131,9 +130,6 @@ export default function NotesPage() {
 
   return (
     <div className="relative max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
-      {/* Welcome Header */}
-      <WelcomeHeader className="mb-8 md:mb-10" />
-
       {/* Notes Stats and Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 md:mb-10 animate-fade-in-up animate-delay-100">
         <div>

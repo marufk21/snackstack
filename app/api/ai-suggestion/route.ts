@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { auth } from "@/server/auth/config";
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { invokeWithFallback } from "@/server/services/langchain";
+import { HumanMessage, SystemMessage } from "langchain";
 import {
   aiSuggestionRateLimit,
   getUserIdentifier,
@@ -12,19 +13,16 @@ import {
   incrementAISuggestionsCount,
 } from "@/server/services/subscription";
 
-const getGemini = () => {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("Gemini API key not configured");
-  }
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-};
+// ── Schema ─────────────────────────────────────────────────────────
 
 const aiSuggestionSchema = z.object({
   content: z.string().min(1, "Content is required"),
-  type: z.enum(["improve", "summarize", "expand"]).default("improve"),
+  type: z.enum(["improve", "expand"]).default("improve"),
 });
 
-const SYSTEM_INSTRUCTION = `You are a thinking partner embedded in SnackStack, a notes app. Your job: help users write better notes by editing, condensing, or expanding their thoughts.
+// ── Shared system prompt ───────────────────────────────────────────
+
+const SYSTEM_INSTRUCTION = `You are a thinking partner embedded in SnackStack, a notes app. Your job: help users write better notes by editing or expanding their thoughts.
 
 Golden rules:
 - Return ONLY the final output. No intros, no sign-offs, no "Here you go," no code blocks, no quotation wrapping.
@@ -34,72 +32,59 @@ Golden rules:
 - Use light Markdown (bullets, **bold**, *italic*) only when it genuinely helps readability.
 - If the input is already optimal, return it exactly as-is. Doing nothing is better than making it worse.`;
 
+// ── Prompt templates ───────────────────────────────────────────────
+
 const PROMPTS: Record<string, (content: string) => string> = {
   improve: (content: string) =>
-    `Edit this note for clarity, grammar, and flow.
+    `Fix every spelling mistake, grammar error, and punctuation issue in this note. Format it cleanly so it reads well.
 
-What to fix:
-- Spelling, grammar, punctuation
-- Run-on sentences → break them up. Choppy fragments → connect them.
-- Filler words: "very", "really", "just", "basically", "actually", "kind of", "sort of"
-- Weak constructions: "there is/are", "it is/was that", "in order to"
-- Wordiness — cut until every word earns its place
+Your job is simple — fix only what's broken:
+- **Spelling**: Correct every misspelled word. This is the #1 priority.
+- **Grammar**: Fix subject-verb agreement, tense errors, missing articles, wrong prepositions.
+- **Punctuation**: Add missing periods, commas, capital letters. Fix run-on sentences.
+- **Format**: If the note is a list, make it a clean bullet list. If it's prose, make it readable paragraphs. Add line breaks between sections where helpful.
+- **Capitalization**: Capitalize the first letter of sentences and proper nouns.
 
-What to leave alone:
-- The meaning, the ideas, the conclusion
-- The author's voice — don't formalize casual writing
-- Short functional notes (todos, reminders, lists)
-- Bullet points — keep them as bullets unless they're clearly meant as prose
+What you MUST NOT change:
+- The meaning, the ideas, the tone, the voice
+- Casual language — "gonna", "wanna", slang stay as-is
+- Short notes, todos, reminders — keep them short
+- Any facts, names, dates, numbers, links
+
+CRITICAL: If there are spelling mistakes, you MUST fix them. That is non-negotiable. If the note has no errors at all, return it exactly as-is.
 
 Example:
 Input: "i think we should probly refactor the auth module becuase its getting to complecated and hard to maintain, also the tests are failin"
-Output: "We should probably refactor the auth module — it's getting too complicated and hard to maintain. The tests are also failing."
+Output: "I think we should probably refactor the auth module because it's getting too complicated and hard to maintain. Also, the tests are failing."
 
-Now edit this:
+Now fix this note:
 """
 ${content}
 """
 
 Output:`,
-  summarize: (content: string) =>
-    `Condense this note to its essentials.
 
-Guidelines:
-- 2+ distinct points → use bullet points. Single idea → one tight paragraph.
-- Strip: greetings, filler, digressions, repetition, "I think that", "It's worth noting that"
-- Keep: the core claim, supporting evidence, action items, deadlines, decisions
-- ~30-50% of original length. But don't crush a 2-sentence note into gibberish.
-- Preserve dates, names, numbers, links exactly
-
-Example:
-Input: "Had a call with the design team today. They brought up some good points about the onboarding flow. Basically, users are dropping off at step 3 because the form asks for too much info at once. We should probably split it into multiple steps. Also, Sarah mentioned that the color contrast on the buttons doesn't meet WCAG standards, which we need to fix before the next release."
-Output:
-- Users drop off at onboarding step 3 — form asks too much at once → split into multiple steps
-- Button color contrast fails WCAG → fix before next release
-
-Now condense this:
-"""
-${content}
-"""
-
-Output:`,
   expand: (content: string) =>
-    `Enrich this note with genuine depth. Do not pad — add insight.
+    `Expand this note with more detail — but only about what's already in it. Stay on topic. Do not drift.
 
-Pick the strategies that fit best (1-3, not all):
-1. Why does this matter? Answer it concretely.
-2. Give a vivid example or analogy.
-3. What's a second-order consequence or hidden implication?
-4. What's the strongest counterargument or alternative view?
-5. What's the natural next step or action?
+Rules for expansion:
+- **Stay relevant**: Every sentence you add must connect directly to the original content. Don't introduce unrelated ideas.
+- **Right length**: Double to triple the original length. A 2-line note becomes 4-6 lines. A paragraph becomes 2-3 paragraphs. Don't write an essay from a one-liner.
+- **Add depth, not fluff**: Explain the "why", give a concrete example, describe a real consequence, or suggest a natural next step.
+- **One voice**: Blend your additions seamlessly with the original. The reader should not be able to tell where the original ends and yours begins.
+- **Match the style**: Formal stays formal. Casual stays casual. Hindi stays Hindi.
 
-Then blend everything into one seamless note. The reader should not be able to tell where the original ends and your addition begins.
+What NOT to do:
+- Don't invent facts, statistics, names, or citations
+- Don't repeat the same point in different words
+- Don't go off on tangents — stay anchored to the input
+- Don't add generic motivational quotes or life advice
 
 Example:
 Input: "Remote work improves productivity but hurts collaboration."
-Output: "Remote work improves productivity but hurts collaboration. The productivity gain is real — no commute, fewer interruptions, 2-3 extra hours of deep work per day. But collaboration suffers because the spontaneous conversations that happen in hallways and over lunch don't replicate over Slack. The real question isn't remote versus office — it's how to design for both focus and connection. One approach: make synchronous meetings rare and intentional, and move everything else to async."
+Output: "Remote work improves productivity but hurts collaboration. The productivity gain is real — no commute means 2-3 extra hours of deep work per day, and fewer interruptions let people stay in flow longer. But collaboration takes a hit because the quick hallway conversations and lunch chats that spark ideas don't happen over Slack. The real challenge isn't choosing remote or office — it's designing a workflow that enables both focused solo work and meaningful team connection. One practical approach: reserve synchronous meetings for decisions and brainstorming, and move status updates and feedback to async channels."
 
-Now enrich this:
+Now expand this — stay on topic and keep it proportional:
 """
 ${content}
 """
@@ -107,26 +92,28 @@ ${content}
 Output:`,
 };
 
+// ── Output cleaner ─────────────────────────────────────────────────
+
 function extractOutput(raw: string): string {
   let text = raw;
 
-  // Strip common preamble patterns
   text = text
     .replace(
       /^(here( is| are|'s| you go| ya go)?[!.,]?\s*|sure[!.,]?\s*|certainly[!.,]?\s*|of course[!.,]?\s*|absolutely[!.,]?\s*|great question[!.,]?\s*)(the |a |your |an )?\s*/i,
-      ""
+      "",
     )
     .replace(
       /^(improved|edited|summarized|condensed|expanded|enriched|enhanced|rewritten|polished)( version| note| text| content| result| summary| draft)?[:\-]?\s*/i,
-      ""
+      "",
     );
 
-  // Strip trailing pleasantries
   text = text
-    .replace(/\s*(hope this helps[!.]?|let me know[^.]*\.?|lmk[^.]*\.?|feel free[^.]*\.?)$/i, "")
+    .replace(
+      /\s*(hope this helps[!.]?|let me know[^.]*\.?|lmk[^.]*\.?|feel free[^.]*\.?)$/i,
+      "",
+    )
     .replace(/\s*\n---\s*\n?[\s\S]*$/, "");
 
-  // Strip code fences and quote wrappers
   text = text
     .replace(/^```[a-z]*\s*\n?/i, "")
     .replace(/\n?\s*```$/i, "")
@@ -136,8 +123,24 @@ function extractOutput(raw: string): string {
   return text.trim();
 }
 
+// ── Type config ────────────────────────────────────────────────────
+
+function getConfigForType(type: string) {
+  switch (type) {
+    case "improve":
+      return { temperature: 0.1, maxOutputTokens: 1024, topP: 0.92, topK: 20 };
+    case "expand":
+      return { temperature: 0.8, maxOutputTokens: 1024, topP: 0.92, topK: 40 };
+    default:
+      return { temperature: 0.4, maxOutputTokens: 1024, topP: 0.92 };
+  }
+}
+
+// ── Main handler ───────────────────────────────────────────────────
+
 export async function POST(request: NextRequest) {
   try {
+    // --- Auth & quota checks ---
     const session = await auth();
     const userId = session?.user?.id;
 
@@ -160,7 +163,7 @@ export async function POST(request: NextRequest) {
                 : "You've reached your AI suggestion limit for this period.",
           aiSuggestionsRemaining: 0,
         },
-        { status: 429 }
+        { status: 429 },
       );
     }
 
@@ -186,17 +189,11 @@ export async function POST(request: NextRequest) {
             "Retry-After": resetTime.toString(),
             "X-RateLimit-Remaining": "0",
           },
-        }
+        },
       );
     }
 
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        { error: "Gemini API key not configured" },
-        { status: 500 }
-      );
-    }
-
+    // --- Validate input ---
     const body = await request.json();
     const { content, type } = aiSuggestionSchema.parse(body);
 
@@ -204,48 +201,39 @@ export async function POST(request: NextRequest) {
     if (!promptBuilder) {
       return NextResponse.json(
         { error: `Invalid suggestion type: ${type}` },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const genAI = getGemini();
-
-    const generationConfig: Record<string, unknown> = {
-      topP: 0.92,
-      topK: type === "improve" ? 20 : 40,
-      maxOutputTokens: type === "summarize" ? 512 : 1024,
-      stopSequences: type === "expand"
-        ? []
-        : ["\n\nNote", "\n\nInput", "\n\n---", "\n\nExample"],
-    };
-
-    switch (type) {
-      case "improve":
-        generationConfig.temperature = 0.1;
-        break;
-      case "summarize":
-        generationConfig.temperature = 0.4;
-        break;
-      case "expand":
-        generationConfig.temperature = 0.8;
-        break;
-    }
-
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-      systemInstruction: SYSTEM_INSTRUCTION,
-      generationConfig,
-    });
-
     const prompt = promptBuilder(content);
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const rawText = response.text();
+
+    // --- Call AI via LangChain (Gemini primary → OpenAI fallback) ---
+    const config = getConfigForType(type);
+
+    let rawText: string;
+
+    try {
+      // invokeWithFallback: tries Gemini first, falls back to OpenAI on failure/timeout
+      // SystemMessage carries the rules for both providers
+      rawText = await invokeWithFallback(
+        [new SystemMessage(SYSTEM_INSTRUCTION), new HumanMessage(prompt)],
+        config,
+      );
+    } catch (error) {
+      console.error("[AI Suggestion] Both providers failed:", error);
+      return NextResponse.json(
+        {
+          error: "AI provider error",
+          message: "Unable to process your request. Please try again later.",
+        },
+        { status: 429 },
+      );
+    }
 
     if (!rawText) {
       return NextResponse.json(
         { error: "Failed to generate suggestion" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -254,7 +242,7 @@ export async function POST(request: NextRequest) {
     if (!suggestion) {
       return NextResponse.json(
         { error: "Generated output was empty after cleaning" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -268,55 +256,15 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.issues },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     console.error("Error generating AI suggestion:", error);
 
-    if (error instanceof Error) {
-      if (error.message.includes("API key")) {
-        return NextResponse.json(
-          { error: "Invalid Gemini API key" },
-          { status: 401 }
-        );
-      }
-
-      if (
-        error.message.includes("429") ||
-        error.message.includes("quota") ||
-        error.message.includes("rate limit") ||
-        error.message.includes("RESOURCE_EXHAUSTED")
-      ) {
-        return NextResponse.json(
-          {
-            error: "Daily quota exceeded",
-            message:
-              "You've reached your daily free tier limit. Please try again tomorrow or upgrade your plan.",
-          },
-          { status: 429 }
-        );
-      }
-
-      if (
-        error.message.includes("404") ||
-        error.message.includes("not found") ||
-        error.message.includes("is not found for API version")
-      ) {
-        return NextResponse.json(
-          {
-            error: "Model not available",
-            message:
-              "The selected model is not available. Please check your API key permissions or try a different model.",
-          },
-          { status: 500 }
-        );
-      }
-    }
-
     return NextResponse.json(
       { error: "Failed to generate AI-powered note enhancement" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
