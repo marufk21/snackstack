@@ -1,4 +1,4 @@
-# UI:DB:CODE:Readme
+# UI:DB:CODE:README
 ## Landing Page + Admin Panel (Blog)
 - Resend/Nodemailer
 ## Authentication + Dashboard
@@ -8,3 +8,4 @@
 - Realworld (Features)
 
 
+Shifted to lanfhcin also note modal remove ajjeb duplicacy

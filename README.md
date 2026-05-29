@@ -29,6 +29,7 @@ AI-powered notes and blogging platform built with Next.js 15, featuring subscrip
 ## ✨ Features
 
 - 🧠 **AI-Powered Notes** - Intelligent content suggestions with Google Gemini API
+- 🤖 **AI Chat Assistant** - Streaming in-note chat with Gemini (primary) and OpenAI fallback
 - 📝 **Rich Text Editor** - TipTap with markdown support and syntax highlighting
 - 📚 **Blog Management** - Full admin dashboard for blog posts
 - 💳 **Stripe Payments** - Subscription management with trial periods and billing
@@ -50,7 +51,7 @@ AI-powered notes and blogging platform built with Next.js 15, featuring subscrip
 - **Auth:** NextAuth.js v5 with Google OAuth
 - **Payments:** Stripe with subscription tiers and trials
 - **Storage:** Cloudinary, Appwrite
-- **AI:** Google Gemini API
+- **AI:** Google Gemini API (primary), OpenAI (fallback)
 - **Analytics:** PostHog
 - **State:** Zustand, TanStack Query
 - **Editor:** TipTap with markdown, code highlighting, images, and links
@@ -103,6 +104,9 @@ NEXTAUTH_URL="http://localhost:3000"
 
 # Cloudinary
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="your_cloud_name"
+NEXT_PUBLIC_CLOUDINARY_API_KEY="your_cloudinary_api_key"
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="your_upload_preset"
+CLOUDINARY_API_SECRET="your_cloudinary_api_secret"
 
 # Appwrite
 NEXT_PUBLIC_APPWRITE_ENDPOINT="https://cloud.appwrite.io/v1"
@@ -111,18 +115,33 @@ NEXT_PUBLIC_APPWRITE_DATABASE_ID="your_database_id"
 NEXT_PUBLIC_APPWRITE_COLLECTION_ID="your_collection_id"
 NEXT_PUBLIC_APPWRITE_BUCKET_ID="your_bucket_id"
 
-# Google Gemini API
+# Google Gemini AI (primary)
 GEMINI_API_KEY="your_gemini_api_key"
+
+# OpenAI (fallback for AI chat)
+OPENAI_API_KEY="your_openai_api_key"
 
 # Stripe
 STRIPE_SECRET_KEY="your_stripe_secret_key"
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="your_stripe_publishable_key"
 STRIPE_WEBHOOK_SECRET="your_stripe_webhook_secret"
-NEXT_PUBLIC_STRIPE_PRICE_ID="your_price_id"
+STRIPE_PRICE_ID_BASIC="price_id_for_basic_tier"
+STRIPE_PRICE_ID_PRO="price_id_for_pro_tier"
+STRIPE_PRICE_ID_ENTERPRISE="price_id_for_enterprise_tier"
+NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC="price_id_for_basic_tier"
+NEXT_PUBLIC_STRIPE_PRICE_ID_PRO="price_id_for_pro_tier"
+NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE="price_id_for_enterprise_tier"
 
 # PostHog
 NEXT_PUBLIC_POSTHOG_KEY="your_posthog_project_key"
 NEXT_PUBLIC_POSTHOG_HOST="https://us.i.posthog.com"
+
+# Cron Jobs (protects /api/cron routes)
+CRON_SECRET="your_cron_secret"
+
+# Blog Admin (superuser credentials for /admin/blogs-dashboard)
+NEXT_PUBLIC_ADMIN_ID="admin_user_id"
+NEXT_PUBLIC_ADMIN_PASSWORD="admin_password"
 
 # App URL
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
@@ -135,8 +154,9 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000"
 3. **Cloudinary**: Create account at [cloudinary.com](https://cloudinary.com/) for media storage
 4. **Appwrite**: Create account at [appwrite.io](https://appwrite.io/) and set up project
 5. **Stripe**: Get API keys from [Stripe Dashboard](https://stripe.com/)
-6. **Gemini API**: Get key from [Google AI Studio](https://ai.google.dev/)
-7. **PostHog**: Sign up at [posthog.com](https://posthog.com/)
+6. **Gemini API**: Get key from [Google AI Studio](https://ai.google.dev/) (primary AI provider)
+7. **OpenAI API** (optional): Get key from [OpenAI](https://platform.openai.com/) — fallback for AI chat when Gemini is rate-limited
+8. **PostHog**: Sign up at [posthog.com](https://posthog.com/)
 
 ### 3. Set up the database
 
@@ -206,6 +226,7 @@ snackstack/
 │   └── dashboard/               # Dashboard feature components
 │
 ├── server/                       # Backend code
+│   ├── ai/                      # AI provider config & model constants
 │   ├── api/                     # Client-side Axios API wrappers
 │   ├── auth/                    # NextAuth v5 configuration
 │   ├── db/                      # Prisma schema, client, seed, config
