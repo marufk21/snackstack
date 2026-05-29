@@ -208,7 +208,7 @@ snackstack/
 │   │   ├── admin/blogs-dashboard/# Blog admin (new, edit, view)
 │   │   └── blogs/               # Public blog listing & details
 │   ├── api/                     # API route handlers
-│   │   ├── ai-suggestion/       # Gemini AI suggestions
+│   │   ├── ai/                    # AI chat (streaming SSE) + suggestions
 │   │   ├── auth/                # NextAuth handlers
 │   │   ├── cron/                # Scheduled subscription checks
 │   │   ├── notes/               # Notes CRUD
@@ -226,7 +226,6 @@ snackstack/
 │   └── dashboard/               # Dashboard feature components
 │
 ├── server/                       # Backend code
-│   ├── ai/                      # AI provider config & model constants
 │   ├── api/                     # Client-side Axios API wrappers
 │   ├── auth/                    # NextAuth v5 configuration
 │   ├── db/                      # Prisma schema, client, seed, config
@@ -234,7 +233,7 @@ snackstack/
 │   │   ├── appwrite/            # Appwrite blog CMS
 │   │   ├── cloudinary/          # Cloudinary image upload
 │   │   └── stripe/              # Stripe payments
-│   ├── services/                # Business logic (user, subscription, notes)
+│   ├── services/                # Business logic (langchain, subscription, user, notes)
 │   └── utils/                   # Server utilities (rate-limit, api-protection, plan-limits)
 │
 ├── lib/                          # Client-side utilities & configs

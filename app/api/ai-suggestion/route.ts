@@ -1,12 +1,8 @@
 import { z } from "zod";
 import { auth } from "@/server/auth/config";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getGeminiModel,
-  getOpenAIClient,
-  shouldFallbackToOpenAI,
-  OPENAI_MODEL,
-} from "@/server/services/ai-providers";
+import { invokeWithFallback } from "@/server/services/langchain";
+import { HumanMessage, SystemMessage } from "langchain";
 import {
   aiSuggestionRateLimit,
   getUserIdentifier,
@@ -24,7 +20,7 @@ const aiSuggestionSchema = z.object({
   type: z.enum(["improve", "expand"]).default("improve"),
 });
 
-// ── Shared prompts ─────────────────────────────────────────────────
+// ── Shared system prompt ───────────────────────────────────────────
 
 const SYSTEM_INSTRUCTION = `You are a thinking partner embedded in SnackStack, a notes app. Your job: help users write better notes by editing or expanding their thoughts.
 
@@ -35,6 +31,8 @@ Golden rules:
 - Match the input language. Hindi input → Hindi output. Mixed input → stay in the primary language.
 - Use light Markdown (bullets, **bold**, *italic*) only when it genuinely helps readability.
 - If the input is already optimal, return it exactly as-is. Doing nothing is better than making it worse.`;
+
+// ── Prompt templates ───────────────────────────────────────────────
 
 const PROMPTS: Record<string, (content: string) => string> = {
   improve: (content: string) =>
@@ -125,64 +123,17 @@ function extractOutput(raw: string): string {
   return text.trim();
 }
 
-// ── Gemini caller ──────────────────────────────────────────────────
+// ── Type config ────────────────────────────────────────────────────
 
-async function callGemini(prompt: string, type: string): Promise<string> {
-  const model = getGeminiModel(SYSTEM_INSTRUCTION);
-
-  const generationConfig: Record<string, unknown> = {
-    topP: 0.92,
-    topK: type === "improve" ? 20 : 40,
-    maxOutputTokens: 1024,
-    stopSequences:
-      type === "expand"
-        ? []
-        : ["\n\nNote", "\n\nInput", "\n\n---", "\n\nExample"],
-  };
-
+function getConfigForType(type: string) {
   switch (type) {
     case "improve":
-      generationConfig.temperature = 0.1;
-      break;
+      return { temperature: 0.1, maxOutputTokens: 1024, topP: 0.92, topK: 20 };
     case "expand":
-      generationConfig.temperature = 0.8;
-      break;
+      return { temperature: 0.8, maxOutputTokens: 1024, topP: 0.92, topK: 40 };
+    default:
+      return { temperature: 0.4, maxOutputTokens: 1024, topP: 0.92 };
   }
-
-  const result = await model.generateContent({
-    contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig,
-  });
-  const rawText = result.response.text();
-
-  if (!rawText) throw new Error("Gemini returned empty response");
-  return rawText;
-}
-
-// ── OpenAI fallback ────────────────────────────────────────────────
-
-async function callOpenAI(prompt: string, type: string): Promise<string> {
-  const openai = getOpenAIClient();
-  if (!openai) throw new Error("OPENAI_API_KEY not configured");
-
-  const temperatures: Record<string, number> = {
-    improve: 0.1,
-    expand: 0.8,
-  };
-
-  const completion = await openai.chat.completions.create({
-    model: OPENAI_MODEL,
-    temperature: temperatures[type] ?? 0.4,
-    max_tokens: 1024,
-    messages: [
-      { role: "system", content: SYSTEM_INSTRUCTION },
-      { role: "user", content: prompt },
-    ],
-  });
-
-  const rawText = completion.choices[0]?.message?.content;
-  if (!rawText) throw new Error("OpenAI returned empty response");
-  return rawText;
 }
 
 // ── Main handler ───────────────────────────────────────────────────
@@ -256,36 +207,27 @@ export async function POST(request: NextRequest) {
 
     const prompt = promptBuilder(content);
 
-    // --- Primary: Gemini → fallback: OpenAI gpt-4o-mini ---
-    let rawText: string | null = null;
-    let usedFallback = false;
+    // --- Call AI via LangChain (Gemini primary → OpenAI fallback) ---
+    const config = getConfigForType(type);
 
-    // Try Gemini first
+    let rawText: string;
+
     try {
-      rawText = await callGemini(prompt, type);
-    } catch (geminiError) {
-      console.warn("Gemini failed, falling back to OpenAI:", geminiError);
-
-      if (!shouldFallbackToOpenAI(geminiError)) {
-        // Not a quota issue — rethrow so the outer catch handles it
-        throw geminiError;
-      }
-
-      // Fallback to OpenAI
-      try {
-        rawText = await callOpenAI(prompt, type);
-        usedFallback = true;
-      } catch (openaiError) {
-        console.error("OpenAI fallback also failed:", openaiError);
-        return NextResponse.json(
-          {
-            error: "Both AI providers failed",
-            message:
-              "Gemini quota exhausted and OpenAI fallback also failed. Please try again later.",
-          },
-          { status: 429 },
-        );
-      }
+      // invokeWithFallback: tries Gemini first, falls back to OpenAI on failure/timeout
+      // SystemMessage carries the rules for both providers
+      rawText = await invokeWithFallback(
+        [new SystemMessage(SYSTEM_INSTRUCTION), new HumanMessage(prompt)],
+        config,
+      );
+    } catch (error) {
+      console.error("[AI Suggestion] Both providers failed:", error);
+      return NextResponse.json(
+        {
+          error: "AI provider error",
+          message: "Unable to process your request. Please try again later.",
+        },
+        { status: 429 },
+      );
     }
 
     if (!rawText) {
@@ -309,7 +251,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       suggestion,
       aiSuggestionsRemaining: newRemaining,
-      ...(usedFallback ? { provider: "openai" } : { provider: "gemini" }),
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -320,27 +261,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.error("Error generating AI suggestion:", error);
-
-    if (error instanceof Error) {
-      if (error.message.includes("API key")) {
-        return NextResponse.json({ error: error.message }, { status: 401 });
-      }
-
-      if (
-        error.message.includes("429") ||
-        error.message.includes("quota") ||
-        error.message.includes("rate limit")
-      ) {
-        return NextResponse.json(
-          {
-            error: "Quota exceeded",
-            message:
-              "Both Gemini and OpenAI quotas are exhausted. Please try again later.",
-          },
-          { status: 429 },
-        );
-      }
-    }
 
     return NextResponse.json(
       { error: "Failed to generate AI-powered note enhancement" },
