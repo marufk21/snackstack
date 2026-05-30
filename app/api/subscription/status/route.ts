@@ -61,7 +61,7 @@ export async function GET() {
     // Fetch user's actual usage counts (for "used / limit" display)
     const userStats = await prisma.user.findUnique({
       where: { id: userId },
-      select: { aiSuggestionsCount: true, agentRunsCount: true },
+      select: { aiSuggestionsCount: true },
     });
 
     const aiSuggestionsUsed = userStats?.aiSuggestionsCount ?? 0;
