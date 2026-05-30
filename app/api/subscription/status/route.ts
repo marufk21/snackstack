@@ -55,6 +55,16 @@ export async function GET() {
         getSubscriptionLimits(userId),
       ]);
 
+    // JSON cannot serialize Infinity → use safe sentinel
+    const s = (n: number) => (n === Infinity ? 999999 : n);
+
+    // Fetch user's actual usage counts (for "used / limit" display)
+    const userStats = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { aiSuggestionsCount: true, agentRunsCount: true },
+    });
+
+    const aiSuggestionsUsed = userStats?.aiSuggestionsCount ?? 0;
     const aiSuggestionsRemaining = await getAISuggestionsRemaining(
       userId,
       tier
@@ -73,10 +83,11 @@ export async function GET() {
       isActive,
       limits: planLimits,
       noteCount,
-      noteLimit: limits.maxNotes,
-      remainingNotes,
-      aiSuggestionsRemaining,
-      aiSuggestionsLimit: PLAN_LIMITS[tier].aiSuggestionsPerMonth,
+      noteLimit: s(limits.maxNotes),
+      remainingNotes: s(remainingNotes),
+      aiSuggestionsUsed,
+      aiSuggestionsRemaining: s(aiSuggestionsRemaining),
+      aiSuggestionsLimit: s(PLAN_LIMITS[tier].aiSuggestionsPerMonth),
       subscription: subscription
         ? {
             status: subscription.status,

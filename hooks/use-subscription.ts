@@ -10,6 +10,7 @@ interface SubscriptionData {
   remainingNotes?: number;
   aiSuggestionsRemaining?: number;
   aiSuggestionsLimit?: number;
+  aiSuggestionsUsed?: number;
   limits: {
     maxNotes: number;
     aiSuggestionsPerMonth: number;
@@ -60,6 +61,7 @@ export function useSubscription() {
     remainingNotes: data?.remainingNotes ?? 5,
     aiSuggestionsRemaining: data?.aiSuggestionsRemaining ?? 30,
     aiSuggestionsLimit: data?.aiSuggestionsLimit ?? 30,
+    aiSuggestionsUsed: data?.aiSuggestionsUsed ?? 0,
     canCreateNote: (data?.remainingNotes ?? 0) > 0,
     limits: data?.limits ?? {
       maxNotes: 5,
