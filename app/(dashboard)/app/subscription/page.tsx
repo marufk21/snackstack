@@ -35,6 +35,7 @@ export default function SubscriptionPage() {
     hasSubscription,
     aiSuggestionsRemaining,
     aiSuggestionsLimit,
+    aiSuggestionsUsed,
     tier,
     limits,
   } = useSubscription();
@@ -74,6 +75,9 @@ export default function SubscriptionPage() {
   const planPrice = getPlanPrice(planName);
   const isFree = !hasSubscription;
 
+  const fmt = (n: number) => (n >= 999999 ? "∞" : n.toLocaleString("en-IN"));
+  const lim = (n: number) => n >= 999999;
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
@@ -99,30 +103,38 @@ export default function SubscriptionPage() {
                   <FileText className="h-4 w-4" /> Notes
                 </div>
                 <p className="text-2xl font-bold">
-                  {noteCount}
-                  <span className="text-sm font-normal text-muted-foreground">/{noteLimit}</span>
+                  {fmt(noteCount)}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    /{fmt(noteLimit)}
+                  </span>
                 </p>
-                <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                  <div
-                    className="bg-cyan-500 h-1.5 rounded-full transition-all"
-                    style={{ width: `${Math.min(100, ((noteCount || 0) / (noteLimit || 1)) * 100)}%` }}
-                  />
-                </div>
+                {!lim(noteLimit) && (
+                  <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                    <div
+                      className="bg-cyan-500 h-1.5 rounded-full transition-all"
+                      style={{ width: `${Math.min(100, ((noteCount || 0) / (noteLimit || 1)) * 100)}%` }}
+                    />
+                  </div>
+                )}
               </div>
               <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
                   <Sparkles className="h-4 w-4" /> AI Suggestions
                 </div>
                 <p className="text-2xl font-bold">
-                  {aiSuggestionsRemaining}
-                  <span className="text-sm font-normal text-muted-foreground">/{aiSuggestionsLimit}</span>
+                  {fmt(aiSuggestionsUsed ?? 0)}
+                  <span className="text-sm font-normal text-muted-foreground">
+                    /{fmt(aiSuggestionsLimit)}
+                  </span>
                 </p>
-                <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                  <div
-                    className="bg-purple-500 h-1.5 rounded-full transition-all"
-                    style={{ width: `${Math.min(100, 100 - (((aiSuggestionsRemaining ?? 30) / (aiSuggestionsLimit || 30)) * 100))}%` }}
-                  />
-                </div>
+                {!lim(aiSuggestionsLimit) && (
+                  <div className="mt-2 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
+                    <div
+                      className="bg-purple-500 h-1.5 rounded-full transition-all"
+                      style={{ width: `${Math.min(100, (((aiSuggestionsUsed ?? 0) / (aiSuggestionsLimit || 1)) * 100))}%` }}
+                    />
+                  </div>
+                )}
               </div>
               <div className="bg-white/60 dark:bg-white/5 rounded-xl p-4 border">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
