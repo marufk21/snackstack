@@ -132,7 +132,7 @@ export default function NotesPage() {
     <div className="relative max-w-7xl mx-auto px-1.5 py-3 md:px-3 md:py-4">
       {/* Notes Stats and Actions */}
       <div className="flex items-center justify-between gap-3 mb-4 md:mb-6 animate-fade-in-up animate-delay-100">
-        <h2 className="text-lg font-bold">My Notes</h2>
+        <h2 className="text-lg font-bold"></h2>
 
         <Button
           onClick={handleCreateNewNote}
