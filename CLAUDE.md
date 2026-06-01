@@ -56,9 +56,9 @@ server/
 
 **Auth flow.** [server/auth/config.ts](server/auth/config.ts) configures NextAuth v5 with Google OAuth (JWT strategy, no database sessions). The JWT callback does a dynamic import of `getOrCreateUserByEmail` — Prisma is kept out of the Edge middleware bundle. On first sign-in it creates/looks up the user and stores the DB user ID as `token.sub`. The session callback copies `isSubscribed` from the token.
 
-[middleware.ts](middleware.ts) wraps NextAuth's `auth()` middleware. It protects `/app/*`, redirects authenticated users away from `/sign-in` and `/sign-up`, and redirects authenticated users from the landing page and `/admin` to `/app`.
+[proxy.ts](proxy.ts) wraps NextAuth's `auth()` middleware. It protects `/app/*`, redirects authenticated users away from `/sign-in` and `/sign-up`, and redirects authenticated users from the landing page and `/admin` to `/app`.
 
-**Database.** PostgreSQL with Prisma. The Prisma client is a singleton ([server/db/client.ts](server/db/client.ts)) marked `server-only`. Generated client output goes to `server/lib/generated/prisma` (configured in the schema). The `User` model denormalizes `isSubscribed` and `noteCount` for fast checks without joining through `Subscription`.
+**Database.** PostgreSQL with Prisma. The Prisma client is a singleton ([server/db/client.ts](server/db/client.ts)) marked `server-only`. Generated client output goes to the default `node_modules/.prisma/client` location. The `User` model denormalizes `isSubscribed` and `noteCount` for fast checks without joining through `Subscription`.
 
 **Subscription system.** Stripe webhooks ([app/api/stripe/webhook/route.ts](app/api/stripe/webhook/route.ts)) handle the full lifecycle: `checkout.session.completed` → create subscription + set `isSubscribed=true`; `customer.subscription.updated` / `deleted` → sync status; `invoice.payment_succeeded` / `failed` → renew or downgrade. The `Subscription` model tracks Stripe IDs, plan type, billing periods, and trial windows. Plan limits are defined in [server/utils/subscription-check.ts](server/utils/subscription-check.ts) with four tiers: free (no time limit), basic, pro, enterprise.
 

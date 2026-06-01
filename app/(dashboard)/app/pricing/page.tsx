@@ -6,8 +6,6 @@ import { PricingToggle } from "@/components/ui/pricing-toggle";
 import { useStripeCheckout } from "@/hooks/use-stripe-checkout";
 import { pricingTiers } from "@/lib/pricing";
 import { useSubscription } from "@/hooks/use-subscription";
-import { Sparkles } from "lucide-react";
-
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
@@ -17,7 +15,7 @@ export default function PricingPage() {
   const handleSelectPlan = async (
     priceId: string | null,
     planName: string,
-    isTrial?: boolean
+    isTrial?: boolean,
   ) => {
     if (isTrial) {
       window.location.href = "/app?trial=true";
@@ -42,11 +40,9 @@ export default function PricingPage() {
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
             Choose Your <span className="gradient-text">SnackStack</span> Plan
           </h1>
-          <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-cyan-500 animate-pulse-glow" />
         </div>
         <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-          Unlock the full potential of AI-powered note-taking. Choose a plan
-          that fits your needs and start creating amazing content today.
+          Pick the plan that fits your workflow and unlock smarter note-taking.
         </p>
 
         {/* Billing Toggle */}

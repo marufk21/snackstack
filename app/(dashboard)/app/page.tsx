@@ -131,27 +131,12 @@ export default function NotesPage() {
   return (
     <div className="relative max-w-7xl mx-auto px-1.5 py-3 md:px-3 md:py-4">
       {/* Notes Stats and Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 md:mb-6 animate-fade-in-up animate-delay-100">
-        <div>
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-            My Notes
-            {notes.length > 0 && (
-              <Sparkles className="w-5 h-5 md:w-6 md:h-6 text-cyan-500" />
-            )}
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground mt-1">
-            {notes.length > 0
-              ? `${notes.length} note${
-                  notes.length === 1 ? "" : "s"
-                } with AI-powered insights`
-              : "No notes yet"}
-          </p>
-        </div>
+      <div className="flex items-center justify-between gap-3 mb-4 md:mb-6 animate-fade-in-up animate-delay-100">
+        <h2 className="text-lg font-bold">My Notes</h2>
 
         <Button
           onClick={handleCreateNewNote}
-          size="lg"
-          className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+          className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 text-sm px-3 py-1.5"
           disabled={isCreatingNote}
         >
           {isCreatingNote ? (
@@ -197,7 +182,7 @@ export default function NotesPage() {
       ) : (
         <>
           {/* Modern Notes Grid with staggered animation */}
-          <div className="grid grid-cols-2 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
             {notes.map((note, index) => (
               <div
                 key={note.id}

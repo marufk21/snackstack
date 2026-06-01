@@ -5,7 +5,7 @@ export const databaseConfig = {
   idleTimeout: 600000,
   migrationDirectory: "./server/db/migrations",
   schemaPath: "./server/db/schema.prisma",
-  generatedPath: "./server/lib/generated/prisma",
+  generatedPath: "./node_modules/.prisma/client",
 } as const;
 
 export const getDatabaseUrl = () => {
