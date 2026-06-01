@@ -51,7 +51,7 @@ export default function NotesLayout({
         </header>
 
         {/* Content Area with relative positioning */}
-        <div className="relative flex-1 p-3 md:p-4">{children}</div>
+        <div className="relative flex-1 p-0 md:p-1">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

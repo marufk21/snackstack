@@ -234,9 +234,9 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             if (e.target === e.currentTarget) onClose();
           }}
         >
-          {/* Wrapper: modal + AI chat panel side by side */}
+          {/* Wrapper: responsive — side-by-side on desktop, overlay on mobile */}
           <div
-            className="flex items-stretch justify-center w-full max-w-[calc(768px+360px)]"
+            className="relative flex items-stretch justify-center w-full max-w-3xl md:max-w-[calc(768px+360px)]"
             onClick={(e) => e.stopPropagation()}
           >
             <m.div
@@ -245,9 +245,9 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className={cn(
-                "relative flex-1 max-w-3xl h-[90vh] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden flex flex-col",
+                "relative flex-1 max-w-3xl h-[85vh] md:h-[90vh] bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden flex flex-col",
                 isAiChatOpen
-                  ? "rounded-l-xl rounded-r-none"
+                  ? "rounded-xl md:rounded-l-xl md:rounded-r-none"
                   : "rounded-xl",
               )}
             >
@@ -329,7 +329,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     <button
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isUploading}
-                      className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                      className="h-9 px-2 sm:px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-1.5 sm:gap-2 transition-colors disabled:opacity-50"
                       title="Add image"
                     >
                       {isUploading ? (
@@ -337,23 +337,23 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                       ) : (
                         <ImageIcon className="w-4 h-4" />
                       )}
-                      <span className="text-sm font-medium">Image</span>
+                      <span className="hidden sm:inline text-sm font-medium">Image</span>
                     </button>
                   ) : (
                     <button
                       disabled
-                      className="h-9 px-3 text-zinc-400 dark:text-zinc-600 rounded flex items-center gap-2 cursor-not-allowed opacity-50"
+                      className="h-9 px-2 sm:px-3 text-zinc-400 dark:text-zinc-600 rounded flex items-center gap-1.5 sm:gap-2 cursor-not-allowed opacity-50"
                       title="Upgrade to Basic or higher to upload images"
                     >
                       <ImageIcon className="w-4 h-4" />
-                      <span className="text-sm font-medium">Image</span>
+                      <span className="hidden sm:inline text-sm font-medium">Image</span>
                     </button>
                   )}
                   <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
                   <button
                     onClick={() => handleAiAction("improve")}
                     disabled={activeAiAction !== null}
-                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    className="h-9 px-2 sm:px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-1.5 sm:gap-2 transition-colors disabled:opacity-50"
                     title="Improve with AI"
                   >
                     {activeAiAction === "improve" ? (
@@ -361,13 +361,13 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     ) : (
                       <Wand2 className="w-4 h-4" />
                     )}
-                    <span className="text-sm font-medium">Improve</span>
+                    <span className="hidden sm:inline text-sm font-medium">Improve</span>
                   </button>
                   <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
                   <button
                     onClick={() => handleAiAction("expand")}
                     disabled={activeAiAction !== null}
-                    className="h-9 px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-2 transition-colors disabled:opacity-50"
+                    className="h-9 px-2 sm:px-3 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded flex items-center gap-1.5 sm:gap-2 transition-colors disabled:opacity-50"
                     title="Expand"
                   >
                     {activeAiAction === "expand" ? (
@@ -375,13 +375,13 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     ) : (
                       <BookOpen className="w-4 h-4" />
                     )}
-                    <span className="text-sm font-medium">Expand</span>
+                    <span className="hidden sm:inline text-sm font-medium">Expand</span>
                   </button>
                   <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 mx-1" />
                   <button
                     onClick={() => setIsAiChatOpen(!isAiChatOpen)}
                     className={cn(
-                      "h-9 px-3 rounded flex items-center gap-2 transition-colors",
+                      "h-9 px-2 sm:px-3 rounded flex items-center gap-1.5 sm:gap-2 transition-colors",
                       isAiChatOpen
                         ? "dark:text-blue-400"
                         : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800",
@@ -389,7 +389,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     title="Open AI Chat"
                   >
                     <MessageCircle className="w-4 h-4" />
-                    <span className="text-sm font-medium">Chat</span>
+                    <span className="hidden sm:inline text-sm font-medium">Chat</span>
                   </button>
                 </div>
 
@@ -402,13 +402,14 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                     title="Delete note"
                   >
                     <Trash2 className="w-4 h-4" />
-                    Delete
+                    <span className="hidden sm:inline">Delete</span>
                   </button>
                   <button
                     onClick={onClose}
-                    className="h-9 px-4 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-sm font-medium"
+                    className="h-9 px-3 sm:px-4 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-sm font-medium flex items-center gap-1.5"
                   >
-                    Close
+                    <X className="w-4 h-4 sm:hidden" />
+                    <span className="hidden sm:inline">Close</span>
                   </button>
                   <button
                     onClick={handleSave}
@@ -432,7 +433,7 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
                             d="M5 13l4 4L19 7"
                           />
                         </svg>
-                        Done
+                        <span className="hidden sm:inline">Done</span>
                       </>
                     )}
                   </button>
@@ -524,11 +525,15 @@ export function NoteViewModal({ note, isOpen, onClose }: NoteViewModalProps) {
             </AnimatePresence>
           </m.div>
 
-          {/* AI Chat Panel — outside modal, slides in from right */}
+          {/* AI Chat Panel — absolute overlay on mobile, side-by-side on desktop */}
           <div
             className={cn(
-              "h-[90vh] bg-white dark:bg-zinc-900 rounded-r-xl shadow-2xl overflow-hidden transition-all duration-300 ease-in-out flex-shrink-0",
-              isAiChatOpen ? "w-[360px] ml-0" : "w-0 ml-0 opacity-0 pointer-events-none",
+              "bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden transition-all duration-300 ease-in-out flex-shrink-0",
+              "absolute inset-0 z-50 rounded-xl",
+              "md:relative md:inset-auto md:z-auto md:rounded-l-none md:rounded-r-xl md:h-[90vh]",
+              isAiChatOpen
+                ? "w-full md:w-[360px] opacity-100 pointer-events-auto"
+                : "w-0 opacity-0 pointer-events-none",
             )}
           >
             <AiChatPanel
