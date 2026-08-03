@@ -166,15 +166,14 @@ const Footer = () => {
                   { icon: XIcon, label: "X" },
                   { icon: Linkedin, label: "LinkedIn" },
                 ].map(({ icon: Icon, label }) => (
-                  <a
+                  <span
                     key={label}
-                    href="#"
-                    onClick={(e) => e.preventDefault()}
-                    className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/10 text-muted-foreground hover:text-white hover:border-white/20 hover:bg-white/5 transition-all duration-300"
+                    className="flex items-center justify-center w-10 h-10 rounded-xl border border-white/10 text-muted-foreground hover:text-white hover:border-white/20 hover:bg-white/5 transition-all duration-300 cursor-default"
+                    title={`Follow SnackStack on ${label}`}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="sr-only">{label}</span>
-                  </a>
+                  </span>
                 ))}
               </div>
             </div>
@@ -267,7 +266,7 @@ const Footer = () => {
       */}
       <div
         ref={spacerRef}
-        style={{ height: bigTextHeight }}
+        style={{ height: bigTextHeight * 0.7 }}
         className="relative z-10 w-full pointer-events-none"
       />
 
@@ -280,10 +279,10 @@ const Footer = () => {
         ref={bigTextRef}
         className="fixed bottom-0 left-0 w-full -z-10 bg-background backdrop-blur-sm border-t border-border/50"
       >
-        <div className="w-full h-full flex justify-center items-end px-4 sm:px-6 md:px-8 pt-6 sm:pt-10 md:pt-14 pb-3 sm:pb-4 md:pb-6">
+        <div className="w-full h-full flex justify-center items-end px-4 sm:px-6 md:px-8 pt-10 sm:pt-16 md:pt-24 pb-3 sm:pb-4 md:pb-6">
           <div
             ref={textElementRef}
-            className="text-[14vw] sm:text-[15vw] md:text-[14vw] font-black leading-[0.75] tracking-[-0.05em] text-transparent bg-clip-text bg-gradient-to-b from-cyan-500/40 via-teal-500/20 to-transparent select-none pointer-events-none"
+            className="text-[14vw] sm:text-[15vw] md:text-[12vw] font-black leading-[0.75] tracking-[-0.05em] text-transparent bg-clip-text bg-gradient-to-b from-cyan-500/40 via-teal-500/20 to-transparent select-none pointer-events-none"
           >
             SNACKSTACK
           </div>

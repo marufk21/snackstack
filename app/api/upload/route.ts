@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { uploadToCloudinary } from "@/server/integrations/cloudinary/upload";
 import { protectApiRoute } from "@/server/utils/api-protection";
+import { getUserSubscriptionTier } from "@/server/services/subscription";
+import { PLAN_LIMITS } from "@/server/utils/subscription-check";
 
 export async function POST(request: NextRequest) {
   try {
@@ -48,11 +50,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (5MB limit)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Resolve per-plan upload limit (clamped to Cloudinary free-tier safe maximum of 10MB)
+    const tier = user?.id ? await getUserSubscriptionTier(user.id) : "free";
+    const planMaxSize = PLAN_LIMITS[tier].maxImageSize;
+    const CLOUDINARY_SAFE_MAX = 10 * 1024 * 1024; // 10MB safe cap for free Cloudinary accounts
+    const maxSize = Math.min(planMaxSize, CLOUDINARY_SAFE_MAX);
+
     if (file.size > maxSize) {
+      const maxMB = Math.round(maxSize / (1024 * 1024));
       return NextResponse.json(
-        { error: "File size too large. Maximum size is 5MB." },
+        {
+          error: `File size too large. Your plan allows up to ${maxMB}MB per image.`,
+          code: "FILE_TOO_LARGE",
+          maxSize,
+          currentTier: tier,
+        },
         { status: 400 }
       );
     }

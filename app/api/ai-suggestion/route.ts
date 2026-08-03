@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { invokeWithFallback } from "@/server/services/langchain";
 import { HumanMessage, SystemMessage } from "langchain";
 import {
-  aiSuggestionRateLimit,
+  checkRateLimit,
   getUserIdentifier,
 } from "@/server/utils/rate-limit";
 import {
@@ -171,13 +171,11 @@ export async function POST(request: NextRequest) {
     const ip = forwarded
       ? forwarded.split(",")[0]
       : request.headers.get("x-real-ip") || "unknown";
-    const userIdentifier = getUserIdentifier(userId, ip);
-    const rateLimitResult = aiSuggestionRateLimit.check(userIdentifier);
+    const userIdentifier = `ai-suggestion:${getUserIdentifier(userId, ip)}`;
+    const rateLimitResult = await checkRateLimit(userIdentifier, 20, 60_000);
 
     if (!rateLimitResult.allowed) {
-      const resetTime = rateLimitResult.resetTime
-        ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
-        : 60;
+      const resetTime = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       return NextResponse.json(
         {
           error: "Rate limit exceeded. Please try again later.",

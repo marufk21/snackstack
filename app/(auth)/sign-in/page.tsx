@@ -113,19 +113,13 @@ export default function SignInPage() {
             >
               <p className="text-center text-xs text-gray-500 dark:text-gray-400">
                 By clicking continue, you agree to our{" "}
-                <a
-                  href="#"
-                  className=" font-medium text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-500 transition-colors"
-                >
+                <span className="font-medium text-cyan-500">
                   Terms of Service
-                </a>{" "}
+                </span>{" "}
                 and{" "}
-                <a
-                  href="#"
-                  className=" font-medium text-cyan-500 hover:text-cyan-500 dark:hover:text-cyan-500 transition-colors"
-                >
+                <span className="font-medium text-cyan-500">
                   Privacy Policy
-                </a>
+                </span>
               </p>
             </motion.div>
           </div>

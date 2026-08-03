@@ -8,7 +8,7 @@ import {
   incrementAISuggestionsCount,
 } from "@/server/services/subscription";
 import {
-  aiSuggestionRateLimit,
+  checkRateLimit,
   getUserIdentifier,
 } from "@/server/utils/rate-limit";
 
@@ -48,13 +48,11 @@ export async function POST(req: NextRequest) {
     const ip = forwarded
       ? forwarded.split(",")[0]
       : req.headers.get("x-real-ip") || "unknown";
-    const userIdentifier = getUserIdentifier(userId, ip);
-    const rateLimitResult = aiSuggestionRateLimit.check(userIdentifier);
+    const userIdentifier = `ai-chat:${getUserIdentifier(userId, ip)}`;
+    const rateLimitResult = await checkRateLimit(userIdentifier, 20, 60_000);
 
     if (!rateLimitResult.allowed) {
-      const resetTime = rateLimitResult.resetTime
-        ? Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000)
-        : 60;
+      const resetTime = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       return new Response(
         JSON.stringify({ error: "Rate limit exceeded. Please try again later.", retryAfter: resetTime }),
         {

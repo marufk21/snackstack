@@ -142,7 +142,7 @@ const Contact = () => {
 
         <div className="grid lg:grid-cols-5 gap-4 lg:gap-8 items-stretch">
           {/* Contact Info — 2 cols on desktop */}
-          <div className="lg:col-span-2 space-y-3 sm:space-y-5">
+          <div className="lg:col-span-2 flex flex-col gap-3 sm:gap-5">
             {/* Email Card */}
             <div className="group bg-white/50 dark:bg-white/5 border border-gray-200/50 dark:border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-sm hover:border-cyan-500/30 hover:shadow-lg hover:shadow-cyan-500/5 transition-all duration-300">
               <div className="flex items-start gap-4">
@@ -171,8 +171,8 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Community Card */}
-            <div className="group bg-gradient-to-br from-cyan-700 via-cyan-600 to-emerald-600 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-xl shadow-cyan-500/20 relative overflow-hidden border border-white/10">
+            {/* Community Card - flex-1 to fill remaining space */}
+            <div className="group bg-gradient-to-br from-cyan-700 via-cyan-600 to-emerald-600 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 text-white shadow-xl shadow-cyan-500/20 relative overflow-hidden border border-white/10 flex-1 flex flex-col justify-center">
               {/* Decorative elements */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-400/20 rounded-full blur-2xl translate-y-1/2 -translate-x-1/4" />
@@ -197,11 +197,11 @@ const Contact = () => {
           </div>
 
           {/* Contact Form — 3 cols on desktop */}
-          <div ref={formRef} className="lg:col-span-3 bg-white/50 dark:bg-white/5 border border-gray-200/60 dark:border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-sm shadow-xl">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          <div ref={formRef} className="lg:col-span-3 bg-white/50 dark:bg-white/5 border border-gray-200/60 dark:border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 backdrop-blur-sm shadow-xl flex flex-col">
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 space-y-5">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="form-field">
-                  <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                  <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                     Name
                   </label>
                   <Input
@@ -216,7 +216,7 @@ const Contact = () => {
                   />
                 </div>
                 <div className="form-field">
-                  <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                  <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                     Email
                   </label>
                   <Input
@@ -232,8 +232,8 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="form-field">
-                <label htmlFor="message" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              <div className="form-field flex-1 flex flex-col">
+                <label htmlFor="message" className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
                   Message
                 </label>
                 <textarea
@@ -244,7 +244,7 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder="Tell us what's on your mind..."
                   rows={5}
-                  className="w-full px-4 py-3 text-sm bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-white/10 rounded-xl shadow-xs outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-muted-foreground resize-none text-foreground"
+                  className="w-full flex-1 min-h-[140px] px-4 py-3 text-sm bg-gray-50 dark:bg-zinc-800/50 border border-gray-200 dark:border-white/10 rounded-xl shadow-xs outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all placeholder:text-muted-foreground resize-none text-foreground"
                 />
               </div>
 

@@ -43,12 +43,14 @@ export function InfiniteMovingCards({
 
   const directionValue = direction === "left" ? "forwards" : "reverse";
   const speedMap = { slow: "80s", normal: "50s", fast: "25s" };
+  // Start mid-cycle so cards fill the viewport from frame 1 — no gaps.
+  const delayMap = { slow: "-40s", normal: "-25s", fast: "-12.5s" };
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]",
+        "relative z-20 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]",
         className
       )}
     >
@@ -62,6 +64,7 @@ export function InfiniteMovingCards({
         style={{
           "--animation-direction": directionValue,
           "--animation-duration": speedMap[speed],
+          animationDelay: delayMap[speed],
         } as React.CSSProperties}
       >
         {items.map((item) => (

@@ -89,9 +89,9 @@ const Testimonials = () => {
   }, []);
 
   return (
-    <PageWrapper ref={sectionRef} id="testimonials" className="py-14 sm:py-20 md:py-24">
-      <div className="max-w-8xl mx-auto">
-        <div ref={headerRef} className="text-center mb-10 sm:mb-14 max-w-3xl mx-auto">
+    <PageWrapper ref={sectionRef} id="testimonials" className="!px-0 py-16 sm:py-24 md:py-28">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={headerRef} className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 rounded-full px-4 py-1.5 mb-6 backdrop-blur-sm">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" />
@@ -116,7 +116,7 @@ const Testimonials = () => {
 
       <InfiniteMovingCards
         items={testimonials}
-        direction="left"
+        direction="right"
         speed="normal"
         pauseOnHover={true}
       />

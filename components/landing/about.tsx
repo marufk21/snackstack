@@ -8,8 +8,6 @@ import {
   Brain,
   Sparkles,
   Cpu,
-  Globe,
-  CloudLightning,
   ArrowRight,
 } from "lucide-react";
 import { useGSAP } from "@/hooks/use-gsap";
@@ -36,24 +34,24 @@ const About = () => {
     {
       icon: <Shield className="w-5 h-5" />,
       title: "Secure & Reliable",
-      description: "Enterprise-grade encryption with 99.9% uptime guarantee and SOC 2 compliance.",
+      description: "End-to-end encrypted with Google OAuth secure authentication and automatic data backups.",
       gradient: "from-emerald-500 to-teal-600",
       bg: "bg-emerald-500/10",
     },
     {
       icon: <Brain className="w-5 h-5" />,
       title: "AI-Powered",
-      description: "Gemini 1.5 Pro drives intelligent suggestions, auto-tagging, and content enhancement.",
+      description: "Gemini 2.5 Flash drives intelligent suggestions, summaries, and content enhancement.",
       gradient: "from-cyan-500 to-cyan-600",
       bg: "bg-cyan-500/10",
     },
   ];
 
   const stats = [
-    { number: "10K+", label: "Active Users", icon: <Globe className="w-4 h-4" /> },
-    { number: "99.9%", label: "Uptime", icon: <CloudLightning className="w-4 h-4" /> },
-    { number: "24/7", label: "Support", icon: <Sparkles className="w-4 h-4" /> },
-    { number: "50+", label: "Countries", icon: <Cpu className="w-4 h-4" /> },
+    { number: "GPT-5", label: "AI Model", icon: <Brain className="w-4 h-4" /> },
+    { number: "Gemini 2.5", label: "Fallback Model", icon: <Cpu className="w-4 h-4" /> },
+    { number: "∞", label: "AI Actions", icon: <Sparkles className="w-4 h-4" /> },
+    { number: "Secure", label: "Google OAuth", icon: <Shield className="w-4 h-4" /> },
   ];
 
   useGSAP(() => {
@@ -232,10 +230,10 @@ const About = () => {
 
             <div className="space-y-2 sm:space-y-4">
               {[
-                { title: "AI suggestions", desc: "Context-aware content enhancement and summaries" },
-                { title: "Smart organization", desc: "Auto-tagging, folders, and relationship mapping" },
-                { title: "Real-time collaboration", desc: "Share and co-edit notes with your team instantly" },
-                { title: "Powerful search", desc: "Full-text and semantic search across all your notes" },
+                { title: "AI suggestions", desc: "Context-aware content enhancement, summaries, and rewrites" },
+                { title: "Smart organization", desc: "Auto-tagging, instant search, and relationship mapping" },
+                { title: "Secure by default", desc: "Google OAuth authentication with encrypted data storage" },
+                { title: "Flexible plans", desc: "Free tier with 5 notes and 30 AI suggestions per month" },
               ].map((item, index) => (
                 <div key={index} className="check-item flex items-start gap-4 p-3.5 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors duration-200">
                   <div className="bg-emerald-500/10 rounded-lg p-1.5 flex-shrink-0 mt-0.5">

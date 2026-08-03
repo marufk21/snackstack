@@ -142,7 +142,7 @@ export async function getUserSubscriptionTier(
   return subscription.planType as PlanType;
 }
 
-export function getPlanTypeFromPriceId(priceId: string): PlanType {
+export function getPlanTypeFromPriceId(priceId: string): PlanType | null {
   const basicMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY;
   const basicYearly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY;
   const proMonthly = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY;
@@ -157,8 +157,9 @@ export function getPlanTypeFromPriceId(priceId: string): PlanType {
   if (priceId === enterpriseMonthly || priceId === enterpriseYearly)
     return "enterprise";
 
-  console.warn(`Unknown price ID: ${priceId}, defaulting to basic`);
-  return "basic";
+  // Fail closed — unknown price IDs must not silently map to a plan
+  console.error(`Unknown Stripe price ID: ${priceId} — cannot determine plan type`);
+  return null;
 }
 
 export async function upsertSubscriptionFromStripe(
@@ -168,6 +169,11 @@ export async function upsertSubscriptionFromStripe(
   const priceId = stripeSubscription.items.data[0]?.price.id;
   const productId = stripeSubscription.items.data[0]?.price.product as string;
   const planType = getPlanTypeFromPriceId(priceId);
+
+  if (!planType) {
+    console.error(`Cannot upsert subscription — unknown price ID: ${priceId}`);
+    throw new Error(`Unknown Stripe price ID: ${priceId}. Check env vars match active Stripe prices.`);
+  }
 
   console.log(`🔍 upsertSubscriptionFromStripe called`);
   console.log(`   Stripe subscription status: ${stripeSubscription.status}`);
@@ -265,8 +271,14 @@ export async function markExpiredSubscriptionsAsCanceled() {
   };
 }
 
-export async function hasAccess(_userId: string): Promise<boolean> {
-  return true;
+export async function hasAccess(userId: string): Promise<boolean> {
+  const limits = await getSubscriptionLimits(userId);
+  const noteCount = await getUserNoteCount(userId);
+
+  // Enterprise has unlimited notes
+  if (!isFinite(limits.maxNotes)) return true;
+
+  return noteCount < limits.maxNotes;
 }
 
 // --- AI suggestion tracking ------------------------------------------------
@@ -308,8 +320,9 @@ export async function incrementAISuggestionsCount(
   });
 
   const shouldReset = user?.aiSuggestionsResetAt && now >= user.aiSuggestionsResetAt;
-  const nextReset = new Date();
-  nextReset.setMonth(nextReset.getMonth() + 1);
+
+  // Use stable month-rollover: start of next month in UTC to avoid Jan 31 → Mar 3 overflow
+  const nextReset = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
 
   const updated = await prisma.user.update({
     where: { id: userId },

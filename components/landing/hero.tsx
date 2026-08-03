@@ -71,7 +71,7 @@ const Hero = () => {
 
   const chatResponses = {
     summary: "Sure! Q4 roadmap summarized:\n• Phoenix Beta set for Dec 1st.\n• Stripe billing integration ready.\n• Uptime target set to 99.9%.",
-    actions: "Here are your action items:\n• Configure Clerk auth middlewares.\n• Deploy Postgres database backups.\n• Finalize subscription tier layout.",
+    actions: "Here are your action items:\n• Configure NextAuth secure sessions.\n• Deploy Postgres database backups.\n• Finalize subscription tier layout.",
     milestones: "Key project milestones:\n• Q4 Landing Overhaul: Nov 25.\n• Stripe Integration: Dec 5.\n• Public Launch: Dec 15."
   };
 
@@ -355,7 +355,7 @@ const Hero = () => {
                 <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Supercharged By</span>
                 <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1.5 bg-gray-50 dark:bg-zinc-900/40 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
-                    🤖 Gemini 1.5 Pro
+                    🤖 GPT 5
                   </span>
                   <span className="flex items-center gap-1.5 bg-gray-50 dark:bg-zinc-900/40 px-2.5 py-1 rounded-full border border-black/5 dark:border-white/5 shadow-sm">
                     ▲ Next.js 15
@@ -881,7 +881,7 @@ const Hero = () => {
                         • Integrated payment configurations are handled natively through <strong className="text-cyan-500 font-bold">Stripe billing gates</strong>. Basic (₹749/mo) and Pro (₹1599/mo) layers are initialized inside server actions.
                       </p>
                       <p className="text-left">
-                        • Clerk authentication filters are active on all dynamic client workspaces to establish absolute tenant security.
+                        • NextAuth secure sessions protect all dynamic client workspaces.
                       </p>
                     </div>
 
@@ -910,7 +910,7 @@ const Hero = () => {
                           <div className="p-2.5 rounded-xl border border-cyan-500/20 bg-cyan-500/5 dark:bg-cyan-500/10 space-y-1.5 text-left">
                             <span className="font-bold text-cyan-600 dark:text-cyan-400 block text-[9.5px]">Auto Summary</span>
                             <p className="text-[8.5px] leading-relaxed text-gray-500 dark:text-zinc-300">
-                              Product roadmap prioritizing dynamic Clerk security, basic and pro pricing gates via Stripe, and Gemini structure scans. Uptime targeted at 99.9%.
+                              Product roadmap prioritizing secure authentication, basic and pro pricing gates via Stripe, and Gemini AI structure scans. Uptime monitored continuously.
                             </p>
                           </div>
 
@@ -919,7 +919,7 @@ const Hero = () => {
                             <span className="font-bold block text-gray-700 dark:text-zinc-200 text-[9.5px]">Suggested Tags</span>
                             <div className="flex flex-wrap gap-1.5">
                               <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-cyan-500/10 cursor-pointer text-[8px] font-bold text-cyan-500 select-none">+ billing</span>
-                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-cyan-500/10 cursor-pointer text-[8px] font-bold text-cyan-500 select-none">+ clerk</span>
+                              <span className="px-1.5 py-0.5 rounded-md border border-gray-200 dark:border-white/5 bg-white/50 dark:bg-zinc-800/40 hover:bg-cyan-500/10 cursor-pointer text-[8px] font-bold text-cyan-500 select-none">+ auth</span>
                             </div>
                           </div>
 

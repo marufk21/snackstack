@@ -41,7 +41,7 @@ class ErrorBoundary extends React.Component<
             <ul className="text-sm text-muted-foreground mb-6 text-left space-y-1">
               <li>• Missing environment variables</li>
               <li>• Network connectivity issues</li>
-              <li>• Clerk service unavailable</li>
+              <li>• Authentication service unavailable</li>
               <li>• Invalid API keys</li>
             </ul>
             <div className="space-y-3">
