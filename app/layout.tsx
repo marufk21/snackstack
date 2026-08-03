@@ -136,6 +136,13 @@ export const metadata: Metadata = {
     images: [siteConfig.ogImage],
   },
 
+  // Icons
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+    apple: "/icon.svg",
+  },
+
   // Robots
   robots: {
     index: true,

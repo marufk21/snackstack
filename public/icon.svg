@@ -15,10 +15,10 @@
   </defs>
 
   <!-- Background -->
-  <rect width="512" height="512" rx="96" fill="#0f172a" />
+  <circle cx="256" cy="256" r="256" fill="#0f172a" />
 
   <!-- Subtle inner ring -->
-  <rect x="8" y="8" width="496" height="496" rx="88" fill="none" stroke="white" stroke-width="2" opacity="0.04" />
+  <circle cx="256" cy="256" r="248" fill="none" stroke="white" stroke-width="2" opacity="0.04" />
 
   <!-- Stacked cards with refined positioning -->
   <!-- Bottom card - emerald -->
