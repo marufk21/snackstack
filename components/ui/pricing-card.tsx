@@ -21,7 +21,7 @@ export interface PricingTier {
   };
   features: string[];
   popular?: boolean;
-  stripePriceId: { monthly: string; yearly: string } | null;
+  stripePriceId: { monthly: string | null; yearly: string | null } | null;
   isTrial?: boolean;
 }
 

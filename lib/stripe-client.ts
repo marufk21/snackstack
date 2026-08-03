@@ -1,16 +1,13 @@
 // Client-side Stripe configuration
 // Only contains data that's safe to expose to the browser
 
-function requireEnv(key: string): string {
+function getEnv(key: string): string | null {
   const value = process.env[key];
   if (!value) {
-    // In production, missing Stripe price IDs are a hard failure
-    if (process.env.NODE_ENV === "production") {
-      throw new Error(`Missing required environment variable: ${key}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(`Missing Stripe env var: ${key} — checkout will fail until set in .env.local`);
     }
-    // In development, return a placeholder that will fail visibly if used
-    console.warn(`Missing Stripe env var: ${key} — checkout will fail until set in .env.local`);
-    return `missing_${key.toLowerCase()}`;
+    return null;
   }
   return value;
 }
@@ -21,31 +18,30 @@ export const stripePriceIds = {
 
   // Basic Plan
   basic: {
-    monthly: requireEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY"),
-    yearly: requireEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY"),
+    monthly: getEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_MONTHLY"),
+    yearly: getEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_BASIC_YEARLY"),
   },
 
   // Pro Plan
   pro: {
-    monthly: requireEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY"),
-    yearly: requireEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_YEARLY"),
+    monthly: getEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_MONTHLY"),
+    yearly: getEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_YEARLY"),
   },
 
   // Enterprise Plan
   enterprise: {
-    monthly: requireEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_MONTHLY"),
-    yearly: requireEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_YEARLY"),
+    monthly: getEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_MONTHLY"),
+    yearly: getEnv("NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_YEARLY"),
   },
-} as const;
+};
 
 export const getStripePublishableKey = () => {
   const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
   if (!key) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY");
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY — Stripe will not load");
     }
-    console.warn("Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY — Stripe will not load");
-    return "pk_test_missing";
+    return null;
   }
   return key;
 };

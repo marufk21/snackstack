@@ -46,7 +46,11 @@ export function useStripeCheckout() {
 
       // Redirect to Stripe Checkout
       const { loadStripe } = await import("@stripe/stripe-js");
-      const stripe = await loadStripe(getStripePublishableKey());
+      const publishableKey = getStripePublishableKey();
+      if (!publishableKey) {
+        throw new Error("Stripe is not configured. Please set NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY.");
+      }
+      const stripe = await loadStripe(publishableKey);
 
       if (!stripe) {
         throw new Error("Stripe failed to load");
